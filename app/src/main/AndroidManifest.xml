@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.yutauenishi.chordeditor" >
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="コードエディター"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"><!--キーボード入力時に崩れないように＆画面固定-->
+
+        </activity>
+        <activity
+            android:name=".ShowDataBase"
+            android:label="マイノート"
+            android:windowSoftInputMode="adjustNothing"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SongList"
+            android:label="ノート一覧"
+            android:windowSoftInputMode="adjustNothing"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SongPage"
+            android:label="ノート一覧"
+            android:windowSoftInputMode="adjustNothing"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EditPage"
+            android:windowSoftInputMode="adjustNothing"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LyricsEdit"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ChordsEdit"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" />
+
+    </application>
+
+</manifest>
