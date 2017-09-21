@@ -26,6 +26,7 @@
                 android:id="@+id/edit1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:hint="@string/lylics_edit_e1"
                 android:background="#00000000"
                 android:gravity="top"/>
 

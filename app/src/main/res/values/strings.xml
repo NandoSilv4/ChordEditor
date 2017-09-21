@@ -5,6 +5,7 @@
     <string name="action_save">保存</string>
     <string name="action_help">ヘルプ</string>
     <string name="action_else">その他</string>
+    <string name="lylics_edit_e1">記入してください</string>
 
 
     <string-array name="list">
