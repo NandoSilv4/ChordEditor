@@ -1,13 +1,8 @@
 package com.example.yutauenishi.chordeditor;
 
-/**
- * Created by YutaUenishi on 2017/09/21.
- */
-
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.support.v4.app.Fragment;
 import android.widget.LinearLayout;
@@ -82,7 +77,7 @@ public class FragmentTab extends Fragment {
 
 
 
-                String ls="";
+                String ls;
                 int f=0;
                 Matcher m4 = p2.matcher(data_split[i]);
                 if(m4.find()&&m4.replaceAll("").trim().equals("")){
