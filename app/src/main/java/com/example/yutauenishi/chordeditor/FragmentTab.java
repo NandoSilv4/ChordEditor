@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
+import android.view.Gravity;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -112,8 +113,9 @@ public class FragmentTab extends Fragment {
                     chordsText.setTextSize(16);
                     chordsText.setTextColor(Color.BLUE);
                     TextView Tcomment = new TextView(getActivity());
-                    Tcomment.setTextSize(16);
-                    Tcomment.setTextColor(Color.RED);
+                    Tcomment.setTextSize(18);
+                    Tcomment.setTextColor(Color.BLACK);
+                    //Tcomment.setGravity(Gravity.CENTER);
                     switch (index) {
                         case 0:
                             Tcomment.setText(String.format("%s", comment));
