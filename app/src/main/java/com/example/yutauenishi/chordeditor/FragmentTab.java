@@ -43,7 +43,7 @@ public class FragmentTab extends Fragment {
             String lyrics = "";
             String lyricsALL = "";
             String chords = "";
-            String chordsALL = "";
+            String comment = "";
 
             for (int i = 0; i < data_split.length; i++) {
 
@@ -58,7 +58,7 @@ public class FragmentTab extends Fragment {
                 }
 
                 // } Curly Bracketだけを探す
-                String cb2 = "\\}$";
+                String cb2 = "\\}";
                 Pattern pcb2 = Pattern.compile(cb2);
                 Matcher mcb2 = pcb2.matcher(data_split[i]);
                 if(mcb2.find()){
@@ -68,38 +68,47 @@ public class FragmentTab extends Fragment {
 
 
                 //[]と||の両方を探す
-                String regex = "[\\|,\\[].*?[\\|,\\]]";
+                String regex = "[\\|\\[].*?[\\|\\]]";
                 Pattern p = Pattern.compile(regex);
                 Matcher m = p.matcher(data_split[i]);
 
                 //[]だけを探す(Aメロとかのために)
-                String regex2 = "\\[.*?\\]";
+                String regex2 = "^\\[.*?\\]";
                 Pattern p2 = Pattern.compile(regex2);
 
                 //||だけを探す(歌詞+コードの*をつけるため)
                 String regex3 = "\\|.*?\\|";
                 Pattern p3 = Pattern.compile(regex3);
-                Matcher m3 = p3.matcher(data_split[i]);
+
+
+
+                String ls="";
+                int f=0;
+                Matcher m4 = p2.matcher(data_split[i]);
+                if(m4.find()&&m4.replaceAll("").trim().equals("")){
+                    f=1;
+                }
+
+                ls = m4.replaceAll("");
+                Matcher m3 = p3.matcher(ls);
                 lyrics = lyrics + m3.replaceAll("*");
-                lyricsALL = lyricsALL + m3.replaceAll("");
 
                 while (m.find()) {
                     Matcher m2 = p2.matcher(m.group());
                     if (m2.find()) {
-                        chordsALL = chordsALL + m2.group();//直接textviewで中央寄席設定したりで表示するのもあり
+                        comment=m2.group();
                     } else {
                         chords = chords + " | " + m.group().substring(1, m.group().length() - 1);
-                        chordsALL = chordsALL + " | " + m.group().substring(1, m.group().length() - 1);
                     }
                 }
 
+                lyricsALL = lyricsALL + m.replaceAll("");
 
 
                 if(flag==0) {
 
                     if (!(chords.equals(""))) {
                         chords = chords + " |";
-                        chordsALL = chordsALL + " |";
                     }
                     LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout);
                     TextView textView = new TextView(getActivity());
@@ -107,21 +116,29 @@ public class FragmentTab extends Fragment {
                     TextView chordsText = new TextView(getActivity());
                     chordsText.setTextSize(16);
                     chordsText.setTextColor(Color.BLUE);
+                    TextView Tcomment = new TextView(getActivity());
+                    Tcomment.setTextSize(16);
+                    Tcomment.setTextColor(Color.RED);
                     switch (index) {
                         case 0:
+                            Tcomment.setText(String.format("%s", comment));
                             chordsText.setText(String.format("%s", chords));
-                            if (!(chords.equals(""))) layout.addView(chordsText);
                             textView.setText(String.format("%s", lyrics));
-                            layout.addView(textView);
+                            if (!(comment.equals(""))) layout.addView(Tcomment);
+                            if (!(chords.equals(""))) layout.addView(chordsText);
+                            if(f==0)layout.addView(textView);
                             break;
                         case 1:
+                            Tcomment.setText(String.format("%s", comment));
                             textView.setText(String.format("%s", lyricsALL));
-                            layout.addView(textView);
+                            if (!(comment.equals(""))) layout.addView(Tcomment);
+                            if(f==0)layout.addView(textView);
                             break;
                         case 2:
-                            textView.setText(String.format("%s", chordsALL));
-                            //if (!(chordsALL.equals("")))layout.addView(textView);????
-                            layout.addView(textView);
+                            Tcomment.setText(String.format("%s", comment));
+                            chordsText.setText(String.format("%s", chords));
+                            if (!(comment.equals(""))) layout.addView(Tcomment);
+                            if (!(chords.equals(""))) layout.addView(chordsText);
                             break;
                     }
 
@@ -129,7 +146,7 @@ public class FragmentTab extends Fragment {
                     lyrics = "";
                     lyricsALL = "";
                     chords = "";
-                    chordsALL = "";
+                    comment = "";
                 }else{
                     lyrics=lyrics+"\n";
                     lyricsALL = lyricsALL+"\n";
