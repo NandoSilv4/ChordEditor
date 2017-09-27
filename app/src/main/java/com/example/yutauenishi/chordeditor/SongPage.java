@@ -1,8 +1,6 @@
 package com.example.yutauenishi.chordeditor;
 
-/**
- * Created by YutaUenishi on 2017/09/21.
- */
+
 
 
 import android.content.Intent;
@@ -133,10 +131,11 @@ public class SongPage extends AppCompatActivity {
         db.close();
     }
 
+ /*
     @Override
     protected void onRestart() {//!!!!!!!!!!!!!!!!!!!変更しないと!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        super.onRestart();
+      super.onRestart();
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql = "select name,data from note where id ="+ id +";";
         Cursor c = db.rawQuery(sql,null);
@@ -151,8 +150,9 @@ public class SongPage extends AppCompatActivity {
 
         c.close();
         db.close();
-    }
 
+    }
+ */
 
 
 

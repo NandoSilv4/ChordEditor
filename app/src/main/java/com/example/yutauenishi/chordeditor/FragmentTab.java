@@ -108,12 +108,12 @@ public class FragmentTab extends Fragment {
                     }
                     LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout);
                     TextView textView = new TextView(getActivity());
-                    textView.setTextSize(16);
+                    textView.setTextSize(20);
                     TextView chordsText = new TextView(getActivity());
-                    chordsText.setTextSize(16);
+                    chordsText.setTextSize(20);
                     chordsText.setTextColor(Color.BLUE);
                     TextView Tcomment = new TextView(getActivity());
-                    Tcomment.setTextSize(18);
+                    Tcomment.setTextSize(22);
                     Tcomment.setTextColor(Color.BLACK);
                     //Tcomment.setGravity(Gravity.CENTER);
                     switch (index) {
