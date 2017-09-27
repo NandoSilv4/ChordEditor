@@ -24,4 +24,9 @@
         <item name="android:textColorPrimary">@color/colorPrimary</item>
     </style>
 
+    <!-- スプラッシュ -->
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
+
 </resources>

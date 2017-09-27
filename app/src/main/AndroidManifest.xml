@@ -3,28 +3,17 @@
     package="com.example.yutauenishi.chordeditor" >
 
     <application
-        android:allowBackup="true"
-        android:icon="@drawable/ce_icon"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
         android:label="Chord Editor"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"><!--android:allowBackup="true"どうしよう？あと、ディープリンク無効にしてますbuild.gradle-->
 
-        <activity
-            android:name=".SplashActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait"><!--キーボード入力時に崩れないように＆画面固定-->
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait"><!--キーボード入力時に崩れないように＆画面固定-->
-
-        </activity>
+            android:screenOrientation="portrait" /><!--キーボード入力時に崩れないように＆画面固定-->
         <activity
             android:name=".ShowDataBase"
             android:label="マイノート"
@@ -33,14 +22,19 @@
         <activity
             android:name=".SongList"
             android:label="Chord Editor"
+            android:theme="@style/SplashTheme"
             android:windowSoftInputMode="adjustNothing"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"><!--android:theme="@style/SplashTheme"-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".SongPage"
             android:label="ノート一覧"
             android:windowSoftInputMode="adjustNothing"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".LyricsEdit"
             android:windowSoftInputMode="adjustResize"

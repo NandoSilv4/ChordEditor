@@ -1,8 +1,5 @@
 package com.example.yutauenishi.chordeditor;
 
-/**
- * Created by YutaUenishi on 2017/09/21.
- */
 
 
 import android.app.AlertDialog;
@@ -131,9 +128,12 @@ public class SongList extends AppCompatActivity {
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+
+        /*
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
         // UPナビゲーションを有効化する
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,7 +143,7 @@ public class SongList extends AppCompatActivity {
                 overridePendingTransition(0, 0);
             }
         });
-
+        */
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -171,6 +171,14 @@ public class SongList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // ここで1秒間スリープし、スプラッシュを表示させたままにする。
+        try {
+            Thread.sleep(800);
+        } catch (InterruptedException e) {
+            Log.i("エラー", "スプラッシュでエラー");
+        }
+        // スプラッシュthemeを通常themeに変更する
+        setTheme(R.style.AppTheme);
         setContentView(R.layout.songlist);
         toolbar();
 
@@ -195,7 +203,7 @@ public class SongList extends AppCompatActivity {
                 String sql2 = "update note set id = "+i+" where id = "+id+";";
                 db.execSQL(sql2);
                 id=i;
-                Log.i("テスト  ", "更新あり"+i);
+                Log.i("テスト  ", "更新あり"+id);
             }else{
                 Log.i("テスト  ", "更新なし"+id+"  "+i);
             }
