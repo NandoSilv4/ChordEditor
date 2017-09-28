@@ -18,6 +18,8 @@ public class MyOpenHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE note(id INTEGER PRIMARY KEY," +
                 "title TEXT," +
                 "data TEXT," +
+                "chords TEXT," +
+                "artist TEXT," +
                 "year INTEGER," +
                 "month INTEGER," +
                 "day INTEGER);");

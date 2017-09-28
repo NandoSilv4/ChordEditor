@@ -17,9 +17,7 @@ import android.widget.EditText;
 
 import java.util.Calendar;
 
-/**
- * Created by yuta on 2017/08/21.
- */
+
 
 public class LyricsEdit extends AppCompatActivity {
     MyOpenHelper helper = new MyOpenHelper(this);
@@ -61,9 +59,9 @@ public class LyricsEdit extends AppCompatActivity {
         Cursor c = db.rawQuery(sql,null);
         boolean mov1 = c.moveToFirst();
 
-        String name = c.getString(0);
+        String title = c.getString(0);
         String data = c.getString(1);
-        toolbar(name);
+        toolbar(title);
 
 
         EditText editText = (EditText) findViewById(R.id.edit1);
@@ -86,9 +84,9 @@ public class LyricsEdit extends AppCompatActivity {
         Cursor c = db.rawQuery(sql,null);
         boolean mov1 = c.moveToFirst();
 
-        String name = c.getString(0);
+        String title = c.getString(0);
         String data = c.getString(1);
-        toolbar(name);
+        toolbar(title);
 
         EditText editText = (EditText) findViewById(R.id.edit1);
         editText.setText(data);

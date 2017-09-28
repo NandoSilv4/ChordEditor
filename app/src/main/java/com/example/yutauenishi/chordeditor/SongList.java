@@ -68,13 +68,13 @@ public class SongList extends AppCompatActivity {
         buttonP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = editView.getText().toString().trim();
+                String title = editView.getText().toString().trim();
 
-                if (name.equals("")) {
+                if (title.equals("")) {
                     Toast.makeText(SongList.this, "タイトルを正しく入力してください。", Toast.LENGTH_SHORT).show();
                 }else{
 
-                    String sql = "select * from note where title ='"+ name +"';";
+                    String sql = "select * from note where title ='"+ title +"';";
                     Cursor c = db.rawQuery(sql,null);
                     boolean torf = c.moveToFirst();//cの中をすべて見終わるまでまでtrue
                     if(torf){
@@ -87,7 +87,7 @@ public class SongList extends AppCompatActivity {
                     }else {
                         if(flag<0) {
                             int recode = (int) DatabaseUtils.queryNumEntries(db, "note");
-                            String sql2 = "insert into note(title) values('" + name + "');";
+                            String sql2 = "insert into note(title) values('" + title + "');";
                             db.execSQL(sql2);
                             dialog.dismiss();
                             Intent dbIntent = new Intent(getApplication(), LyricsEdit.class);
@@ -96,7 +96,7 @@ public class SongList extends AppCompatActivity {
                             overridePendingTransition(0, 0);
                         }else{
 
-                            String sql3 = "update note set title = '"+ name +"' where id = "+flag+";";
+                            String sql3 = "update note set title = '"+ title +"' where id = "+flag+";";
                             db.execSQL(sql3);
                             startActivity(getIntent());
                             overridePendingTransition(0, 0);

@@ -97,9 +97,9 @@ public class SongPage extends AppCompatActivity {
         Cursor c = db.rawQuery(sql,null);
         boolean mov1 = c.moveToFirst();
 
-        String name = c.getString(0);
+        String title = c.getString(0);
         String data = c.getString(1);
-        toolbar(name);
+        toolbar(title);
 
 
 
