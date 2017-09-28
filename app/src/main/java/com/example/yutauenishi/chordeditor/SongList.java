@@ -74,7 +74,7 @@ public class SongList extends AppCompatActivity {
                     Toast.makeText(SongList.this, "タイトルを正しく入力してください。", Toast.LENGTH_SHORT).show();
                 }else{
 
-                    String sql = "select * from note where name ='"+ name +"';";
+                    String sql = "select * from note where title ='"+ name +"';";
                     Cursor c = db.rawQuery(sql,null);
                     boolean torf = c.moveToFirst();//cの中をすべて見終わるまでまでtrue
                     if(torf){
@@ -87,7 +87,7 @@ public class SongList extends AppCompatActivity {
                     }else {
                         if(flag<0) {
                             int recode = (int) DatabaseUtils.queryNumEntries(db, "note");
-                            String sql2 = "insert into note(name) values('" + name + "');";
+                            String sql2 = "insert into note(title) values('" + name + "');";
                             db.execSQL(sql2);
                             dialog.dismiss();
                             Intent dbIntent = new Intent(getApplication(), LyricsEdit.class);
@@ -96,7 +96,7 @@ public class SongList extends AppCompatActivity {
                             overridePendingTransition(0, 0);
                         }else{
 
-                            String sql3 = "update note set name = '"+ name +"' where id = "+flag+";";
+                            String sql3 = "update note set title = '"+ name +"' where id = "+flag+";";
                             db.execSQL(sql3);
                             startActivity(getIntent());
                             overridePendingTransition(0, 0);
@@ -173,7 +173,7 @@ public class SongList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // ここで1秒間スリープし、スプラッシュを表示させたままにする。
         try {
-            Thread.sleep(800);
+            Thread.sleep(300);
         } catch (InterruptedException e) {
             Log.i("エラー", "スプラッシュでエラー");
         }
@@ -184,11 +184,8 @@ public class SongList extends AppCompatActivity {
 
 
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor c = db.query("note", new String[] { "id", "name", "data","year","month","day"}, null,null, null, null, null,null);
+        Cursor c = db.query("note", new String[] { "id", "title", "data","year","month","day"}, null,null, null, null, null,null);
         boolean mov = c.moveToFirst();
-
-
-        //int recode=(int)DatabaseUtils.queryNumEntries(db, "note");
 
 
         // ListView を取得

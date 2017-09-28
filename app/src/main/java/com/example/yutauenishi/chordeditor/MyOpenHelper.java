@@ -1,8 +1,6 @@
 package com.example.yutauenishi.chordeditor;
 
-/**
- * Created by YutaUenishi on 2017/09/21.
- */
+
 
 
 import android.content.Context;
@@ -18,7 +16,7 @@ public class MyOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE note(id INTEGER PRIMARY KEY," +
-                "name TEXT," +
+                "title TEXT," +
                 "data TEXT," +
                 "year INTEGER," +
                 "month INTEGER," +

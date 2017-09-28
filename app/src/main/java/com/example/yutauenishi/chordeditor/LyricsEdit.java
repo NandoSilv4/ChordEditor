@@ -1,8 +1,5 @@
 package com.example.yutauenishi.chordeditor;
 
-/**
- * Created by YutaUenishi on 2017/09/21.
- */
 
 
 import android.content.Intent;
@@ -60,7 +57,7 @@ public class LyricsEdit extends AppCompatActivity {
 
 
         SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "select name,data from note where id ="+ id +";";
+        String sql = "select title,data from note where id ="+ id +";";
         Cursor c = db.rawQuery(sql,null);
         boolean mov1 = c.moveToFirst();
 
@@ -85,7 +82,7 @@ public class LyricsEdit extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "select name,data from note where id ="+ id +";";
+        String sql = "select title,data from note where id ="+ id +";";
         Cursor c = db.rawQuery(sql,null);
         boolean mov1 = c.moveToFirst();
 

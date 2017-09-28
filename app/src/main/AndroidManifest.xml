@@ -39,10 +39,6 @@
             android:name=".LyricsEdit"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ChordsEdit"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
 
     </application>
 

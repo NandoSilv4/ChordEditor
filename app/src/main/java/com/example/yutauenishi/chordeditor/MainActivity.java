@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                             .setPositiveButton("OK", null)
                             .show();
                 } else {
-                    String sql = "insert into note(name) values('" + name + "');";
+                    String sql = "insert into note(title) values('" + name + "');";
                     db.execSQL(sql);
                 }
             }
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 } else {
                     ContentValues updateValues = new ContentValues();
-                    updateValues.put("name", name);
+                    updateValues.put("title", name);
                     db.update("note", updateValues, "id=?", new String[]{id});
                 }
             }

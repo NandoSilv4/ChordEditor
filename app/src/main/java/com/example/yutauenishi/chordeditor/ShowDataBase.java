@@ -1,8 +1,5 @@
 package com.example.yutauenishi.chordeditor;
 
-/**
- * Created by YutaUenishi on 2017/09/21.
- */
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,7 +21,7 @@ public class ShowDataBase extends AppCompatActivity {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         // queryメソッドの実行例
-        Cursor c = db.query("note", new String[] { "id", "name"}, null,
+        Cursor c = db.query("note", new String[] { "id", "title"}, null,
                 null, null, null, null,null);
         boolean mov = c.moveToFirst();//cの中をすべて見終わるまでまでtrue
         while (mov) {

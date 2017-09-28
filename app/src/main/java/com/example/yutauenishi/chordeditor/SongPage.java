@@ -64,7 +64,7 @@ public class SongPage extends AppCompatActivity {
                         Log.i("テスト  ", "編集");
                         return true;
                     case R.id.chords_edit:
-                        Intent dbIntent2 = new Intent(getApplication(),ChordsEdit.class);
+                        Intent dbIntent2 = new Intent(getApplication(),LyricsEdit.class);
                         dbIntent2.putExtra("id", id);
                         startActivity(dbIntent2);
                         overridePendingTransition(0, 0);
@@ -93,7 +93,7 @@ public class SongPage extends AppCompatActivity {
         id = intent.getIntExtra("id",1);
 
         SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "select name,data from note where id ="+ id +";";
+        String sql = "select title,data from note where id ="+ id +";";
         Cursor c = db.rawQuery(sql,null);
         boolean mov1 = c.moveToFirst();
 
