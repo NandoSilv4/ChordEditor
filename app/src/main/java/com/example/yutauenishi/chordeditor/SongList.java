@@ -7,21 +7,24 @@ import android.content.Intent;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBar;
 import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import android.database.DatabaseUtils;
@@ -44,23 +47,46 @@ public class SongList extends AppCompatActivity {
     //新規作成時タイトルを聞く
     public void TitleAsk(final int flag){
         //テキスト入力を受け付けるビューを作成します。
+        //外枠とパーツの作成
+        final LinearLayout layout = new LinearLayout(getApplicationContext());
+            layout.setOrientation(LinearLayout.VERTICAL);
         final EditText editView = new EditText(SongList.this);
-        editView.setInputType(InputType.TYPE_CLASS_TEXT );
+        final EditText editView2 = new EditText(SongList.this);
+            editView.setInputType(InputType.TYPE_CLASS_TEXT );
+            editView2.setInputType(InputType.TYPE_CLASS_TEXT );
+        //メッセージの設定
+        final TextView song_title = new TextView(getApplicationContext());
+        final TextView artist = new TextView(getApplicationContext());
+            song_title.setText("タイトル(曲名)");
+            song_title.setTextColor(Color.BLACK);
+            song_title.setTextSize(20);
+            artist.setText("作者");
+            artist.setTextColor(Color.BLACK);
+
+        artist.setTextSize(20);
+        //外枠にパーツを組み込む
+        layout.addView(song_title);
+        layout.addView(editView);
+        layout.addView(artist);
+        layout.addView(editView2);
+
         AlertDialog.Builder b = new AlertDialog.Builder(SongList.this);
-        b.setView(editView);
-        b.setTitle("タイトルを入力してください");
+        b.setView(layout);
         b.setPositiveButton(android.R.string.ok, null);
         b.setNegativeButton(android.R.string.cancel, null);
+
+
         final AlertDialog dialog = b.show();
         Button buttonP = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button buttonN = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
         final SQLiteDatabase db = helper.getReadableDatabase();
         if(flag>=0){
-            String sql = "select name from note where id ="+ flag +";";
+            String sql = "select title from note where id ="+ flag +";";
             Cursor c = db.rawQuery(sql,null);
             c.moveToFirst();
             String title = c.getString(0);
             editView.setText(title);
+            c.close();
         }
 
 
