@@ -57,10 +57,10 @@ public class SongList extends AppCompatActivity {
         //メッセージの設定
         final TextView song_title = new TextView(getApplicationContext());
         final TextView artist = new TextView(getApplicationContext());
-            song_title.setText("タイトル(曲名)");
+            song_title.setText("曲名");
             song_title.setTextColor(Color.BLACK);
             song_title.setTextSize(20);
-            artist.setText("作者");
+            artist.setText("作者名");
             artist.setTextColor(Color.BLACK);
 
         artist.setTextSize(20);
@@ -80,21 +80,26 @@ public class SongList extends AppCompatActivity {
         Button buttonP = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button buttonN = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
         final SQLiteDatabase db = helper.getReadableDatabase();
+        final String old_title;
+
         if(flag>=0){
-            String sql = "select title from note where id ="+ flag +";";
+            String sql = "select title,artist from note where id ="+ flag +";";
             Cursor c = db.rawQuery(sql,null);
             c.moveToFirst();
-            String title = c.getString(0);
-            editView.setText(title);
+            old_title = c.getString(0);
+            editView.setText(old_title);
+            String art = c.getString(1);
+            editView2.setText(art);
             c.close();
+        }else {
+            old_title = "";
         }
-
-
         // 通常のViewのように実装します。
         buttonP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String title = editView.getText().toString().trim();
+                String artist = editView2.getText().toString().trim();
 
                 if (title.equals("")) {
                     Toast.makeText(SongList.this, "タイトルを正しく入力してください。", Toast.LENGTH_SHORT).show();
@@ -104,26 +109,32 @@ public class SongList extends AppCompatActivity {
                     Cursor c = db.rawQuery(sql,null);
                     boolean torf = c.moveToFirst();//cの中をすべて見終わるまでまでtrue
                     if(torf){
-                        if(flag<0) {
-                            Toast.makeText(SongList.this, "すでに存在するタイトルです。", Toast.LENGTH_SHORT).show();
-                        }else{
+                        if(old_title.equals(title)){//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!artist更新ZZZZZZZZZZZZ!!!!!!!!!!!!
+                            String sql1 = "update note set artist = '"+ artist +"' where id = "+flag+";";
+                            db.execSQL(sql1);
                             startActivity(getIntent());
+                            overridePendingTransition(0, 0);
+                            dialog.dismiss();
+                        }else{
+                            Toast.makeText(SongList.this, "すでに存在するタイトルです。", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
                     }else {
                         if(flag<0) {
                             int recode = (int) DatabaseUtils.queryNumEntries(db, "note");
-                            String sql2 = "insert into note(title) values('" + title + "');";
+                            String sql2 = "insert into note(title,artist) values('" + title + "','"+ artist +"');";
                             db.execSQL(sql2);
-                            dialog.dismiss();
                             Intent dbIntent = new Intent(getApplication(), LyricsEdit.class);
                             dbIntent.putExtra("id", recode + 1);
                             startActivity(dbIntent);
                             overridePendingTransition(0, 0);
+                            dialog.dismiss();
                         }else{
 
                             String sql3 = "update note set title = '"+ title +"' where id = "+flag+";";
                             db.execSQL(sql3);
+                            String sql4 = "update note set artist = '"+ artist +"' where id = "+flag+";";
+                            db.execSQL(sql4);
                             startActivity(getIntent());
                             overridePendingTransition(0, 0);
                             dialog.dismiss();
@@ -210,7 +221,7 @@ public class SongList extends AppCompatActivity {
 
 
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor c = db.query("note", new String[] { "id", "title", "data","year","month","day"}, null,null, null, null, null,null);
+        Cursor c = db.query("note", new String[] { "id", "title", "artist","year","month","day"}, null,null, null, null, null,null);
         boolean mov = c.moveToFirst();
 
 
@@ -234,7 +245,7 @@ public class SongList extends AppCompatActivity {
             String str2 = c.getString(2);
             data = new HashMap<String, String>();
             data.put("title",str);
-            data.put("data", str2);
+            data.put("artist", str2);
 
 
             int year= c.getInt(3);
@@ -258,7 +269,7 @@ public class SongList extends AppCompatActivity {
 
         // リストビューに渡すアダプタを生成します。
         SimpleAdapter adapter2 = new SimpleAdapter(this, retDataList,
-                R.layout.list_layout, new String[] { "title", "data","YMD" },
+                R.layout.list_layout, new String[] { "title", "artist","YMD" },
                 new int[] {R.id.item1, R.id.item2,R.id.item3 });
 
         listView.setAdapter(adapter2);
@@ -282,7 +293,7 @@ public class SongList extends AppCompatActivity {
                                            final int position, long id) {
 
 
-                final CharSequence[] shareItems = {"開く", "タイトル変更", "削除","キャンセル"};
+                final CharSequence[] shareItems = {"開く", "曲名・作者名 変更", "削除","キャンセル"};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(SongList.this);
                 builder.setItems(shareItems, new DialogInterface.OnClickListener() {
@@ -297,7 +308,7 @@ public class SongList extends AppCompatActivity {
                                 overridePendingTransition(0, 0);
                                 break;
                             case 1:
-                                Log.i("テスト  ", "タイトル変更");
+                                Log.i("テスト  ", "曲名・作者名 変更");
                                 TitleAsk(position+1);
                                 break;
                             case 2:
