@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.AdapterView;
@@ -235,21 +237,44 @@ public class SongList extends AppCompatActivity {
         List<Map<String, String>> retDataList = new ArrayList<Map<String, String>>();
         Map<String, String> data = new HashMap<String, String>();
 
-        //フィルター機能を有効化
+
+
+        // リストビューに渡すアダプタを生成します。
+        SimpleAdapter adapter2 = new SimpleAdapter(this, retDataList,
+                R.layout.list_layout, new String[] { "title", "artist","YMD" },
+                new int[] {R.id.item1, R.id.item2,R.id.item3 });
+
+        listView.setAdapter(adapter2);
         listView.setTextFilterEnabled(true);
+
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent dbIntent = new Intent(getApplication(),SongPage.class);
+                dbIntent.putExtra("id", position+1);
+                startActivity(dbIntent);
+                overridePendingTransition(0, 0);
+            }
+        });
+
+
+
+        // SearchViewにOnQueryChangeListenerを設定
         // SearchView を取得
         SearchView search = (SearchView) findViewById(R.id.searchView);
         search.setOnQueryTextListener(
             new SearchView.OnQueryTextListener(){
                 public boolean onQueryTextChange(String text){
+                    Filter filter = ((Filterable) listView.getAdapter()).getFilter();
                     if(text==null || text.equals("")){
-                        listView.clearTextFilter();
+                        filter.filter(null);
                     }else{
-                        listView.setFilterText(text);
+                        filter.filter(text);
                     }
                     return false;
                 }
-
                 public boolean onQueryTextSubmit(String arg0){
                     return false;
                 }
@@ -257,8 +282,18 @@ public class SongList extends AppCompatActivity {
         );
 
 
+
+
+
+
+
+
+
+
+
+
         int i=1;
-        while (mov) {
+        while(mov){
             int id = c.getInt(0);
             if(id !=i){
                 String sql2 = "update note set id = "+i+" where id = "+id+";";
@@ -273,7 +308,6 @@ public class SongList extends AppCompatActivity {
             data = new HashMap<String, String>();
             data.put("title",str);
             data.put("artist", str2);
-
 
             int year= c.getInt(3);
             int month= c.getInt(4);
@@ -292,27 +326,6 @@ public class SongList extends AppCompatActivity {
             mov = c.moveToNext();
             i++;
         }
-
-
-        // リストビューに渡すアダプタを生成します。
-        SimpleAdapter adapter2 = new SimpleAdapter(this, retDataList,
-                R.layout.list_layout, new String[] { "title", "artist","YMD" },
-                new int[] {R.id.item1, R.id.item2,R.id.item3 });
-
-        listView.setAdapter(adapter2);
-        listView.setTextFilterEnabled(true);
-
-        // SearchViewにOnQueryChangeListenerを設定
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent dbIntent = new Intent(getApplication(),SongPage.class);
-                dbIntent.putExtra("id", position+1);
-                startActivity(dbIntent);
-                overridePendingTransition(0, 0);
-            }
-        });
 
 
 
@@ -370,7 +383,6 @@ public class SongList extends AppCompatActivity {
         c.close();
         db.close();
     }
-
 
 
 
