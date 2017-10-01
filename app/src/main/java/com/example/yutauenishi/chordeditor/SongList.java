@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBar;
 import android.text.InputType;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,9 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.SearchView.OnQueryTextListener;
 
 import android.database.DatabaseUtils;
 import java.util.ArrayList;
@@ -100,7 +101,8 @@ public class SongList extends AppCompatActivity {
             public void onClick(View v) {
                 String title = editView.getText().toString().trim();
                 String artist = editView2.getText().toString().trim();
-
+                artist = artist.replaceAll("'", "''");
+                title = title.replaceAll("'", "''");
                 if (title.equals("")) {
                     Toast.makeText(SongList.this, "タイトルを正しく入力してください。", Toast.LENGTH_SHORT).show();
                 }else{
@@ -112,7 +114,9 @@ public class SongList extends AppCompatActivity {
                         if(old_title.equals(title)){//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!artist更新ZZZZZZZZZZZZ!!!!!!!!!!!!
                             String sql1 = "update note set artist = '"+ artist +"' where id = "+flag+";";
                             db.execSQL(sql1);
-                            startActivity(getIntent());
+                            Intent dbIntent = new Intent(getApplication(), SongList.class);
+                            //dbIntent.putExtra("id", flag);
+                            startActivity(dbIntent);
                             overridePendingTransition(0, 0);
                             dialog.dismiss();
                         }else{
@@ -135,8 +139,9 @@ public class SongList extends AppCompatActivity {
                             db.execSQL(sql3);
                             String sql4 = "update note set artist = '"+ artist +"' where id = "+flag+";";
                             db.execSQL(sql4);
-                            startActivity(getIntent());
-                            overridePendingTransition(0, 0);
+                            Intent dbIntent = new Intent(getApplication(), SongList.class);
+                            //dbIntent.putExtra("id", flag);
+                            startActivity(dbIntent);
                             dialog.dismiss();
                         }
                     }
@@ -203,7 +208,7 @@ public class SongList extends AppCompatActivity {
     }
 
 
-
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,9 +231,31 @@ public class SongList extends AppCompatActivity {
 
 
         // ListView を取得
-        ListView listView = (ListView) findViewById(R.id.nameList);
+        listView = (ListView) findViewById(R.id.nameList);
         List<Map<String, String>> retDataList = new ArrayList<Map<String, String>>();
         Map<String, String> data = new HashMap<String, String>();
+
+        //フィルター機能を有効化
+        listView.setTextFilterEnabled(true);
+        // SearchView を取得
+        SearchView search = (SearchView) findViewById(R.id.searchView);
+        search.setOnQueryTextListener(
+            new SearchView.OnQueryTextListener(){
+                public boolean onQueryTextChange(String text){
+                    if(text==null || text.equals("")){
+                        listView.clearTextFilter();
+                    }else{
+                        listView.setFilterText(text);
+                    }
+                    return false;
+                }
+
+                public boolean onQueryTextSubmit(String arg0){
+                    return false;
+                }
+            }
+        );
+
 
         int i=1;
         while (mov) {
@@ -273,7 +300,9 @@ public class SongList extends AppCompatActivity {
                 new int[] {R.id.item1, R.id.item2,R.id.item3 });
 
         listView.setAdapter(adapter2);
+        listView.setTextFilterEnabled(true);
 
+        // SearchViewにOnQueryChangeListenerを設定
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -341,6 +370,11 @@ public class SongList extends AppCompatActivity {
         c.close();
         db.close();
     }
+
+
+
+
+
 
 
     @Override

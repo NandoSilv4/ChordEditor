@@ -107,6 +107,7 @@ public class LyricsEdit extends AppCompatActivity {
         int sDate = cal.get(Calendar.DATE);         //日を取得
         EditText editText = (EditText) findViewById(R.id.edit1);
         String text = editText.getText().toString();
+        text = text.replaceAll("'", "''");
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql = "UPDATE note SET " +
                 "data = '"+ text +"'," +
