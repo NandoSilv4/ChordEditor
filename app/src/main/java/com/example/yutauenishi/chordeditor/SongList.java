@@ -29,6 +29,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.LinearLayout.LayoutParams;
 
 import android.database.DatabaseUtils;
 import java.util.ArrayList;
@@ -52,28 +53,38 @@ public class SongList extends AppCompatActivity {
         //テキスト入力を受け付けるビューを作成します。
         //外枠とパーツの作成
         final LinearLayout layout = new LinearLayout(getApplicationContext());
-            layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        final LinearLayout Hlayout1 = new LinearLayout(getApplicationContext());
+        Hlayout1.setOrientation(LinearLayout.HORIZONTAL);
+        final LinearLayout Hlayout2 = new LinearLayout(getApplicationContext());
+        Hlayout2.setOrientation(LinearLayout.HORIZONTAL);
+
+
+
         final EditText editView = new EditText(SongList.this);
         final EditText editView2 = new EditText(SongList.this);
             editView.setInputType(InputType.TYPE_CLASS_TEXT );
             editView2.setInputType(InputType.TYPE_CLASS_TEXT );
+
         //メッセージの設定
         final TextView song_title = new TextView(getApplicationContext());
         final TextView artist = new TextView(getApplicationContext());
-            song_title.setText("曲名");
+            song_title.setText(" 　曲名:");
             song_title.setTextColor(Color.BLACK);
-            song_title.setTextSize(20);
-            artist.setText("作者名");
+            song_title.setTextSize(18);
+            artist.setText(" 作者名:");
             artist.setTextColor(Color.BLACK);
-
-        artist.setTextSize(20);
+            artist.setTextSize(18);
         //外枠にパーツを組み込む
-        layout.addView(song_title);
-        layout.addView(editView);
-        layout.addView(artist);
-        layout.addView(editView2);
+        Hlayout1.addView(song_title);
+        Hlayout1.addView(editView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        Hlayout2.addView(artist);
+        Hlayout2.addView(editView2, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        layout.addView(Hlayout1);
+        layout.addView(Hlayout2);
 
         AlertDialog.Builder b = new AlertDialog.Builder(SongList.this);
+        b.setTitle(" ");
         b.setView(layout);
         b.setPositiveButton(android.R.string.ok, null);
         b.setNegativeButton(android.R.string.cancel, null);
@@ -165,6 +176,23 @@ public class SongList extends AppCompatActivity {
 
 
 
+    public void edit(){
+        new AlertDialog.Builder(SongList.this)
+                //.setTitle("ヒント")
+                .setMessage("Chord Editorの使用方法を見ますか？")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // OK button pressed
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+
+
+
     // ツールバー
     public void toolbar(){
 
@@ -198,7 +226,8 @@ public class SongList extends AppCompatActivity {
                         TitleAsk(-1);
                         Log.i("テスト  ", "新規作成");
                         return true;
-                    case R.id.action_edit:
+                    case R.id.action_hint:
+                        edit();
                         Log.i("テスト  ", "編集");
                         return true;
                     default:
@@ -210,10 +239,11 @@ public class SongList extends AppCompatActivity {
     }
 
 
-    private ListView listView;
+    //private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ListView listView;
         super.onCreate(savedInstanceState);
         // ここで1秒間スリープし、スプラッシュを表示させたままにする。
         try {
@@ -245,7 +275,7 @@ public class SongList extends AppCompatActivity {
                 new int[] {R.id.item1, R.id.item2,R.id.item3 });
 
         listView.setAdapter(adapter2);
-        listView.setTextFilterEnabled(true);
+        //listView.setTextFilterEnabled(true);
 
 
 
@@ -263,29 +293,24 @@ public class SongList extends AppCompatActivity {
 
         // SearchViewにOnQueryChangeListenerを設定
         // SearchView を取得
-        SearchView search = (SearchView) findViewById(R.id.searchView);
-        search.setOnQueryTextListener(
-            new SearchView.OnQueryTextListener(){
-                public boolean onQueryTextChange(String text){
-                    Filter filter = ((Filterable) listView.getAdapter()).getFilter();
-                    if(text==null || text.equals("")){
-                        filter.filter(null);
-                    }else{
-                        filter.filter(text);
-                    }
-                    return false;
-                }
-                public boolean onQueryTextSubmit(String arg0){
-                    return false;
-                }
-            }
-        );
+        //SearchView search = (SearchView) findViewById(R.id.searchView);
+        //search.setOnQueryTextListener(
+        //    new SearchView.OnQueryTextListener(){
+        //        public boolean onQueryTextChange(String text){
+        //            Filter filter = ((Filterable) listView.getAdapter()).getFilter();
+        //            if(text==null || text.equals("")){
+        //                filter.filter(null);
+        //            }else{
+        //                filter.filter(text);
+        //            }
+        //            return false;
+        //        }
 
-
-
-
-
-
+        //        public boolean onQueryTextSubmit(String arg0){
+        //            return false;
+        //        }
+        //    }
+        //);
 
 
 
@@ -293,7 +318,7 @@ public class SongList extends AppCompatActivity {
 
 
         int i=1;
-        while(mov){
+        while (mov) {
             int id = c.getInt(0);
             if(id !=i){
                 String sql2 = "update note set id = "+i+" where id = "+id+";";
@@ -308,6 +333,7 @@ public class SongList extends AppCompatActivity {
             data = new HashMap<String, String>();
             data.put("title",str);
             data.put("artist", str2);
+
 
             int year= c.getInt(3);
             int month= c.getInt(4);
@@ -383,6 +409,7 @@ public class SongList extends AppCompatActivity {
         c.close();
         db.close();
     }
+
 
 
 

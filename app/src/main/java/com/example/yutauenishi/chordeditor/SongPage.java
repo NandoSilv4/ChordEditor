@@ -31,10 +31,11 @@ public class SongPage extends AppCompatActivity {
 
 
     // ツールバー
-    public void toolbar(String name){
+    public void toolbar(String name,String artist){
         // ツールバーをアクションバーとして使う
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle(name);
+        toolbar.setSubtitle(artist);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -93,13 +94,14 @@ public class SongPage extends AppCompatActivity {
         id = intent.getIntExtra("id",1);
 
         SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "select title,data from note where id ="+ id +";";
+        String sql = "select title,data,artist from note where id ="+ id +";";
         Cursor c = db.rawQuery(sql,null);
         boolean mov1 = c.moveToFirst();
 
         String title = c.getString(0);
         String data = c.getString(1);
-        toolbar(title);
+        String artist = c.getString(2);
+        toolbar(title,artist);
 
 
 

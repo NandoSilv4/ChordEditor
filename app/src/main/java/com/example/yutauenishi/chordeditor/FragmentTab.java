@@ -87,7 +87,13 @@ public class FragmentTab extends Fragment {
 
                 ls = m4.replaceAll("");
                 Matcher m3 = p3.matcher(ls);
-                lyrics = lyrics + m3.replaceAll("*");
+                //前奏の****にならないように
+                if(m3.find()&&m3.replaceAll("").trim().equals("")){
+                    lyrics="";
+                    f=1;
+                }else {
+                    lyrics = lyrics + m3.replaceAll("*");
+                }
 
                 while (m.find()) {
                     Matcher m2 = p2.matcher(m.group());

@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:padding="5dp"
     android:gravity="center_vertical">
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

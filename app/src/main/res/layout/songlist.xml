@@ -18,12 +18,15 @@
         android:background="?attr/colorPrimary"
         />
 
+    <!--
     <SearchView android:layout_width="match_parent"
         android:id="@+id/searchView"
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false"
         android:queryHint="Search Here"
         />
+    -->
+
     <ListView
         android:id="@+id/nameList"
         android:layout_width="match_parent"
