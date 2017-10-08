@@ -64,16 +64,16 @@ public class SongPage extends AppCompatActivity {
                         overridePendingTransition(0, 0);
                         Log.i("テスト  ", "編集");
                         return true;
-                    case R.id.chords_edit:
-                        Intent dbIntent2 = new Intent(getApplication(),LyricsEdit.class);
-                        dbIntent2.putExtra("id", id);
-                        startActivity(dbIntent2);
-                        overridePendingTransition(0, 0);
-                        Log.i("テスト  ", "コード譜");
-                        return true;
-                    case R.id.action_play:
-                        Log.i("テスト  ", "演奏モード");
-                        return true;
+                    //case R.id.chords_edit:
+                    //    Intent dbIntent2 = new Intent(getApplication(),LyricsEdit.class);
+                    //    dbIntent2.putExtra("id", id);
+                    //    startActivity(dbIntent2);
+                    //    overridePendingTransition(0, 0);
+                    //    Log.i("テスト  ", "コード譜");
+                    //    return true;
+                    //case R.id.action_play:
+                    //    Log.i("テスト  ", "演奏モード");
+                    //    return true;
                     default:
                         return false;
                 }

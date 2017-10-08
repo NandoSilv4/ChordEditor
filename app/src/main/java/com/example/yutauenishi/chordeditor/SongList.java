@@ -176,21 +176,6 @@ public class SongList extends AppCompatActivity {
 
 
 
-    public void edit(){
-        new AlertDialog.Builder(SongList.this)
-                //.setTitle("ヒント")
-                .setMessage("Chord Editorの使用方法を見ますか？")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // OK button pressed
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
-
-
 
 
     // ツールバー
@@ -227,8 +212,19 @@ public class SongList extends AppCompatActivity {
                         Log.i("テスト  ", "新規作成");
                         return true;
                     case R.id.action_hint:
-                        edit();
-                        Log.i("テスト  ", "編集");
+                        new AlertDialog.Builder(SongList.this)
+                                //.setTitle("ヒント")
+                                .setMessage("Chord Editorの使用方法を見ますか？")
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent dbIntent = new Intent(getApplication(), Hint.class);
+                                        startActivity(dbIntent);
+                                    }
+                                })
+                                .setNegativeButton("Cancel", null)
+                                .show();
+                        Log.i("テスト  ", "ヒント");
                         return true;
                     default:
                         return false;

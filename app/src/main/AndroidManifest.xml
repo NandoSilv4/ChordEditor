@@ -20,6 +20,10 @@
             android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Hint"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".SongList"
             android:label="Chord Editor"
             android:theme="@style/SplashTheme"
