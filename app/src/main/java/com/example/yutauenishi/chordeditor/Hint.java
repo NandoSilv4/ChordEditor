@@ -43,7 +43,7 @@ public class Hint extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hint);
-        toolbar("使用方法");
+        toolbar("");
 
 
     }

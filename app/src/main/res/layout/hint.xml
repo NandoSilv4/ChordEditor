@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/toolbar"
@@ -15,16 +14,97 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary" />
 
-
     <LinearLayout
         android:id="@+id/mainLayout"
-        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent">
+        android:orientation="vertical"
+        android:padding="20dp">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
+            android:padding="10dp"
+            android:text="使用方法"
+            android:textSize="30sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_gravity="center"
+            android:background="@android:color/background_dark"
+             />
+        <TextView
+            android:id="@+id/hint0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:padding="10dp"
+            android:text="はじめに"
+            android:textSize="16sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_gravity="center"
+            android:background="@android:color/background_dark"
+            />
+        <TextView
+            android:id="@+id/hint1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:padding="10dp"
+            android:text="ファイルの作製"
+            android:textSize="16sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_gravity="center"
+            android:background="@android:color/background_dark"
+            />
+        <TextView
+            android:id="@+id/hint2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="ファイルの編集・削除"
+            android:textSize="16sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_gravity="center"
+            android:background="@android:color/background_dark"
+            />
+        <TextView
+            android:id="@+id/hint3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="歌詞とコードの書き方"
+            android:textSize="16sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_gravity="center"
+            android:background="@android:color/background_dark"
+            />
+        <TextView
+            android:id="@+id/hint4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="お問い合わせ"
+            android:textSize="16sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_gravity="center"
+            android:background="@android:color/background_dark"
+            />
 
 
     </LinearLayout>
+
 
 
 
