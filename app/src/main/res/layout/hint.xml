@@ -36,11 +36,12 @@
              />
         <TextView
             android:id="@+id/hint0"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:padding="10dp"
             android:text="はじめに"
+            android:clickable="true"
+            android:onClick="hint0"
             android:textSize="16sp" />
         <View
             android:layout_width="match_parent"
@@ -50,11 +51,12 @@
             />
         <TextView
             android:id="@+id/hint1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:padding="10dp"
             android:text="ファイルの作製"
+            android:clickable="true"
+            android:onClick="hint1"
             android:textSize="16sp" />
         <View
             android:layout_width="match_parent"
@@ -64,10 +66,12 @@
             />
         <TextView
             android:id="@+id/hint2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="ファイルの編集・削除"
+            android:clickable="true"
+            android:onClick="hint2"
             android:textSize="16sp" />
         <View
             android:layout_width="match_parent"
@@ -77,10 +81,12 @@
             />
         <TextView
             android:id="@+id/hint3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="歌詞とコードの書き方"
+            android:clickable="true"
+            android:onClick="hint3"
             android:textSize="16sp" />
         <View
             android:layout_width="match_parent"
@@ -90,10 +96,12 @@
             />
         <TextView
             android:id="@+id/hint4"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="お問い合わせ"
+            android:clickable="true"
+            android:onClick="hint4"
             android:textSize="16sp" />
         <View
             android:layout_width="match_parent"
