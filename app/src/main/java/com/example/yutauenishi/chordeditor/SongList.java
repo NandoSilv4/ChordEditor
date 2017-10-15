@@ -247,6 +247,7 @@ public class SongList extends AppCompatActivity {
         } catch (InterruptedException e) {
             Log.i("エラー", "スプラッシュでエラー");
         }
+
         // スプラッシュthemeを通常themeに変更する
         setTheme(R.style.AppTheme);
         setContentView(R.layout.songlist);

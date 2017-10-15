@@ -13,106 +13,255 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary" />
-
-    <LinearLayout
-        android:id="@+id/mainLayout"
-        android:layout_width="match_parent"
+    <ScrollView
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="20dp">
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:padding="10dp"
-            android:text="使用方法"
-            android:textSize="30sp" />
-        <View
+        android:layout_width="match_parent">
+        <LinearLayout
+            android:id="@+id/mainLayout"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_gravity="center"
-            android:background="@android:color/background_dark"
-             />
-        <TextView
-            android:id="@+id/hint0"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="はじめに"
-            android:clickable="true"
-            android:onClick="hint0"
-            android:textSize="16sp" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_gravity="center"
-            android:background="@android:color/background_dark"
-            />
-        <TextView
-            android:id="@+id/hint1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="ファイルの作製"
-            android:clickable="true"
-            android:onClick="hint1"
-            android:textSize="16sp" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_gravity="center"
-            android:background="@android:color/background_dark"
-            />
-        <TextView
-            android:id="@+id/hint2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="ファイルの編集・削除"
-            android:clickable="true"
-            android:onClick="hint2"
-            android:textSize="16sp" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_gravity="center"
-            android:background="@android:color/background_dark"
-            />
-        <TextView
-            android:id="@+id/hint3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="歌詞とコードの書き方"
-            android:clickable="true"
-            android:onClick="hint3"
-            android:textSize="16sp" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_gravity="center"
-            android:background="@android:color/background_dark"
-            />
-        <TextView
-            android:id="@+id/hint4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="お問い合わせ"
-            android:clickable="true"
-            android:onClick="hint4"
-            android:textSize="16sp" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_gravity="center"
-            android:background="@android:color/background_dark"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp">
 
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/hint0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="はじめに"
+                android:clickable="true"
+                android:onClick="hint0"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_gravity="center"
+                android:background="@android:color/background_dark" />
+                <LinearLayout
+                    android:id="@+id/hint0_L"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/hint0_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:textSize="14sp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/background_dark" />
+                </LinearLayout>
+            <TextView
+                android:id="@+id/hint1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="ファイルの作成"
+                android:textColor="@android:color/black"
+                android:clickable="true"
+                android:onClick="hint1"
+                android:textSize="18sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_gravity="center"
+                android:background="@android:color/background_dark" />
+                <LinearLayout
+                    android:id="@+id/hint1_L"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/hint1_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:textSize="14sp"/>
+                    <ImageView
+                        android:src="@drawable/hint1"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@null"
+                        android:padding="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/background_dark" />
+                </LinearLayout>
+            <TextView
+                android:id="@+id/hint2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="ファイルの編集・削除"
+                android:textColor="@android:color/black"
+                android:clickable="true"
+                android:onClick="hint2"
+                android:textSize="18sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_gravity="center"
+                android:background="@android:color/background_dark" />
+                <LinearLayout
+                    android:id="@+id/hint2_L"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/hint2_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:textSize="14sp" />
+                    <ImageView
+                        android:src="@drawable/hint2_1"
+                        android:id="@+id/hint2_1"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@null"
+                        android:padding="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/hint2_2_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:textSize="14sp" />
+                    <ImageView
+                        android:src="@drawable/hint2_2"
+                        android:id="@+id/hint2_2"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@null"
+                        android:padding="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_gravity="center"
+                        android:background="@android:color/background_dark" />
+                </LinearLayout>
+            <TextView
+                android:id="@+id/hint3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="歌詞とコードの書き方"
+                android:textColor="@android:color/black"
+                android:clickable="true"
+                android:onClick="hint3"
+                android:textSize="18sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_gravity="center"
+                android:background="@android:color/background_dark" />
+            <LinearLayout
+                android:id="@+id/hint3_L"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <ImageView
+                    android:src="@drawable/hint3_1"
+                    android:id="@+id/hint3_1"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:padding="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/hint3_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:textSize="14sp" />
+                <ImageView
+                    android:src="@drawable/hint3_2"
+                    android:id="@+id/hint3_2"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:padding="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:src="@drawable/hint3_3"
+                    android:id="@+id/hint3_3"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:padding="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:src="@drawable/hint3_4"
+                    android:id="@+id/hint3_4"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:padding="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_gravity="center"
+                    android:background="@android:color/background_dark" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/hint4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="バグの報告、要望"
+                android:textColor="@android:color/black"
+                android:clickable="true"
+                android:onClick="hint4"
+                android:textSize="18sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_gravity="center"
+                android:background="@android:color/background_dark"
+                />
+            <LinearLayout
+                android:id="@+id/hint4_L"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/hint4_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:textSize="14sp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_gravity="center"
+                    android:background="@android:color/background_dark" />
+            </LinearLayout>
 
+
+        </LinearLayout>
+    </ScrollView>
 
 
 
