@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -22,6 +23,14 @@ import java.util.Calendar;
 public class LyricsEdit extends AppCompatActivity {
     MyOpenHelper helper = new MyOpenHelper(this);
     int id =1;
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_lyrics_edit, menu);
+        return true;
+    }
+
 
     // ツールバー
     public void toolbar(String name,String artist){
@@ -41,6 +50,31 @@ public class LyricsEdit extends AppCompatActivity {
                 Intent dbIntent = new Intent(getApplication(),SongPage.class);
                 dbIntent.putExtra("id", id);
                 startActivity(dbIntent);
+                overridePendingTransition(0, 0);
+            }
+        });
+
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // アイテムクリック時の処理
+                AnalysisChords AC = new AnalysisChords();
+                EditText editText = (EditText) findViewById(R.id.edit1);
+                String text = editText.getText().toString();
+                switch (item.getItemId()) {
+                    case R.id.sharp:
+                        text=AC.HalfUpDownEdit(text,1);
+                        editText.setText(text);
+                        return true;
+                    case R.id.flat:
+                        text=AC.HalfUpDownEdit(text,-1);
+                        editText.setText(text);
+                        return true;
+                    default:
+                        return false;
+                }
+
             }
         });
     }

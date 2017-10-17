@@ -30,12 +30,6 @@ public class SongPage extends AppCompatActivity {
         return true;
     }
 
-    public void test(String a,int id){
-        SQLiteDatabase db = helper.getReadableDatabase();
-        String sql1 = "update note set chords = '" + a + "' where id = "+id+";";
-        db.execSQL(sql1);
-    }
-
 
     // ツールバー
     public void toolbar(String name,String artist){

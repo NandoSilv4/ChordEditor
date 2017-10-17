@@ -83,27 +83,32 @@ public class AnalysisChords extends AppCompatActivity {
         while(count<0){//ハーフダウンの場合
             count=12+count;
         }
+        String s="\\[\\$";
+        String f="\\$\\]";
 
+        text = Pattern.compile("\\|(.*?)\\|").matcher(text).replaceAll(s+"$1"+f);
         for(int i=0; i<count; i++) {
-            //まず間違いがあったら訂正する
-            text = Pattern.compile("\\|B#").matcher(text).replaceAll("|C");
-            text = Pattern.compile("\\|E#").matcher(text).replaceAll("|F");
+            //まず間違いがあったら訂正する  必要なかった
+            //text = Pattern.compile("\\|B#(.*?)\\|").matcher(text).replaceAll("\\|C$1\\|");
+            //text = Pattern.compile("\\|E(.*?)\\|").matcher(text).replaceAll("|F");
             //2回変換することがないように、とりあえずBをいったんXに置き換え
-            text = Pattern.compile("\\|B").matcher(text).replaceAll("|X");
-            text = Pattern.compile("\\|A#").matcher(text).replaceAll("|B");
-            text = Pattern.compile("\\|A").matcher(text).replaceAll("|A#");
-            text = Pattern.compile("\\|G#").matcher(text).replaceAll("|A");
-            text = Pattern.compile("\\|G").matcher(text).replaceAll("|G#");
-            text = Pattern.compile("\\|F#").matcher(text).replaceAll("|G");
-            text = Pattern.compile("\\|F").matcher(text).replaceAll("|F#");
-            text = Pattern.compile("\\|E").matcher(text).replaceAll("|F");
-            text = Pattern.compile("\\|D#").matcher(text).replaceAll("|E");
-            text = Pattern.compile("\\|D").matcher(text).replaceAll("|D#");
-            text = Pattern.compile("\\|C#").matcher(text).replaceAll("|D");
-            text = Pattern.compile("\\|C").matcher(text).replaceAll("|C#");
+            text = Pattern.compile(s+"B(.*?)"+f).matcher(text).replaceAll(s+"X$1"+f);
+            text = Pattern.compile(s+"A#(.*?)"+f).matcher(text).replaceAll(s+"B$1"+f);
+            text = Pattern.compile(s+"A(.*?)"+f).matcher(text).replaceAll(s+"A#$1"+f);
+            text = Pattern.compile(s+"G#(.*?)"+f).matcher(text).replaceAll(s+"A$1"+f);
+            text = Pattern.compile(s+"G(.*?)"+f).matcher(text).replaceAll(s+"G#$1"+f);
+            text = Pattern.compile(s+"F#(.*?)"+f).matcher(text).replaceAll(s+"G$1"+f);
+            text = Pattern.compile(s+"F(.*?)"+f).matcher(text).replaceAll(s+"F#$1"+f);
+            text = Pattern.compile(s+"E(.*?)"+f).matcher(text).replaceAll(s+"F$1"+f);
+            text = Pattern.compile(s+"D#(.*?)"+f).matcher(text).replaceAll(s+"E$1"+f);
+            text = Pattern.compile(s+"D(.*?)"+f).matcher(text).replaceAll(s+"D#$1"+f);
+            text = Pattern.compile(s+"C#(.*?)"+f).matcher(text).replaceAll(s+"D$1"+f);
+            text = Pattern.compile(s+"C(.*?)"+f).matcher(text).replaceAll(s+"C#$1"+f);
             //XをCに戻す
-            text = Pattern.compile("\\|X").matcher(text).replaceAll("|C");
+            text = Pattern.compile(s+"X(.*?)"+f).matcher(text).replaceAll(s+"C$1"+f);
+
         }
+        text = Pattern.compile(s+"(.*?)"+f).matcher(text).replaceAll("\\|$1\\|");
 
         return text;
     }

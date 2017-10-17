@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/flat"
+        android:orderInCategory="1"
+        android:title="♭"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_flat" />
+    <item
+        android:id="@+id/sharp"
+        android:orderInCategory="1"
+        android:title="#"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_sharp" />
 
 </menu>
