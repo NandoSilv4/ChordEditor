@@ -65,9 +65,20 @@ public class ChordInfo extends AppCompatActivity {
         String artist = c.getString(2);
         toolbar(title,artist);
 
+        AnalysisChords AC=new AnalysisChords();
+        String Rank=AC.Counter(chords,"A")+"\n";
+        Rank=Rank+AC.Counter(chords,"B")+"\n";
+        Rank=Rank+AC.Counter(chords,"C#")+"\n";
+        Rank=Rank+AC.Counter(chords,"D")+"\n";
+        Rank=Rank+AC.Counter(chords,"E")+"\n";
+        Rank=Rank+AC.Counter(chords,"F#")+"\n";
+        Rank=Rank+AC.Counter(chords,"G")+"\n";
 
         TextView textView = (TextView) findViewById(R.id.text);
         textView.setText(chords);
+
+        TextView textView2 = (TextView) findViewById(R.id.text2);
+        textView2.setText(Rank);
 
         c.close();
         db.close();
