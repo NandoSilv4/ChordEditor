@@ -27,8 +27,88 @@ public class AnalysisChords extends AppCompatActivity {
                 if(!(chords.equals("")))chordsALL=chordsALL+chords+"\n";
             }
         }
+
+        chordsALL=Pattern.compile("C♭").matcher(chordsALL).replaceAll("B");
+        chordsALL=Pattern.compile("D♭").matcher(chordsALL).replaceAll("C#");
+        chordsALL=Pattern.compile("E♭").matcher(chordsALL).replaceAll("D#");
+        chordsALL=Pattern.compile("F♭").matcher(chordsALL).replaceAll("E");
+        chordsALL=Pattern.compile("G♭").matcher(chordsALL).replaceAll("F#");
+        chordsALL=Pattern.compile("A♭").matcher(chordsALL).replaceAll("G#");
+        chordsALL=Pattern.compile("B♭").matcher(chordsALL).replaceAll("A#");
+
+
         return chordsALL;
     }
+
+
+
+
+
+    public String HalfUpDown(String text,int count){
+
+        while(count<0){//ハーフダウンの場合
+            count=12+count;
+        }
+
+        for(int i=0; i<count; i++) {
+            //まず間違いがあったら訂正する
+            text = Pattern.compile("B#").matcher(text).replaceAll("C");
+            text = Pattern.compile("E#").matcher(text).replaceAll("F");
+            //2回変換することがないように、とりあえずBをいったんXに置き換え
+            text = Pattern.compile("B").matcher(text).replaceAll("X");
+            text = Pattern.compile("A#").matcher(text).replaceAll("B");
+            text = Pattern.compile("A").matcher(text).replaceAll("A#");
+            text = Pattern.compile("G#").matcher(text).replaceAll("A");
+            text = Pattern.compile("G").matcher(text).replaceAll("G#");
+            text = Pattern.compile("F#").matcher(text).replaceAll("G");
+            text = Pattern.compile("F").matcher(text).replaceAll("F#");
+            text = Pattern.compile("E").matcher(text).replaceAll("F");
+            text = Pattern.compile("D#").matcher(text).replaceAll("E");
+            text = Pattern.compile("D").matcher(text).replaceAll("D#");
+            text = Pattern.compile("C#").matcher(text).replaceAll("D");
+            text = Pattern.compile("C").matcher(text).replaceAll("C#");
+            //XをCに戻す
+            text = Pattern.compile("X").matcher(text).replaceAll("C");
+        }
+
+        return text;
+    }
+
+
+
+
+
+    public String HalfUpDownEdit(String text,int count){
+
+        while(count<0){//ハーフダウンの場合
+            count=12+count;
+        }
+
+        for(int i=0; i<count; i++) {
+            //まず間違いがあったら訂正する
+            text = Pattern.compile("\\|B#").matcher(text).replaceAll("|C");
+            text = Pattern.compile("\\|E#").matcher(text).replaceAll("|F");
+            //2回変換することがないように、とりあえずBをいったんXに置き換え
+            text = Pattern.compile("\\|B").matcher(text).replaceAll("|X");
+            text = Pattern.compile("\\|A#").matcher(text).replaceAll("|B");
+            text = Pattern.compile("\\|A").matcher(text).replaceAll("|A#");
+            text = Pattern.compile("\\|G#").matcher(text).replaceAll("|A");
+            text = Pattern.compile("\\|G").matcher(text).replaceAll("|G#");
+            text = Pattern.compile("\\|F#").matcher(text).replaceAll("|G");
+            text = Pattern.compile("\\|F").matcher(text).replaceAll("|F#");
+            text = Pattern.compile("\\|E").matcher(text).replaceAll("|F");
+            text = Pattern.compile("\\|D#").matcher(text).replaceAll("|E");
+            text = Pattern.compile("\\|D").matcher(text).replaceAll("|D#");
+            text = Pattern.compile("\\|C#").matcher(text).replaceAll("|D");
+            text = Pattern.compile("\\|C").matcher(text).replaceAll("|C#");
+            //XをCに戻す
+            text = Pattern.compile("\\|X").matcher(text).replaceAll("|C");
+        }
+
+        return text;
+    }
+
+
 
 
 
@@ -58,6 +138,24 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
+
+
+
+
+
+
+
+    public String ToRomanNumeral(String text){
+        text=Pattern.compile("C").matcher(text).replaceAll("Ⅰ");
+        text=Pattern.compile("D").matcher(text).replaceAll("Ⅱ");
+        text=Pattern.compile("E").matcher(text).replaceAll("Ⅲ");
+        text=Pattern.compile("F").matcher(text).replaceAll("Ⅳ");
+        text=Pattern.compile("G").matcher(text).replaceAll("Ⅴ");
+        text=Pattern.compile("A").matcher(text).replaceAll("Ⅵ");
+        text=Pattern.compile("B").matcher(text).replaceAll("Ⅶ");
+        text=Pattern.compile("#").matcher(text).replaceAll("+");
+        return text;
+    }
 
 
 

@@ -74,11 +74,20 @@ public class ChordInfo extends AppCompatActivity {
         Rank=Rank+AC.Counter(chords,"F#")+"\n";
         Rank=Rank+AC.Counter(chords,"G")+"\n";
 
+        String HUC=AC.HalfUpDown(chords,1);
+        String HDC=AC.HalfUpDown(HUC,-1);
+
         TextView textView = (TextView) findViewById(R.id.text);
         textView.setText(chords);
 
         TextView textView2 = (TextView) findViewById(R.id.text2);
-        textView2.setText(Rank);
+        textView2.setText(HUC);
+
+        TextView textView3 = (TextView) findViewById(R.id.text3);
+        textView3.setText(HDC);
+
+        TextView textView4 = (TextView) findViewById(R.id.text4);
+        textView4.setText(Rank);
 
         c.close();
         db.close();

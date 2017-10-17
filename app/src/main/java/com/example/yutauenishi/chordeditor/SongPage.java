@@ -26,7 +26,7 @@ public class SongPage extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_edit_page, menu);
+        getMenuInflater().inflate(R.menu.menu_song_page, menu);
         return true;
     }
 
