@@ -1,6 +1,8 @@
 package com.example.yutauenishi.chordeditor;
 
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -16,12 +18,13 @@ import java.util.regex.Pattern;
 
 public class FragmentTab extends Fragment {
 
-    public static FragmentTab newInstance(int index,String data) {
+    public static FragmentTab newInstance(String data,int index) {
         Bundle args = new Bundle();
         args.putString("data",data);
         args.putInt("index",index);
         FragmentTab fragment = new FragmentTab();
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -140,8 +143,12 @@ public class FragmentTab extends Fragment {
                         case 2:
                             Tcomment.setText(String.format("%s", comment));
                             chordsText.setText(String.format("%s", chords));
-                            if (!(comment.equals(""))) layout.addView(Tcomment);
-                            if (!(chords.equals(""))) layout.addView(chordsText);
+                            if (!(comment.equals(""))) {
+                                layout.addView(Tcomment);
+                            }
+                            if (!(chords.equals(""))) {
+                                layout.addView(chordsText);
+                            }
                             break;
                     }
 
@@ -159,11 +166,6 @@ public class FragmentTab extends Fragment {
 
         }
 
-
-
-
-
-        //((TextView) view.findViewById(R.id.text1)).setText(data);
         return view;
     }
 }

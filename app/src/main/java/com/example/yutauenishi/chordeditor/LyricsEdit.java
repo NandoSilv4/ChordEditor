@@ -24,10 +24,11 @@ public class LyricsEdit extends AppCompatActivity {
     int id =1;
 
     // ツールバー
-    public void toolbar(String name){
+    public void toolbar(String name,String artist){
         // ツールバーをアクションバーとして使う
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle(name);
+        toolbar.setSubtitle(artist);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -55,13 +56,14 @@ public class LyricsEdit extends AppCompatActivity {
 
 
         SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "select title,data from note where id ="+ id +";";
+        String sql = "select title,data,artist from note where id ="+ id +";";
         Cursor c = db.rawQuery(sql,null);
         boolean mov1 = c.moveToFirst();
 
         String title = c.getString(0);
         String data = c.getString(1);
-        toolbar(title);
+        String artist = c.getString(2);
+        toolbar(title,artist);
 
 
         EditText editText = (EditText) findViewById(R.id.edit1);
@@ -80,13 +82,14 @@ public class LyricsEdit extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "select title,data from note where id ="+ id +";";
+        String sql = "select title,data,artist from note where id ="+ id +";";
         Cursor c = db.rawQuery(sql,null);
         boolean mov1 = c.moveToFirst();
 
         String title = c.getString(0);
         String data = c.getString(1);
-        toolbar(title);
+        String artist = c.getString(2);
+        toolbar(title,artist);
 
         EditText editText = (EditText) findViewById(R.id.edit1);
         editText.setText(data);
@@ -107,10 +110,15 @@ public class LyricsEdit extends AppCompatActivity {
         int sDate = cal.get(Calendar.DATE);         //日を取得
         EditText editText = (EditText) findViewById(R.id.edit1);
         String text = editText.getText().toString();
+        String chord;
         text = text.replaceAll("'", "''");
+        AnalysisChords AC = new AnalysisChords();
+        chord = AC.GetChords(text);
+        Log.i("テスト  ", "ファイル保存！！"+chord);
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql = "UPDATE note SET " +
                 "data = '"+ text +"'," +
+                "chords = '"+ chord +"'," +
                 "year = "+ sYear +"," +
                 "month = "+ sMonth +"," +
                 "day = "+ sDate +" WHERE id = "+ id +";";

@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 public class SongPage extends AppCompatActivity {
     MyOpenHelper helper = new MyOpenHelper(this);
+    public String chordsALL;
     int id =1;
 
 
@@ -27,6 +28,12 @@ public class SongPage extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit_page, menu);
         return true;
+    }
+
+    public void test(String a,int id){
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String sql1 = "update note set chords = '" + a + "' where id = "+id+";";
+        db.execSQL(sql1);
     }
 
 
@@ -64,16 +71,12 @@ public class SongPage extends AppCompatActivity {
                         overridePendingTransition(0, 0);
                         Log.i("テスト  ", "編集");
                         return true;
-                    //case R.id.chords_edit:
-                    //    Intent dbIntent2 = new Intent(getApplication(),LyricsEdit.class);
-                    //    dbIntent2.putExtra("id", id);
-                    //    startActivity(dbIntent2);
-                    //    overridePendingTransition(0, 0);
-                    //    Log.i("テスト  ", "コード譜");
-                    //    return true;
-                    //case R.id.action_play:
-                    //    Log.i("テスト  ", "演奏モード");
-                    //    return true;
+                    case R.id.action_new:
+                        Intent dbIntent2 = new Intent(getApplication(),ChordInfo.class);
+                        dbIntent2.putExtra("id", id);
+                        startActivity(dbIntent2);
+                        overridePendingTransition(0, 0);
+                        return true;
                     default:
                         return false;
                 }
@@ -117,10 +120,11 @@ public class SongPage extends AppCompatActivity {
         // 各コンテンツとなるフラグメントをセットするアダプターをViewPagerにセット
         // Fragmentを操作するためにコンストラクタの引数にFragmentManagerを渡しスーパークラスにセットします。
         FragmentPA pagerAdapter = new FragmentPA(getSupportFragmentManager());
+
         // アダプターに各ページ要素となるフラグメントを追加
-        pagerAdapter.addFragment(FragmentTab.newInstance(0, data));
-        pagerAdapter.addFragment(FragmentTab.newInstance(1, data));
-        pagerAdapter.addFragment(FragmentTab.newInstance(2, data));
+        pagerAdapter.addFragment(FragmentTab.newInstance(data,0));
+        pagerAdapter.addFragment(FragmentTab.newInstance(data,1));
+        pagerAdapter.addFragment(FragmentTab.newInstance(data,2));
         viewPager.setAdapter(pagerAdapter);// ViewPagerにアダプタをセット
         mTabLayout.setupWithViewPager(viewPager);// TabLayoutとViewPagerをバインド??必要あるか不明
 
@@ -133,28 +137,6 @@ public class SongPage extends AppCompatActivity {
         db.close();
     }
 
- /*
-    @Override
-    protected void onRestart() {//!!!!!!!!!!!!!!!!!!!変更しないと!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      super.onRestart();
-        SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "select name,data from note where id ="+ id +";";
-        Cursor c = db.rawQuery(sql,null);
-        boolean mov1 = c.moveToFirst();
-
-        String name = c.getString(0);
-        String data = c.getString(1);
-        toolbar(name);
-
-        TextView textView = (TextView) findViewById(R.id.text1);
-        textView.setText(data);
-
-        c.close();
-        db.close();
-
-    }
- */
 
 
 
