@@ -1,8 +1,7 @@
 package com.example.yutauenishi.chordeditor;
 
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
-import android.view.Gravity;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

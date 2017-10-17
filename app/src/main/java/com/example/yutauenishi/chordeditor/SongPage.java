@@ -16,11 +16,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 public class SongPage extends AppCompatActivity {
     MyOpenHelper helper = new MyOpenHelper(this);
-    public String chordsALL;
     int id =1;
 
 

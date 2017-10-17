@@ -2,7 +2,7 @@ package com.example.yutauenishi.chordeditor;
 
 
 
-import android.app.AlertDialog;
+
 import android.content.Intent;
 
 import android.os.Bundle;
@@ -15,8 +15,7 @@ import android.widget.TextView;
 
 
 public class Hint extends AppCompatActivity {
-    MyOpenHelper helper = new MyOpenHelper(this);
-    int id =1;
+
     int hint0_f=0;
     int hint1_f=0;
     int hint2_f=0;

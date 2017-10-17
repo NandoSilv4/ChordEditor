@@ -1,8 +1,6 @@
 package com.example.yutauenishi.chordeditor;
 
-/**
- * Created by YutaUenishi on 2017/09/21.
- */
+
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
