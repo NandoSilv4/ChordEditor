@@ -60,28 +60,14 @@ public class ChordInfo extends AppCompatActivity {
         toolbar(title,artist);
 
         AnalysisChords AC=new AnalysisChords();
-        String Rank=AC.Counter(chords,"A")+"\n";
-        Rank=Rank+AC.Counter(chords,"B")+"\n";
-        Rank=Rank+AC.Counter(chords,"C#")+"\n";
-        Rank=Rank+AC.Counter(chords,"D")+"\n";
-        Rank=Rank+AC.Counter(chords,"E")+"\n";
-        Rank=Rank+AC.Counter(chords,"F#")+"\n";
-        Rank=Rank+AC.Counter(chords,"G")+"\n";
 
-        String HUC=AC.HalfUpDown(chords,1);
-        String HDC=AC.HalfUpDown(HUC,-1);
+        String Key=AC.FindKey(chords);
 
         TextView textView = (TextView) findViewById(R.id.text);
         textView.setText(chords);
 
-        TextView textView2 = (TextView) findViewById(R.id.text2);
-        textView2.setText(HUC);
-
-        TextView textView3 = (TextView) findViewById(R.id.text3);
-        textView3.setText(HDC);
-
-        TextView textView4 = (TextView) findViewById(R.id.text4);
-        textView4.setText(Rank);
+        TextView textView_key = (TextView) findViewById(R.id.text_key);
+        textView_key.setText(Key);
 
         c.close();
         db.close();

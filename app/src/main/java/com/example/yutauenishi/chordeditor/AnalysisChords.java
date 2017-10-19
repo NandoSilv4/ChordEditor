@@ -11,15 +11,13 @@ public class AnalysisChords extends AppCompatActivity {
 
     public String GetChords(String text){
 
-        String regex3 = "\\|.*?\\|";
-        Pattern p3 = Pattern.compile(regex3);
+        Pattern p3 = Pattern.compile("\\|.*?\\|");
         String chords;
         String chordsALL = "";
         if(text!=null) {
             String[] data_split = text.split("\\n", 0);
             for (String data_s : data_split) {
                 chords="";
-                //||だけを探す(歌詞+コードの*をつけるため)
                 Matcher m3 = p3.matcher(data_s);
                 while (m3.find()){
                     chords=chords+m3.group().substring(1, m3.group().length() - 1)+",";
@@ -117,16 +115,56 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
+    public String FindKey(String text){
+        String return_s;
+        int num=0;
+        int C,D,E,F,G,A;
+        int sum[] = {0, 0, 0, 0, 0,0,0,0,0,0,0,0};
+        String Key[] = {"C", "C#","D","D#","E","F","F#","G","G#","A","A#","B"};
+        int max=0;
+        int max_i=-1;
+        int sub_max=0;
+
+        for(int i=0;i<12;i++) {
+            C = Counter(text, "C") - Counter(text, "C#");
+            D = Counter(text, "D") - Counter(text, "D#");
+            E = Counter(text, "E");
+            F = Counter(text, "F") - Counter(text, "F#");
+            G = Counter(text, "G") - Counter(text, "G#");
+            A = Counter(text, "A") - Counter(text, "A#");
+            sum[i] = C + D + E + F + G + A;
+            if(max<sum[i]){
+                max=sum[i];
+                max_i=i;
+            }else if(max==sum[i]){
+                sub_max=sum[i];
+            }
+            text=HalfUpDown(text,-1);
+        }
+
+
+        if(sub_max==max){
+            //解析不能
+            return_s="Key=?";
+        }else{
+            return_s="Key="+Key[max_i]+"\n" +
+                    "" +
+                    " keyCで弾くには　capo="+String.valueOf(max_i);//12-max_iカポするとCで弾ける
+        }
+
+        return return_s;
+    }
 
 
 
-    public String Counter(String text,String target){
-        String return_s = "";
+
+
+
+
+    public int Counter(String text,String target){
         int num=0;
         text=Pattern.compile("\\n").matcher(text).replaceAll("");
-
         if(text!=null) {
-
             String[] data_split = text.split(",", 0);
             String t_chord = "^" + target + ".*";
             Pattern p_t= Pattern.compile(t_chord);
@@ -135,10 +173,8 @@ public class AnalysisChords extends AppCompatActivity {
                 Matcher m_t = p_t.matcher(data_s);
                 if (m_t.find())num++;
             }
-            return_s= target+ " : " + String.valueOf(num)+"回";
         }
-
-        return return_s;
+        return num;
     }
 
 
