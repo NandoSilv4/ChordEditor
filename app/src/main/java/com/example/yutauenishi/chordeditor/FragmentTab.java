@@ -4,6 +4,7 @@ package com.example.yutauenishi.chordeditor;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.support.v4.app.Fragment;
 import android.widget.LinearLayout;
@@ -15,9 +16,10 @@ import java.util.regex.Pattern;
 
 public class FragmentTab extends Fragment {
 
-    public static FragmentTab newInstance(String data,int index) {
+    public static FragmentTab newInstance(String data,String Key,int index) {
         Bundle args = new Bundle();
         args.putString("data",data);
+        args.putString("key",Key);
         args.putInt("index",index);
         FragmentTab fragment = new FragmentTab();
         fragment.setArguments(args);
@@ -31,6 +33,7 @@ public class FragmentTab extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tab,container,false);
         Bundle args = getArguments();
         String data = args.getString("data");
+        String Key = args.getString("key");
         int index = args.getInt("index");
         int flag=0;
 
@@ -40,6 +43,21 @@ public class FragmentTab extends Fragment {
             String lyricsALL = "";
             String chords = "";
             String comment = "";
+
+
+            LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout);
+
+
+            if(index==2){
+                TextView key_text = new TextView(getActivity());
+                key_text.setTextSize(16);
+                //key_text.setGravity(Gravity.RIGHT);
+                key_text.setTextColor(Color.DKGRAY);
+                key_text.setText(String.format("%s", Key));
+                layout.addView(key_text);
+            }
+
+
 
             for (int i = 0; i < data_split.length; i++) {
 
@@ -112,7 +130,7 @@ public class FragmentTab extends Fragment {
                     if (!(chords.equals(""))) {
                         chords = chords + " |";
                     }
-                    LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout);
+
                     TextView textView = new TextView(getActivity());
                     textView.setTextSize(20);
                     TextView chordsText = new TextView(getActivity());

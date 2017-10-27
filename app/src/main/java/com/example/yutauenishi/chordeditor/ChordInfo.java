@@ -62,12 +62,13 @@ public class ChordInfo extends AppCompatActivity {
         AnalysisChords AC=new AnalysisChords();
 
         String Key=AC.FindKey(chords);
+        String uc=AC.UsedChord(chords);
 
         TextView textView = (TextView) findViewById(R.id.text);
         textView.setText(chords);
 
         TextView textView_key = (TextView) findViewById(R.id.text_key);
-        textView_key.setText(Key);
+        textView_key.setText(uc);
 
         c.close();
         db.close();

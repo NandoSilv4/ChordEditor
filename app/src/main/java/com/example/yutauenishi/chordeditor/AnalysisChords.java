@@ -126,12 +126,12 @@ public class AnalysisChords extends AppCompatActivity {
         int sub_max=0;
 
         for(int i=0;i<12;i++) {
-            C = Counter(text, "C") - Counter(text, "C#");
-            D = Counter(text, "D") - Counter(text, "D#");
-            E = Counter(text, "E");
-            F = Counter(text, "F") - Counter(text, "F#");
-            G = Counter(text, "G") - Counter(text, "G#");
-            A = Counter(text, "A") - Counter(text, "A#");
+            C = Counter(text, "C",0) - Counter(text, "C#",0);
+            D = Counter(text, "D",0) - Counter(text, "D#",0);
+            E = Counter(text, "E",0);
+            F = Counter(text, "F",0) - Counter(text, "F#",0);
+            G = Counter(text, "G",0) - Counter(text, "G#",0);
+            A = Counter(text, "A",0) - Counter(text, "A#",0);
             sum[i] = C + D + E + F + G + A;
             if(max<sum[i]){
                 max=sum[i];
@@ -147,9 +147,7 @@ public class AnalysisChords extends AppCompatActivity {
             //解析不能
             return_s="Key=?";
         }else{
-            return_s="Key="+Key[max_i]+"\n" +
-                    "" +
-                    " keyCで弾くには　capo="+String.valueOf(max_i);//12-max_iカポするとCで弾ける
+            return_s="Key="+Key[max_i];//12-max_iカポするとCで弾ける
         }
 
         return return_s;
@@ -161,14 +159,22 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-    public int Counter(String text,String target){
+    public int Counter(String text,String target,int f){//f=1完全一致f=0頭一致
         int num=0;
         text=Pattern.compile("\\n").matcher(text).replaceAll("");
         if(text!=null) {
             String[] data_split = text.split(",", 0);
-            String t_chord = "^" + target + ".*";
-            Pattern p_t= Pattern.compile(t_chord);
-
+            Pattern p_t;
+            switch (f){
+                case 0:
+                    p_t= Pattern.compile("^" + target + ".*");
+                    break;
+                case 1:
+                    p_t= Pattern.compile("^" + target + "$");
+                    break;
+                default:
+                    return num;
+            }
             for(String data_s : data_split){
                 Matcher m_t = p_t.matcher(data_s);
                 if (m_t.find())num++;
@@ -179,6 +185,27 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
+
+    public String UsedChord(String text){
+        String result="";
+        int num;
+        int con=0;
+        text=Pattern.compile("\\n").matcher(text).replaceAll("");
+
+        if(text!=null) {
+            text=","+text;
+            while(con<100&&!(Pattern.compile(",").matcher(text).replaceAll("").trim().equals(""))) {
+                con++;
+                String[] data_split = text.split(",", 0);
+                    if(data_split[1].equals(""))continue;//[0]は""が入ってる。,C,D,E....だから
+                        num = Counter(text, data_split[1],1);
+                        result = result + "|" + data_split[1] + "{+}" + num;
+                        text = Pattern.compile(",("+data_split[1]+",)+").matcher(text).replaceAll(",");
+
+            }
+        }
+        return result;
+    }
 
 
 

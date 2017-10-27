@@ -89,15 +89,19 @@ public class SongPage extends AppCompatActivity {
         id = intent.getIntExtra("id",1);
 
         SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "select title,data,artist from note where id ="+ id +";";
+        String sql = "select title,data,artist,chords from note where id ="+ id +";";
         Cursor c = db.rawQuery(sql,null);
         boolean mov1 = c.moveToFirst();
 
         String title = c.getString(0);
         String data = c.getString(1);
         String artist = c.getString(2);
+        String chords = c.getString(3);
         toolbar(title,artist);
 
+
+        AnalysisChords AC=new AnalysisChords();
+        String Key=AC.FindKey(chords);
 
 
 
@@ -114,9 +118,9 @@ public class SongPage extends AppCompatActivity {
         FragmentPA pagerAdapter = new FragmentPA(getSupportFragmentManager());
 
         // アダプターに各ページ要素となるフラグメントを追加
-        pagerAdapter.addFragment(FragmentTab.newInstance(data,0));
-        pagerAdapter.addFragment(FragmentTab.newInstance(data,1));
-        pagerAdapter.addFragment(FragmentTab.newInstance(data,2));
+        pagerAdapter.addFragment(FragmentTab.newInstance(data,Key,0));
+        pagerAdapter.addFragment(FragmentTab.newInstance(data,Key,1));
+        pagerAdapter.addFragment(FragmentTab.newInstance(data,Key,2));
         viewPager.setAdapter(pagerAdapter);// ViewPagerにアダプタをセット
         mTabLayout.setupWithViewPager(viewPager);// TabLayoutとViewPagerをバインド??必要あるか不明
 
