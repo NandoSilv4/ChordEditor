@@ -1,4 +1,4 @@
-package com.example.yutauenishi.chordeditor;
+package com.sakamalab.yutauenishi.chordeditor;
 
 
 
@@ -110,7 +110,8 @@ public class Hint extends AppCompatActivity {
         text=   "コード（和音）を記入する際は、コードを | | で囲んでください。（例）Eコードの場合 |E|\n" +
                 "歌詞の途中のコードが変わるタイミングで、上記の方法でコードを記入することによって、弾き語りをする場合でも理解しやすい楽譜を生成することができます。\n" +
                 "[Aメロ]など、[]で囲まれた部分は「歌詞」にも「コード」にも表示されます。\n" +
-                "{ } で囲まれた部分は、歌詞以外改行されません。";
+                "{ } で囲まれた部分は、歌詞以外改行されません。" +
+                "※コードのタブにKey:と表示されることがあります。使用コードからKeyを推測して表示します。";
         TextView hint3_text = (TextView) findViewById(R.id.hint3_text);
         hint3_text.setText(text);
     }

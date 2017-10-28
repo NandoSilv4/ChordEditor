@@ -12,10 +12,12 @@
         android:title="編集"
         app:showAsAction="never"
         android:icon="@android:drawable/ic_menu_edit" />
+    <!--
     <item
         android:id="@+id/action_new"
         android:orderInCategory="1"
         android:title="コード"
         app:showAsAction="never"
         android:icon="@android:drawable/ic_menu_edit" />
+        -->
 </menu>

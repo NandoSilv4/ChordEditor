@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.yutauenishi.chordeditor" >
+    package="com.sakamalab.yutauenishi.chordeditor" >
 
     <application
         android:allowBackup="false"
@@ -11,20 +11,20 @@
         android:theme="@style/AppTheme"><!--android:allowBackup="true"どうしよう？あと、ディープリンク無効にしてますbuild.gradle-->
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.sakamalab.yutauenishi.chordeditor.MainActivity"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" /><!--キーボード入力時に崩れないように＆画面固定-->
         <activity
-            android:name=".ShowDataBase"
+            android:name="com.sakamalab.yutauenishi.chordeditor.ShowDataBase"
             android:label="マイノート"
             android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Hint"
+            android:name="com.sakamalab.yutauenishi.chordeditor.Hint"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SongList"
+            android:name="com.sakamalab.yutauenishi.chordeditor.SongList"
             android:label="Chord Editor"
             android:theme="@style/SplashTheme"
             android:windowSoftInputMode="adjustNothing"
@@ -35,16 +35,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SongPage"
+            android:name="com.sakamalab.yutauenishi.chordeditor.SongPage"
             android:label="ノート一覧"
             android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".LyricsEdit"
+            android:name="com.sakamalab.yutauenishi.chordeditor.LyricsEdit"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ChordInfo"
+            android:name="com.sakamalab.yutauenishi.chordeditor.ChordInfo"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
 

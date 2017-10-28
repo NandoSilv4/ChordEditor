@@ -1,4 +1,4 @@
-package com.example.yutauenishi.chordeditor;
+package com.sakamalab.yutauenishi.chordeditor;
 
 
 

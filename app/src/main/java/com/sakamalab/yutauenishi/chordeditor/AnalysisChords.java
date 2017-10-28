@@ -1,4 +1,4 @@
-package com.example.yutauenishi.chordeditor;
+package com.sakamalab.yutauenishi.chordeditor;
 
 
 import android.support.v7.app.AppCompatActivity;
@@ -90,20 +90,20 @@ public class AnalysisChords extends AppCompatActivity {
             //text = Pattern.compile("\\|B#(.*?)\\|").matcher(text).replaceAll("\\|C$1\\|");
             //text = Pattern.compile("\\|E(.*?)\\|").matcher(text).replaceAll("|F");
             //2回変換することがないように、とりあえずBをいったんXに置き換え
-            text = Pattern.compile(s+"B(.*?)"+f).matcher(text).replaceAll(s+"X$1"+f);
-            text = Pattern.compile(s+"A#(.*?)"+f).matcher(text).replaceAll(s+"B$1"+f);
-            text = Pattern.compile(s+"A(.*?)"+f).matcher(text).replaceAll(s+"A#$1"+f);
-            text = Pattern.compile(s+"G#(.*?)"+f).matcher(text).replaceAll(s+"A$1"+f);
-            text = Pattern.compile(s+"G(.*?)"+f).matcher(text).replaceAll(s+"G#$1"+f);
-            text = Pattern.compile(s+"F#(.*?)"+f).matcher(text).replaceAll(s+"G$1"+f);
-            text = Pattern.compile(s+"F(.*?)"+f).matcher(text).replaceAll(s+"F#$1"+f);
-            text = Pattern.compile(s+"E(.*?)"+f).matcher(text).replaceAll(s+"F$1"+f);
-            text = Pattern.compile(s+"D#(.*?)"+f).matcher(text).replaceAll(s+"E$1"+f);
-            text = Pattern.compile(s+"D(.*?)"+f).matcher(text).replaceAll(s+"D#$1"+f);
-            text = Pattern.compile(s+"C#(.*?)"+f).matcher(text).replaceAll(s+"D$1"+f);
-            text = Pattern.compile(s+"C(.*?)"+f).matcher(text).replaceAll(s+"C#$1"+f);
+            text = Pattern.compile(s+"(.*?)B(.*?)"+f).matcher(text).replaceAll(s+"$1X$2"+f);
+            text = Pattern.compile(s+"(.*?)A#(.*?)"+f).matcher(text).replaceAll(s+"$1B$2"+f);
+            text = Pattern.compile(s+"(.*?)A(.*?)"+f).matcher(text).replaceAll(s+"$1A#$2"+f);
+            text = Pattern.compile(s+"(.*?)G#(.*?)"+f).matcher(text).replaceAll(s+"$1A$2"+f);
+            text = Pattern.compile(s+"(.*?)G(.*?)"+f).matcher(text).replaceAll(s+"$1G#$2"+f);
+            text = Pattern.compile(s+"(.*?)F#(.*?)"+f).matcher(text).replaceAll(s+"$1G$2"+f);
+            text = Pattern.compile(s+"(.*?)F(.*?)"+f).matcher(text).replaceAll(s+"$1F#$2"+f);
+            text = Pattern.compile(s+"(.*?)E(.*?)"+f).matcher(text).replaceAll(s+"$1F$2"+f);
+            text = Pattern.compile(s+"(.*?)D#(.*?)"+f).matcher(text).replaceAll(s+"$1E$2"+f);
+            text = Pattern.compile(s+"(.*?)D(.*?)"+f).matcher(text).replaceAll(s+"$1D#$2"+f);
+            text = Pattern.compile(s+"(.*?)C#(.*?)"+f).matcher(text).replaceAll(s+"$1D$2"+f);
+            text = Pattern.compile(s+"(.*?)C(.*?)"+f).matcher(text).replaceAll(s+"$1C#$2"+f);
             //XをCに戻す
-            text = Pattern.compile(s+"X(.*?)"+f).matcher(text).replaceAll(s+"C$1"+f);
+            text = Pattern.compile(s+"(.*?)X(.*?)"+f).matcher(text).replaceAll(s+"$1C$2"+f);
 
         }
         text = Pattern.compile(s+"(.*?)"+f).matcher(text).replaceAll("\\|$1\\|");
