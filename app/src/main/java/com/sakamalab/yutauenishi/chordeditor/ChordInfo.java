@@ -64,11 +64,17 @@ public class ChordInfo extends AppCompatActivity {
         String Key=AC.FindKey(chords);
         String uc=AC.UsedChord(chords);
 
+        String cp="";
+        cp=AC.ChordProgression(chords,"2,2,4,4");
+
         TextView textView = (TextView) findViewById(R.id.text);
         textView.setText(chords);
 
-        TextView textView_key = (TextView) findViewById(R.id.text_key);
-        textView_key.setText(uc);
+        TextView textView_2 = (TextView) findViewById(R.id.text_2);
+        textView_2.setText(uc);
+
+        TextView textView_3 = (TextView) findViewById(R.id.text_3);
+        textView_3.setText(cp);
 
         c.close();
         db.close();

@@ -29,11 +29,17 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
             <TextView
-                android:id="@+id/text_key"
+                android:id="@+id/text_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/text_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
         </LinearLayout>

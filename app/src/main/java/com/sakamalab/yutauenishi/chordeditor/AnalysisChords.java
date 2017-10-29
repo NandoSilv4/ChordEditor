@@ -3,14 +3,16 @@ package com.sakamalab.yutauenishi.chordeditor;
 
 import android.support.v7.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AnalysisChords extends AppCompatActivity {
 
 
-    public String GetChords(String text){
 
+    //歌詞+コードからコードだけを抜き出す。
+    public String GetChords(String text){
         Pattern p3 = Pattern.compile("\\|.*?\\|");
         String chords;
         String chordsALL = "";
@@ -25,7 +27,6 @@ public class AnalysisChords extends AppCompatActivity {
                 if(!(chords.equals("")))chordsALL=chordsALL+chords+"\n";
             }
         }
-
         chordsALL=Pattern.compile("C♭").matcher(chordsALL).replaceAll("B");
         chordsALL=Pattern.compile("D♭").matcher(chordsALL).replaceAll("C#");
         chordsALL=Pattern.compile("E♭").matcher(chordsALL).replaceAll("D#");
@@ -34,14 +35,13 @@ public class AnalysisChords extends AppCompatActivity {
         chordsALL=Pattern.compile("A♭").matcher(chordsALL).replaceAll("G#");
         chordsALL=Pattern.compile("B♭").matcher(chordsALL).replaceAll("A#");
 
-
         return chordsALL;
     }
 
 
 
 
-
+    //コード解析するさいの＃など
     public String HalfUpDown(String text,int count){
 
         while(count<0){//ハーフダウンの場合
@@ -75,7 +75,7 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
+    //エディットページの#などの実装
     public String HalfUpDownEdit(String text,int count){
 
         while(count<0){//ハーフダウンの場合
@@ -114,8 +114,8 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
-    public String FindKey(String text){
+    //曲のキーを返す
+    public String FindKey(String chords){
         String return_s;
         int num=0;
         int C,D,E,F,G,A;
@@ -126,12 +126,12 @@ public class AnalysisChords extends AppCompatActivity {
         int sub_max=0;
 
         for(int i=0;i<12;i++) {
-            C = Counter(text, "C",0) - Counter(text, "C#",0);
-            D = Counter(text, "D",0) - Counter(text, "D#",0);
-            E = Counter(text, "E",0);
-            F = Counter(text, "F",0) - Counter(text, "F#",0);
-            G = Counter(text, "G",0) - Counter(text, "G#",0);
-            A = Counter(text, "A",0) - Counter(text, "A#",0);
+            C = Counter(chords, "C",0) - Counter(chords, "C#",0);
+            D = Counter(chords, "D",0) - Counter(chords, "D#",0);
+            E = Counter(chords, "E",0);
+            F = Counter(chords, "F",0) - Counter(chords, "F#",0);
+            G = Counter(chords, "G",0) - Counter(chords, "G#",0);
+            A = Counter(chords, "A",0) - Counter(chords, "A#",0);
             sum[i] = C + D + E + F + G + A;
             if(max<sum[i]){
                 max=sum[i];
@@ -139,7 +139,7 @@ public class AnalysisChords extends AppCompatActivity {
             }else if(max==sum[i]){
                 sub_max=sum[i];
             }
-            text=HalfUpDown(text,-1);
+            chords=HalfUpDown(chords,-1);
         }
 
 
@@ -158,12 +158,12 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
-    public int Counter(String text,String target,int f){//f=1完全一致f=0頭一致
+//targetの文字がchordsで何回つかわれているか数える
+    public int Counter(String chords,String target,int f){//f=1完全一致f=0頭一致
         int num=0;
-        text=Pattern.compile("\\n").matcher(text).replaceAll("");
-        if(text!=null) {
-            String[] data_split = text.split(",", 0);
+        chords=Pattern.compile("\\n").matcher(chords).replaceAll("");
+        if(chords!=null) {
+            String[] data_split = chords.split(",", 0);
             Pattern p_t;
             switch (f){
                 case 0:
@@ -185,22 +185,22 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
-    public String UsedChord(String text){
+//曲で使われているすべてのコードの種類と出現回数
+    public String UsedChord(String chords){
         String result="";
         int num;
         int con=0;
-        text=Pattern.compile("\\n").matcher(text).replaceAll("");
+        chords=Pattern.compile("\\n").matcher(chords).replaceAll("");
 
-        if(text!=null) {
-            text=","+text;
-            while(con<100&&!(Pattern.compile(",").matcher(text).replaceAll("").trim().equals(""))) {
+        if(chords!=null) {
+            chords=","+chords;
+            while(con<100&&!(Pattern.compile(",").matcher(chords).replaceAll("").trim().equals(""))) {
                 con++;
-                String[] data_split = text.split(",", 0);
-                    if(data_split[1].equals(""))continue;//[0]は""が入ってる。,C,D,E....だから
-                        num = Counter(text, data_split[1],1);
-                        result = result + "|" + data_split[1] + "{+}" + num;
-                        text = Pattern.compile(",("+data_split[1]+",)+").matcher(text).replaceAll(",");
+                String[] data_split = chords.split(",", 0);
+                if(data_split[1].equals(""))continue;//[0]は""が入ってる。,C,D,E....だから
+                num = Counter(chords, data_split[1],1);
+                result = result  + data_split[1] + "," + num + ",";
+                chords = Pattern.compile(",("+data_split[1]+",)+").matcher(chords).replaceAll(",");
 
             }
         }
@@ -208,6 +208,43 @@ public class AnalysisChords extends AppCompatActivity {
     }
 
 
+
+//UCの出力を入力し、ランダムで１つのコードを出力
+    public String RandomChoice(String UC){
+        String result="";
+
+        if(UC!=null) {
+            String[] data_split = UC.split(",", 0);
+            ArrayList<String> array = new ArrayList<String>();
+            int max=0;
+            for (int i = 1 ; i < data_split.length ; i+=2){
+                for(int j=0;j<Integer.valueOf(data_split[i]);j++){
+                    array.add(data_split[i-1]);
+                    max++;
+                }
+            }
+            int ran = (int)(Math.random()*(max));
+
+            result=array.get(ran);
+        }
+
+        return result;
+    }
+
+    public String ChordProgression(String chords,String rule) {
+        String result="";
+        String uc=UsedChord(chords);
+        String[] rule_split = rule.split(",", 0);
+
+        for (String rule_s : rule_split){
+            for(int j=0;j<Integer.valueOf(rule_s);j++){
+                result=result+"|"+RandomChoice(uc);
+            }
+            result=result+"|\n";
+        }
+
+        return result;
+    }
 
 
 
