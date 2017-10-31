@@ -47,6 +47,10 @@
             android:name="com.sakamalab.yutauenishi.chordeditor.ChordInfo"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.sakamalab.yutauenishi.chordeditor.SoundPoolTest"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" />
 
 
     </application>

@@ -63,6 +63,12 @@ public class SongPage extends AppCompatActivity {
                         overridePendingTransition(0, 0);
                         Log.i("テスト  ", "編集");
                         return true;
+                    case R.id.action_sound:
+                        Intent dbIntent3 = new Intent(getApplication(),SoundPoolTest.class);
+                        startActivity(dbIntent3);
+                        overridePendingTransition(0, 0);
+                        Log.i("テスト  ", "音");
+                        return true;
                     case R.id.action_new:
                         Intent dbIntent2 = new Intent(getApplication(),ChordInfo.class);
                         dbIntent2.putExtra("id", id);

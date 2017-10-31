@@ -5,6 +5,8 @@ package com.sakamalab.yutauenishi.chordeditor;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +16,10 @@ import android.widget.TextView;
 
 
 
-public class ChordInfo extends AppCompatActivity {
+public class SoundPoolTest extends AppCompatActivity {
     MyOpenHelper helper = new MyOpenHelper(this);
+    SoundPool cSoundPool,eSoundPool,gSoundPool;
+    int cSoundResID,eSoundResID,gSoundResID;
     int id =1;
 
     // ツールバー
@@ -40,11 +44,19 @@ public class ChordInfo extends AppCompatActivity {
         });
     }
 
+    public void sound_c(View v) {
+        cSoundPool.play(cSoundResID,1.0f,1.0f,0,0,1.0f);
+        eSoundPool.play(eSoundResID,1.0f,1.0f,0,0,1.0f);
+        gSoundPool.play(gSoundResID,1.0f,1.0f,0,0,1.0f);
+    }
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.chord_info);
+        setContentView(R.layout.sound_pool_test);
         Intent intent = getIntent();
         id = intent.getIntExtra("id",1);
 
@@ -58,27 +70,38 @@ public class ChordInfo extends AppCompatActivity {
         String artist = c.getString(2);
         toolbar(title,artist);
 
-        AnalysisChords AC=new AnalysisChords();
 
-        String Key=AC.FindKey(chords);
-        String uc=AC.UsedChord(chords);
-
-        String cp="";
-        cp=AC.ChordProgression(chords,"2,2,4,4,2,2,4,4");
 
         TextView textView = (TextView) findViewById(R.id.text);
         textView.setText(chords);
 
-        TextView textView_2 = (TextView) findViewById(R.id.text_2);
-        textView_2.setText(uc);
 
-        TextView textView_3 = (TextView) findViewById(R.id.text_3);
-        textView_3.setText(cp);
 
         c.close();
         db.close();
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cSoundPool= new SoundPool(3, AudioManager.STREAM_MUSIC,0);
+        cSoundResID=cSoundPool.load(this,R.raw.sound_c,1);
+        eSoundPool= new SoundPool(3, AudioManager.STREAM_MUSIC,0);
+        eSoundResID=eSoundPool.load(this,R.raw.sound_e,1);
+        gSoundPool= new SoundPool(3, AudioManager.STREAM_MUSIC,0);
+        gSoundResID=gSoundPool.load(this,R.raw.sound_g,1);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cSoundPool.release();
+        eSoundPool.release();
+        gSoundPool.release();
+    }
+
+
 
 
 }
