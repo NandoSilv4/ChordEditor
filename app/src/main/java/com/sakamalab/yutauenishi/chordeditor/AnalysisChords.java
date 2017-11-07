@@ -4,6 +4,7 @@ package com.sakamalab.yutauenishi.chordeditor;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -142,7 +143,6 @@ public class AnalysisChords extends AppCompatActivity {
             chords=HalfUpDown(chords,-1);
         }
 
-
         if(sub_max==max){
             //解析不能
             return_s="Key=?";
@@ -185,9 +185,15 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-//曲で使われているすべてのコードの種類と出現回数
-    public String UsedChord(String chords){
-        String result="";
+
+
+
+
+
+    //曲で使われているすべてのコードの種類と出現回数
+    public HashMap<String, Integer> UsedChord(String chords){
+        HashMap<String,Integer> map = new HashMap<String,Integer>();
+
         int num;
         int con=0;
         chords=Pattern.compile("\\n").matcher(chords).replaceAll("");
@@ -198,53 +204,61 @@ public class AnalysisChords extends AppCompatActivity {
                 con++;
                 String[] data_split = chords.split(",", 0);
                 if(data_split[1].equals(""))continue;//[0]は""が入ってる。,C,D,E....だから
-                num = Counter(chords, data_split[1],1);
-                result = result  + data_split[1] + "," + num + ",";
+                num = Counter(chords, data_split[1],1);//完全一致を探す
+                map.put(data_split[1], num);
                 chords = Pattern.compile(",("+data_split[1]+",)+").matcher(chords).replaceAll(",");
-
             }
         }
-        return result;
+        return map;
     }
 
 
 
-//UCの出力を入力し、ランダムで１つのコードを出力
-    public String RandomChoice(String UC){
-        String result="";
 
+    //UCの出力を入力し、ランダムで１つのコードを出力
+    public String RandomChoice(HashMap<String, Integer> UC){
+        String result="";
+        ArrayList<String> array = new ArrayList<String>();
+        int max=0;
         if(UC!=null) {
-            String[] data_split = UC.split(",", 0);
-            ArrayList<String> array = new ArrayList<String>();
-            int max=0;
-            for (int i = 1 ; i < data_split.length ; i+=2){
-                for(int j=0;j<Integer.valueOf(data_split[i]);j++){
-                    array.add(data_split[i-1]);
+            for (String key : UC.keySet()) {
+                Integer n_times = UC.get(key);
+                for(int j=0;j<n_times;j++){
+                    array.add(key);
                     max++;
                 }
             }
             int ran = (int)(Math.random()*(max));
-
             result=array.get(ran);
         }
-
         return result;
     }
 
+
+
+
+
+
+
     public String ChordProgression(String chords,String rule) {
         String result="";
-        String uc=UsedChord(chords);
+        HashMap<String,Integer> map;
+        map=UsedChord(chords);
         String[] rule_split = rule.split(",", 0);
 
         for (String rule_s : rule_split){
             for(int j=0;j<Integer.valueOf(rule_s);j++){
-                result=result+"|"+RandomChoice(uc);
+                result=result+"|"+RandomChoice(map);
             }
             result=result+"|\n";
         }
 
         return result;
     }
+
+
+
+
 
 
 

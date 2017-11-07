@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.HashMap;
 
 
 public class ChordInfo extends AppCompatActivity {
@@ -60,8 +61,15 @@ public class ChordInfo extends AppCompatActivity {
 
         AnalysisChords AC=new AnalysisChords();
 
-        String Key=AC.FindKey(chords);
-        String uc=AC.UsedChord(chords);
+
+        HashMap<String,Integer> map;
+        map=AC.UsedChord(chords);
+        String text="";
+        for (String key : map.keySet()) {
+            Integer n_times = map.get(key);
+            text=text+key+"が"+n_times+"回\n";
+        }
+
 
         String cp="";
         cp=AC.ChordProgression(chords,"2,2,4,4,2,2,4,4");
@@ -70,7 +78,7 @@ public class ChordInfo extends AppCompatActivity {
         textView.setText(chords);
 
         TextView textView_2 = (TextView) findViewById(R.id.text_2);
-        textView_2.setText(uc);
+        textView_2.setText(text);
 
         TextView textView_3 = (TextView) findViewById(R.id.text_3);
         textView_3.setText(cp);
