@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="sound_c"
-                android:text="ド(C)の音" />
+                android:text="Cm7の音" />
             <!--
             <Button
                 android:id="@+id/d"

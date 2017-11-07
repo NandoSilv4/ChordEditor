@@ -65,6 +65,7 @@ public class SongPage extends AppCompatActivity {
                         return true;
                     case R.id.action_sound:
                         Intent dbIntent3 = new Intent(getApplication(),SoundPoolTest.class);
+                        dbIntent3.putExtra("id", id);
                         startActivity(dbIntent3);
                         overridePendingTransition(0, 0);
                         Log.i("テスト  ", "音");

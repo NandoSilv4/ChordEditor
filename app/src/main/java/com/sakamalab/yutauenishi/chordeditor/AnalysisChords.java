@@ -35,7 +35,8 @@ public class AnalysisChords extends AppCompatActivity {
         chordsALL=Pattern.compile("G♭").matcher(chordsALL).replaceAll("F#");
         chordsALL=Pattern.compile("A♭").matcher(chordsALL).replaceAll("G#");
         chordsALL=Pattern.compile("B♭").matcher(chordsALL).replaceAll("A#");
-
+        chordsALL = Pattern.compile("B#").matcher(chordsALL).replaceAll("C");
+        chordsALL = Pattern.compile("E#").matcher(chordsALL).replaceAll("F");
         return chordsALL;
     }
 
@@ -258,7 +259,135 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
+/*
+0  C
+1  C#
+2  D
+3  D#
+4  E
+5  F
+6  F#
+7  G
+8  G#
+9  A
+10 A#
+11 B
+ */
+    //コード一文字目を上記に基づいて数字化する
+    public  int ChordToNo(char first){
+        switch (first){
+            case 'C':
+                return 0;
+            case 'D':
+                return 2;
+            case 'E':
+                return 4;
+            case 'F':
+                return 5;
+            case 'G':
+                return 7;
+            case 'A':
+                return 9;
+            case 'B':
+                return 11;
+            default:
+                return -1;
+        }
+    }
 
+
+
+
+
+    public HashMap<String, Integer> ChordType(String type,HashMap<String, Integer> map){
+        int root=map.get("root");
+        switch(type){
+            //対応済
+            case "add9":
+                map.put("sub3", (root+2)%12);break;
+            case "aug":
+                map.put("sub2", (root+8)%12);break;
+            case "dim":
+                map.put("sub1", (root+3)%12);map.put("sub2", (root+6)%12);map.put("sub3", (root+9)%12);break;
+            case "sus4":
+                map.put("sub1", (root+5)%12);break;
+            case "m":
+                map.put("sub1", (root+3)%12);break;
+            case "m6":
+                map.put("sub1", (root+3)%12);
+                map.put("sub3", (root+9)%12);break;
+            case "m7":
+                map.put("sub1", (root+3)%12);map.put("sub3", (root+10)%12);break;
+            case "maj7":case "M7":
+                map.put("sub3", (root+11)%12);break;
+            case "mM7":case "m+7":
+                map.put("sub1", (root+3)%12);
+                map.put("sub3", (root+11)%12);break;
+            case "6":
+                map.put("sub3", (root+9)%12);break;
+            case "69":case "6/9":case "6(9)":
+                map.put("sub3", (root+9)%12);
+                map.put("sub4", (root+2)%12);break;
+            case "7":
+                map.put("sub3", (root+10)%12);break;
+            case "7sus4":
+                map.put("sub1", (root+5)%12);
+                map.put("sub3", (root+10)%12);break;
+
+
+            //未対応
+            case "maj9":case "M9":break;
+            case "dim7":break;
+            case "7aug":break;
+            case "9":break;
+            case "11":break;
+            case "m7(b5)":case "m7-5":break;
+            case "M7aug":break;
+
+            default:
+        }
+        return map;
+    }
+
+
+
+
+
+    //コードのルートを見つけ、和音の構成音を見つける
+    public HashMap<String, Integer> ChordNameAnalysis(String chord){
+        HashMap<String,Integer> map= new HashMap<String,Integer>();
+        int root=0;
+        String type;
+        switch (chord.length()) {
+            case 0:
+                return null;
+            case 1:
+                root=ChordToNo(chord.charAt(0));
+                map.put("root", root);
+                map.put("sub1", (root+4)%12);
+                map.put("sub2", (root+7)%12);
+                return map;
+            default:
+                root=ChordToNo(chord.charAt(0));
+                if(chord.charAt(1)=='#'){
+                    root++;
+                    if(chord.length()==2){
+                        map.put("root", root);
+                        map.put("sub1", (root+4)%12);
+                        map.put("sub2", (root+7)%12);
+                        return map;
+                    }
+                    type=chord.substring(2);
+                }else{
+                    type=chord.substring(1);
+                }
+                map.put("root", root);
+                map.put("sub1", (root+4)%12);
+                map.put("sub2", (root+7)%12);
+                map=ChordType(type,map);
+                return map;
+        }
+    }
 
 
 
