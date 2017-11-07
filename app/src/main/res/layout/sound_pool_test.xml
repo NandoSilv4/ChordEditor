@@ -29,11 +29,11 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
             <Button
-                android:id="@+id/c"
+                android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="sound_c"
-                android:text="Cm7の音" />
+                android:onClick="Play"
+                android:text="再生" />
             <!--
             <Button
                 android:id="@+id/d"
