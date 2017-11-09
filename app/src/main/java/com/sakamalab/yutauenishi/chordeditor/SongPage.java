@@ -211,7 +211,7 @@ public class SongPage extends AppCompatActivity {
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql = "select title,data,artist,chords from note where id ="+ id +";";
         Cursor c = db.rawQuery(sql,null);
-        boolean mov1 = c.moveToFirst();
+        c.moveToFirst();
 
         String title = c.getString(0);
         String data = c.getString(1);

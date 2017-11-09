@@ -52,7 +52,7 @@ public class ChordInfo extends AppCompatActivity {
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql = "select title,chords,artist from note where id ="+ id +";";
         Cursor c = db.rawQuery(sql,null);
-        boolean mov1 = c.moveToFirst();
+        c.moveToFirst();
 
         String title = c.getString(0);
         String chords = c.getString(1);
@@ -76,8 +76,7 @@ public class ChordInfo extends AppCompatActivity {
         //    text=text+n_times+",";
         //}
 
-        String cp="";
-        cp=AC.ChordProgression(chords,"2,2,4,4,2,2,4,4");
+        String cp=AC.ChordProgression(chords,"2,2,4,4,2,2,4,4");
 
         TextView textView = (TextView) findViewById(R.id.text);
         textView.setText(chords);

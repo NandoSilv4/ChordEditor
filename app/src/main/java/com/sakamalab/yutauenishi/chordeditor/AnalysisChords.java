@@ -119,7 +119,6 @@ public class AnalysisChords extends AppCompatActivity {
     //曲のキーを返す
     public String FindKey(String chords){
         String return_s;
-        int num=0;
         int C,D,E,F,G,A;
         int sum[] = {0, 0, 0, 0, 0,0,0,0,0,0,0,0};
         String Key[] = {"C", "C#","D","D#","E","F","F#","G","G#","A","A#","B"};
@@ -193,7 +192,7 @@ public class AnalysisChords extends AppCompatActivity {
 
     //曲で使われているすべてのコードの種類と出現回数
     public HashMap<String, Integer> UsedChord(String chords){
-        HashMap<String,Integer> map = new HashMap<String,Integer>();
+        HashMap<String,Integer> map = new HashMap<>();
 
         int num;
         int con=0;
@@ -219,7 +218,7 @@ public class AnalysisChords extends AppCompatActivity {
     //UCの出力を入力し、ランダムで１つのコードを出力
     public String RandomChoice(HashMap<String, Integer> UC){
         String result="";
-        ArrayList<String> array = new ArrayList<String>();
+        ArrayList<String> array = new ArrayList<>();
         int max=0;
         if(UC!=null) {
             for (String key : UC.keySet()) {
@@ -355,8 +354,8 @@ public class AnalysisChords extends AppCompatActivity {
 
     //コードのルートを見つけ、和音の構成音を見つける
     public HashMap<String, Integer> ChordNameAnalysis(String chord){
-        HashMap<String,Integer> map= new HashMap<String,Integer>();
-        int root=0;
+        HashMap<String,Integer> map= new HashMap<>();
+        int root;
         String type;
         switch (chord.length()) {
             case 0:
@@ -393,7 +392,7 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-    public String ToRomanNumeral(String text){
+  /*  public String ToRomanNumeral(String text){
         text=Pattern.compile("C").matcher(text).replaceAll("Ⅰ");
         text=Pattern.compile("D").matcher(text).replaceAll("Ⅱ");
         text=Pattern.compile("E").matcher(text).replaceAll("Ⅲ");
@@ -404,6 +403,7 @@ public class AnalysisChords extends AppCompatActivity {
         text=Pattern.compile("#").matcher(text).replaceAll("+");
         return text;
     }
+    */
 
 
 

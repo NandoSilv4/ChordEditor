@@ -255,8 +255,8 @@ public class SongList extends AppCompatActivity {
 
         // ListView を取得
         listView = (ListView) findViewById(R.id.nameList);
-        List<Map<String, String>> retDataList = new ArrayList<Map<String, String>>();
-        Map<String, String> data = new HashMap<String, String>();
+        List<Map<String, String>> retDataList = new ArrayList<>();
+        Map<String, String> data;
 
 
 
@@ -321,7 +321,7 @@ public class SongList extends AppCompatActivity {
             }
             String str = c.getString(1);
             String str2 = c.getString(2);
-            data = new HashMap<String, String>();
+            data = new HashMap<>();
             data.put("title",str);
             data.put("artist", str2);
 

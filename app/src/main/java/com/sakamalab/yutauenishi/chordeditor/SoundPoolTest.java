@@ -12,8 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
+
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -133,7 +132,7 @@ public class SoundPoolTest extends AppCompatActivity {
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql = "select title,chords,artist from note where id ="+ id +";";
         Cursor c = db.rawQuery(sql,null);
-        boolean mov1 = c.moveToFirst();
+        c.moveToFirst();
 
         String title = c.getString(0);
         chords = c.getString(1);

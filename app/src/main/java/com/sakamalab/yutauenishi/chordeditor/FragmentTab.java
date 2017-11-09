@@ -81,7 +81,7 @@ public class FragmentTab extends Fragment {
 
 
                 //[]と||の両方を探す
-                String regex = "[\\|\\[].*?[\\|\\]]";
+                String regex = "[|\\[].*?[|\\]]";
                 Pattern p = Pattern.compile(regex);
                 Matcher m = p.matcher(data_split[i]);
 
