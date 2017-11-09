@@ -22,8 +22,7 @@ import java.util.regex.Pattern;
 
 public class SoundPoolTest extends AppCompatActivity {
     MyOpenHelper helper = new MyOpenHelper(this);
-    SoundPool s_00,s_01,s_02,s_03,s_04,s_05,s_06,s_07,s_08,s_09,s_10,s_11;
-    int ID_00,ID_01,ID_02,ID_03,ID_04,ID_05,ID_06,ID_07,ID_08,ID_09,ID_10,ID_11;
+
     int id =1;
 
     AnalysisChords AC=new AnalysisChords();
@@ -50,8 +49,9 @@ public class SoundPoolTest extends AppCompatActivity {
     }
 
 
-
-    public void PlaySound(HashMap<String, Integer> SM){
+    SoundPool s_00,s_01,s_02,s_03,s_04,s_05,s_06,s_07,s_08,s_09,s_10,s_11;
+    int ID_00,ID_01,ID_02,ID_03,ID_04,ID_05,ID_06,ID_07,ID_08,ID_09,ID_10,ID_11;
+    public void SoundPlay(HashMap<String, Integer> SM){
         for (String ToneName : SM.keySet()) {
             Integer tone = SM.get(ToneName);
             switch (tone){
@@ -70,62 +70,7 @@ public class SoundPoolTest extends AppCompatActivity {
             }
         }
     }
-
-
-    public void sound_c(View v) {
-        s_00.play(ID_00,1.0f,1.0f,0,0,1.0f);
-        s_03.play(ID_03,1.0f,1.0f,0,0,1.0f);
-        s_07.play(ID_07,1.0f,1.0f,0,0,1.0f);
-        s_10.play(ID_10,1.0f,1.0f,0,0,1.0f);
-    }
-
-
-    int count=0;
-    public void Play(View v) {
-
-        chords= Pattern.compile("\\n").matcher(chords).replaceAll("");
-        String[] data_split = chords.split(",", 0);
-        HashMap<String,Integer> SoundMap;
-        SoundMap=AC.ChordNameAnalysis(data_split[count]);
-        PlaySound(SoundMap);
-        count++;
-    }
-
-    String chords;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.sound_pool_test);
-        Intent intent = getIntent();
-        id = intent.getIntExtra("id",1);
-
-        SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "select title,chords,artist from note where id ="+ id +";";
-        Cursor c = db.rawQuery(sql,null);
-        boolean mov1 = c.moveToFirst();
-
-        String title = c.getString(0);
-        chords = c.getString(1);
-        String artist = c.getString(2);
-        toolbar(title,artist);
-
-
-
-
-
-
-        TextView textView = (TextView) findViewById(R.id.text);
-        textView.setText(chords);
-
-        c.close();
-        db.close();
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+    public void SoundLoad(){
         s_00= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
         s_01= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
         s_02= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
@@ -151,13 +96,69 @@ public class SoundPoolTest extends AppCompatActivity {
         ID_10=s_10.load(this,R.raw.sound_10,1);
         ID_11=s_11.load(this,R.raw.sound_11,1);
     }
+    public void SoundRelease() {
+        s_00.release();
+        s_01.release();
+        s_02.release();
+        s_03.release();
+        s_04.release();
+        s_05.release();
+        s_06.release();
+        s_07.release();
+        s_08.release();
+        s_09.release();
+        s_10.release();
+        s_11.release();
+    }
+
+    int count=0;
+    public void Play(View v) {
+        chords= Pattern.compile("\\n").matcher(chords).replaceAll("");
+        String[] data_split = chords.split(",", 0);
+        HashMap<String,Integer> SoundMap;
+        SoundMap=AC.ChordNameAnalysis(data_split[count]);
+        SoundPlay(SoundMap);
+        count++;
+    }
+
+    String chords;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.sound_pool_test);
+        Intent intent = getIntent();
+        id = intent.getIntExtra("id",1);
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String sql = "select title,chords,artist from note where id ="+ id +";";
+        Cursor c = db.rawQuery(sql,null);
+        boolean mov1 = c.moveToFirst();
+
+        String title = c.getString(0);
+        chords = c.getString(1);
+        String artist = c.getString(2);
+        toolbar(title,artist);
+
+
+        TextView textView = (TextView) findViewById(R.id.text);
+        textView.setText(chords);
+
+        c.close();
+        db.close();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SoundLoad();
+    }
 
     @Override
     protected void onPause() {
         super.onPause();
-        s_00.release();s_01.release();s_02.release();s_03.release();
-        s_04.release();s_05.release();s_06.release();s_07.release();
-        s_08.release();s_09.release();s_10.release();s_11.release();
+        SoundRelease();
     }
 
 
