@@ -70,13 +70,9 @@ public class ChordInfo extends AppCompatActivity {
             text=text+key+"が"+n_times+"回\n";
         }
 
-        //map=AC.ChordNameAnalysis("C#m");
-        //for (String key : map.keySet()) {
-        //    Integer n_times = map.get(key);
-        //    text=text+n_times+",";
-        //}
 
         String cp=AC.ChordProgression(chords,"2,2,4,4,2,2,4,4");
+
 
         TextView textView = (TextView) findViewById(R.id.text);
         textView.setText(chords);

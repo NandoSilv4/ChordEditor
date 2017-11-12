@@ -21,6 +21,7 @@ public class Hint extends AppCompatActivity {
     int hint2_f=0;
     int hint3_f=0;
     int hint4_f=0;
+    int hint5_f=0;
 
     public void hint0(View v){
         if(hint0_f==0) {
@@ -82,6 +83,18 @@ public class Hint extends AppCompatActivity {
         }
     }
 
+    public void hint5(View v){
+        if(hint5_f==0) {
+            LinearLayout hint5_L = (LinearLayout) findViewById(R.id.hint5_L);
+            hint5_L.setVisibility(View.VISIBLE);
+            hint5_f=1;
+        }else{
+            LinearLayout hint5_L = (LinearLayout) findViewById(R.id.hint5_L);
+            hint5_L.setVisibility(View.GONE);
+            hint5_f=0;
+        }
+    }
+
     String text;
     public void set_hint0(){
         text=   "Chord Editorは、「歌詞+コード」が記述された1つのファイルから「歌詞」と「コード」を分けて読み取り、見やすく表示する作曲支援ツールです。\n" +
@@ -117,9 +130,17 @@ public class Hint extends AppCompatActivity {
     }
 
     public void set_hint4(){
-        text=   "バグの報告やご要望は、アプリストアにある評価・コメントからお願い致します。";
+        text=   "閲覧ページの右上にある「♪(音符マーク)」をクリックするとコードの再生がされます。\n" +
+                "クリックするごとに、一番最初のコードから順番に再生することができ、コード進行の確認などが可能です。\n";
         TextView hint4_text = (TextView) findViewById(R.id.hint4_text);
         hint4_text.setText(text);
+    }
+
+
+    public void set_hint5(){
+        text=   "バグの報告やご要望は、アプリストアにある評価・コメントからお願い致します。";
+        TextView hint5_text = (TextView) findViewById(R.id.hint5_text);
+        hint5_text.setText(text);
     }
 
     // ツールバー
@@ -154,7 +175,7 @@ public class Hint extends AppCompatActivity {
         set_hint2();
         set_hint3();
         set_hint4();
-
+        set_hint5();
     }
 
 

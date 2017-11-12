@@ -44,18 +44,18 @@ public class SongPage extends AppCompatActivity {
         for (String ToneName : SM.keySet()) {
             Integer tone = SM.get(ToneName);
             switch (tone){
-                case 0:s_00.play(ID_00, 0.5f, 0.5f, 0, 0, 1.0f);break;
-                case 1:s_01.play(ID_01, 0.5f, 0.5f, 0, 0, 1.0f);break;
-                case 2:s_02.play(ID_02, 0.5f, 0.5f, 0, 0, 1.0f);break;
-                case 3:s_03.play(ID_03, 0.5f, 0.5f, 0, 0, 1.0f);break;
-                case 4:s_04.play(ID_04, 0.5f, 0.5f, 0, 0, 1.0f);break;
-                case 5:s_05.play(ID_05, 0.5f, 0.5f, 0, 0, 1.0f);break;
-                case 6:s_06.play(ID_06, 0.5f, 0.5f, 0, 0, 1.0f);break;
-                case 7:s_07.play(ID_07, 0.5f, 0.5f, 0, 0, 1.0f);break;
-                case 8:s_08.play(ID_08, 0.5f, 0.5f, 0, 0, 1.0f);break;
-                case 9:s_09.play(ID_09, 0.5f, 0.5f, 0, 0, 1.0f);break;
-                case 10:s_10.play(ID_10, 0.5f, 0.5f, 0, 0, 1.0f);break;
-                case 11:s_11.play(ID_11, 0.5f, 0.5f, 0, 0, 1.0f);break;
+                case 0:s_00.play(ID_00, 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 1:s_01.play(ID_01, 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 2:s_02.play(ID_02, 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 3:s_03.play(ID_03, 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 4:s_04.play(ID_04, 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 5:s_05.play(ID_05, 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 6:s_06.play(ID_06, 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 7:s_07.play(ID_07, 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 8:s_08.play(ID_08, 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 9:s_09.play(ID_09, 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 10:s_10.play(ID_10, 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 11:s_11.play(ID_11, 0.9f, 0.9f, 0, 0, 1.0f);break;
             }
         }
     }
@@ -103,6 +103,7 @@ public class SongPage extends AppCompatActivity {
     public void Play() {
         String chords2;
         chords2= Pattern.compile("\\n").matcher(chords).replaceAll("");
+        chords2=Pattern.compile("\\[.*?\\],").matcher(chords2).replaceAll("");
         HashMap<String, Integer> SoundMap;
         if(!chords2.equals("")){
             String[] data_split = chords2.split(",", 0);
@@ -177,10 +178,6 @@ public class SongPage extends AppCompatActivity {
                         Log.i("テスト  ", "編集");
                         return true;
                     case R.id.action_sound:
-                        //Intent dbIntent3 = new Intent(getApplication(),SoundPoolTest.class);
-                        //dbIntent3.putExtra("id", id);
-                        //startActivity(dbIntent3);
-                        //overridePendingTransition(0, 0);
                         Play();
                         Log.i("テスト  ", "音");
                         return true;
@@ -190,6 +187,7 @@ public class SongPage extends AppCompatActivity {
                         startActivity(dbIntent2);
                         overridePendingTransition(0, 0);
                         return true;
+
                     default:
                         return false;
                 }

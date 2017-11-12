@@ -17,7 +17,19 @@ public class AnalysisChords extends AppCompatActivity {
         Pattern p3 = Pattern.compile("\\|.*?\\|");
         String chords;
         String chordsALL = "";
+
+        /*int flag=0;
+        // { Curly Bracketだけを探す
+        Pattern pcb1 = Pattern.compile("^\\{");
+        Matcher mcb1 = pcb1.matcher(data_split[i]);
+        if(mcb1.find()){
+            flag=1;
+            data_split[i]=mcb1.replaceAll("");
+        }
+        */
+
         if(text!=null) {
+            text=Pattern.compile("\\[(.*?)\\]").matcher(text).replaceAll("|\\[$1\\]|");
             String[] data_split = text.split("\\n", 0);
             for (String data_s : data_split) {
                 chords="";
@@ -197,7 +209,7 @@ public class AnalysisChords extends AppCompatActivity {
         int num;
         int con=0;
         chords=Pattern.compile("\\n").matcher(chords).replaceAll("");
-
+        chords=Pattern.compile("\\[.*?\\],").matcher(chords).replaceAll("");
         if(chords!=null) {
             chords=","+chords;
             while(con<100&&!(Pattern.compile(",").matcher(chords).replaceAll("").trim().equals(""))) {
@@ -258,6 +270,17 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
+    //Aメロ(Verse 1)のコード進行生成
+    public String NextChord(HashMap<String,Integer> map,String chord) {
+        String result="";
+        if(chord.equals(""))return null;
+        String[] rule_split = chord.split(",", 0);
+
+
+        return result;
+    }
+
+
 /*
 0  C
 1  C#
@@ -316,10 +339,11 @@ public class AnalysisChords extends AppCompatActivity {
                 map.put("sub1", (root+3)%12);
                 map.put("sub3", (root+9)%12);break;
             case "m7":
-                map.put("sub1", (root+3)%12);map.put("sub3", (root+10)%12);break;
-            case "maj7":case "M7":
+                map.put("sub1", (root+3)%12);
+                map.put("sub3", (root+10)%12);break;
+            case "maj7":case "Maj7":case "M7":
                 map.put("sub3", (root+11)%12);break;
-            case "mM7":case "m+7":
+            case "mM7":case "m+7":case "mMaj7":
                 map.put("sub1", (root+3)%12);
                 map.put("sub3", (root+11)%12);break;
             case "6":
@@ -332,15 +356,24 @@ public class AnalysisChords extends AppCompatActivity {
             case "7sus4":
                 map.put("sub1", (root+5)%12);
                 map.put("sub3", (root+10)%12);break;
+            case "m7(b5)":case "m7♭5":case "m7(-5)":case "m7-5":
+                map.put("sub1", (root+3)%12);
+                map.put("sub2", (root+6)%12);
+                map.put("sub3", (root+10)%12);
+                break;
+            case "7(b5)":case "7♭5":case "7(-5)":case "7-5":
+                map.put("sub2", (root+6)%12);
+                map.put("sub3", (root+10)%12);
+                break;
 
 
             //未対応
-            case "maj9":case "M9":break;
+            case "maj9":case"Maj9":case "M9":break;
             case "dim7":break;
             case "7aug":break;
             case "9":break;
             case "11":break;
-            case "m7(b5)":case "m7-5":break;
+
             case "M7aug":break;
 
             default:

@@ -62,41 +62,31 @@ public class FragmentTab extends Fragment {
 
 
                 // { Curly Bracketだけを探す
-                String cb1 = "^\\{";
-                Pattern pcb1 = Pattern.compile(cb1);
-                Matcher mcb1 = pcb1.matcher(data_split[i]);
+                Matcher mcb1 = Pattern.compile("^\\{").matcher(data_split[i]);
                 if(mcb1.find()){
                     flag=1;
                     data_split[i]=mcb1.replaceAll("");
                 }
 
                 // } Curly Bracketだけを探す
-                String cb2 = "\\}";
-                Pattern pcb2 = Pattern.compile(cb2);
-                Matcher mcb2 = pcb2.matcher(data_split[i]);
+                Matcher mcb2 = Pattern.compile("\\}").matcher(data_split[i]);
                 if(mcb2.find()){
                     flag=0;
                     data_split[i]=mcb2.replaceAll("");
                 }
-
-
-                //[]と||の両方を探す
-                String regex = "[|\\[].*?[|\\]]";
-                Pattern p = Pattern.compile(regex);
-                Matcher m = p.matcher(data_split[i]);
-
-                //[]だけを探す(Aメロとかのために)
-                String regex2 = "^\\[.*?\\]";
-                Pattern p2 = Pattern.compile(regex2);
-
-                //||だけを探す(歌詞+コードの*をつけるため)
-                String regex3 = "\\|.*?\\|";
-                Pattern p3 = Pattern.compile(regex3);
-
-
-
                 String ls;
                 int f=0;
+                //[]と||の両方を探す
+                Matcher m = Pattern.compile("[|\\[].*?[|\\]]").matcher(data_split[i]);
+
+                //[]だけを探す(Aメロとかのために)
+                Pattern p2 = Pattern.compile("^\\[.*?\\]");
+
+                //||だけを探す(歌詞+コードの*をつけるため)
+                Pattern p3 = Pattern.compile("\\|.*?\\|");
+
+
+
                 Matcher m4 = p2.matcher(data_split[i]);
                 if(m4.find()&&m4.replaceAll("").trim().equals("")){
                     f=1;

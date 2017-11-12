@@ -19,6 +19,7 @@
         android:title="コード解析"
         app:showAsAction="never"
         android:icon="@android:drawable/ic_menu_edit" />
+
     <item
         android:id="@+id/action_sound"
         android:orderInCategory="1"
