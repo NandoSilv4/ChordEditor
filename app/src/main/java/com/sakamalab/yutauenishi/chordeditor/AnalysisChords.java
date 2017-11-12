@@ -10,6 +10,26 @@ import java.util.regex.Pattern;
 
 public class AnalysisChords extends AppCompatActivity {
 
+    //♭を全部なくし、＃にする
+    public String FlatToSharp(String text){
+
+        String s="\\[\\$";
+        String f="\\$\\]";
+        text = Pattern.compile("\\|(.*?)\\|").matcher(text).replaceAll(s+"$1"+f);
+
+        text = Pattern.compile(s+"(.*?)C♭(.*?)"+f).matcher(text).replaceAll(s+"$1B$2"+f);
+        text = Pattern.compile(s+"(.*?)D♭(.*?)"+f).matcher(text).replaceAll(s+"$1C#$2"+f);
+        text = Pattern.compile(s+"(.*?)E♭(.*?)"+f).matcher(text).replaceAll(s+"$1D#$2"+f);
+        text = Pattern.compile(s+"(.*?)F♭(.*?)"+f).matcher(text).replaceAll(s+"$1E$2"+f);
+        text = Pattern.compile(s+"(.*?)G♭(.*?)"+f).matcher(text).replaceAll(s+"$1F#$2"+f);
+        text = Pattern.compile(s+"(.*?)A♭(.*?)"+f).matcher(text).replaceAll(s+"$1G#$2"+f);
+        text = Pattern.compile(s+"(.*?)B♭(.*?)"+f).matcher(text).replaceAll(s+"$1A#$2"+f);
+        text = Pattern.compile(s+"(.*?)B#(.*?)"+f).matcher(text).replaceAll(s+"$1C$2"+f);
+        text = Pattern.compile(s+"(.*?)E#(.*?)"+f).matcher(text).replaceAll(s+"$1F$2"+f);
+
+        text = Pattern.compile(s+"(.*?)"+f).matcher(text).replaceAll("\\|$1\\|");
+        return text;
+    }
 
 
     //歌詞+コードからコードだけを抜き出す。
@@ -17,6 +37,7 @@ public class AnalysisChords extends AppCompatActivity {
         Pattern p3 = Pattern.compile("\\|.*?\\|");
         String chords;
         String chordsALL = "";
+        text=FlatToSharp(text);
 
         /*int flag=0;
         // { Curly Bracketだけを探す
@@ -40,17 +61,14 @@ public class AnalysisChords extends AppCompatActivity {
                 if(!(chords.equals("")))chordsALL=chordsALL+chords+"\n";
             }
         }
-        chordsALL=Pattern.compile("C♭").matcher(chordsALL).replaceAll("B");
-        chordsALL=Pattern.compile("D♭").matcher(chordsALL).replaceAll("C#");
-        chordsALL=Pattern.compile("E♭").matcher(chordsALL).replaceAll("D#");
-        chordsALL=Pattern.compile("F♭").matcher(chordsALL).replaceAll("E");
-        chordsALL=Pattern.compile("G♭").matcher(chordsALL).replaceAll("F#");
-        chordsALL=Pattern.compile("A♭").matcher(chordsALL).replaceAll("G#");
-        chordsALL=Pattern.compile("B♭").matcher(chordsALL).replaceAll("A#");
-        chordsALL = Pattern.compile("B#").matcher(chordsALL).replaceAll("C");
-        chordsALL = Pattern.compile("E#").matcher(chordsALL).replaceAll("F");
+
         return chordsALL;
     }
+
+
+
+
+
 
 
 
@@ -92,6 +110,7 @@ public class AnalysisChords extends AppCompatActivity {
     //エディットページの#などの実装
     public String HalfUpDownEdit(String text,int count){
 
+        text=FlatToSharp(text);
         while(count<0){//ハーフダウンの場合
             count=12+count;
         }
