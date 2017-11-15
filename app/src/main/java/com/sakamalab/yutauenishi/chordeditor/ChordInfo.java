@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.TextView;
 
@@ -71,7 +72,10 @@ public class ChordInfo extends AppCompatActivity {
         }
 
 
-        String cp=AC.ChordProgression(chords,"2,2,4,4,2,2,4,4");
+        //String cp=AC.ChordProgression(chords,"2,2,4,4,2,2,4,4");
+        SparseArray<String[]> map2= new SparseArray<>();
+        map2=AC.StringToMap(chords);
+        String test=AC.MapToString(map2);
 
 
         TextView textView = (TextView) findViewById(R.id.text);
@@ -81,7 +85,7 @@ public class ChordInfo extends AppCompatActivity {
         textView_2.setText(text);
 
         TextView textView_3 = (TextView) findViewById(R.id.text_3);
-        textView_3.setText(cp);
+        textView_3.setText(test);
 
         c.close();
         db.close();

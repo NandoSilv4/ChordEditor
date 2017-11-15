@@ -2,6 +2,7 @@ package com.sakamalab.yutauenishi.chordeditor;
 
 
 import android.support.v7.app.AppCompatActivity;
+import android.util.SparseArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,12 +65,6 @@ public class AnalysisChords extends AppCompatActivity {
 
         return chordsALL;
     }
-
-
-
-
-
-
 
 
 
@@ -146,53 +141,11 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
-    //曲のキーを返す
-    public String FindKey(String chords){
-        String return_s;
-        int C,D,E,F,G,A;
-        int sum[] = {0, 0, 0, 0, 0,0,0,0,0,0,0,0};
-        String Key[] = {"C", "C#","D","D#","E","F","F#","G","G#","A","A#","B"};
-        int max=0;
-        int max_i=-1;
-        int sub_max=0;
-
-        for(int i=0;i<12;i++) {
-            C = Counter(chords, "C",0) - Counter(chords, "C#",0);
-            D = Counter(chords, "D",0) - Counter(chords, "D#",0);
-            E = Counter(chords, "E",0);
-            F = Counter(chords, "F",0) - Counter(chords, "F#",0);
-            G = Counter(chords, "G",0) - Counter(chords, "G#",0);
-            A = Counter(chords, "A",0) - Counter(chords, "A#",0);
-            sum[i] = C + D + E + F + G + A;
-            if(max<sum[i]){
-                max=sum[i];
-                max_i=i;
-            }else if(max==sum[i]){
-                sub_max=sum[i];
-            }
-            chords=HalfUpDown(chords,-1);
-        }
-
-        if(sub_max==max){
-            //解析不能
-            return_s="Key=?";
-        }else{
-            return_s="Key="+Key[max_i];//12-max_iカポするとCで弾ける
-        }
-
-        return return_s;
-    }
-
-
-
-
-
-
-//targetの文字がchordsで何回つかわれているか数える
+    //targetの文字がchordsで何回つかわれているか数える
     public int Counter(String chords,String target,int f){//f=1完全一致f=0頭一致
         int num=0;
         chords=Pattern.compile("\\n").matcher(chords).replaceAll("");
+        chords=Pattern.compile("\\[.*?\\],").matcher(chords).replaceAll("");
         if(chords!=null) {
             String[] data_split = chords.split(",", 0);
             Pattern p_t;
@@ -212,6 +165,50 @@ public class AnalysisChords extends AppCompatActivity {
             }
         }
         return num;
+    }
+
+
+
+
+
+
+    //曲のキーを返す
+    public String FindKey(String chords){
+        String return_s;
+        int C,Dm,Em,F,G,Am;
+        int sum[] = {0, 0, 0, 0, 0,0,0,0,0,0,0,0};
+        String Key[] = {"C", "C#","D","D#","E","F","F#","G","G#","A","A#","B"};
+        int max=0;
+        int max_i=-1;
+        int sub_max=0;
+
+
+
+        for(int i=0;i<12;i++) {
+            C = Counter(chords, "C",0) - Counter(chords, "C#",0);
+            Dm = Counter(chords, "Dm",0);
+            Em = Counter(chords, "Em",0);
+            F = Counter(chords, "F",0) - Counter(chords, "F#",0);
+            G = Counter(chords, "G",0) - Counter(chords, "G#",0);
+            Am = Counter(chords, "Am",0);
+            sum[i] = C + Dm + Em + F + G + Am;
+            if(max<sum[i]){
+                max=sum[i];
+                max_i=i;
+            }else if(max==sum[i]){
+                sub_max=sum[i];
+            }
+            chords=HalfUpDown(chords,-1);
+        }
+
+        if(sub_max==max){
+            //解析不能
+            return_s="Key=?";
+        }else{
+            return_s="Key="+Key[max_i];//12-max_iカポするとCで弾ける
+        }
+
+        return return_s;
     }
 
 
@@ -269,8 +266,6 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
-
     public String ChordProgression(String chords,String rule) {
         String result="";
         HashMap<String,Integer> map;
@@ -288,32 +283,63 @@ public class AnalysisChords extends AppCompatActivity {
     }
 
 
+    //コードデータをStringからSparseArrayに変更
+    public SparseArray<String[]> StringToMap(String chordsALL) {
+        chordsALL=Pattern.compile("\\[.*?\\],").matcher(chordsALL).replaceAll("");
+        if(chordsALL.equals(""))return null;
 
-    //Aメロ(Verse 1)のコード進行生成
-    public String NextChord(HashMap<String,Integer> map,String chord) {
+        String[] data_line = chordsALL.split("\\n", 0);
+        SparseArray<String[]> map = new SparseArray<>();
+
+
+        for(int i=0;i<data_line.length;i++){
+            if(!(data_line[i].equals(""))) {
+                String[] data_chord = data_line[i].split(",", 0);
+                map.put(i,data_chord);
+            }
+        }
+
+
+        return map;
+    }
+
+
+
+
+    //コードデータをSparseArrayに変更
+    public String MapToString(SparseArray<String[]> map) {
         String result="";
-        if(chord.equals(""))return null;
-        String[] rule_split = chord.split(",", 0);
+        if(map==null)return result;
 
-
+        for(int i=0;i<map.size();i++){
+            int key = map.keyAt(i);
+            String[] chord=map.get(key);
+            for(String FE_chord:chord){
+                result=result+FE_chord+",";
+            }
+            result=result+"\n";
+        }
         return result;
     }
 
 
-/*
-0  C
-1  C#
-2  D
-3  D#
-4  E
-5  F
-6  F#
-7  G
-8  G#
-9  A
-10 A#
-11 B
- */
+
+
+
+    /*
+    0  C
+    1  C#
+    2  D
+    3  D#
+    4  E
+    5  F
+    6  F#
+    7  G
+    8  G#
+    9  A
+    10 A#
+    11 B
+     */
     //コード一文字目を上記に基づいて数字化する
     public  int ChordToNo(char first){
         switch (first){
@@ -455,8 +481,54 @@ public class AnalysisChords extends AppCompatActivity {
         text=Pattern.compile("#").matcher(text).replaceAll("+");
         return text;
     }
-    */
 
+
+    //最初、最後のコードがC(ルート)か調べ、点数出す。あんま意味ないかも
+    public int FirstLastChord(String chords){
+        int result=0;
+        chords=Pattern.compile("\\n").matcher(chords).replaceAll("");
+        chords=Pattern.compile("\\[.*?\\],").matcher(chords).replaceAll("");
+        Pattern p_t,p_t2;
+        p_t= Pattern.compile("^C.*");
+        p_t2= Pattern.compile("^C#.*");
+        if(chords!=null) {
+            String[] data_split = chords.split(",", 0);
+            Matcher m_t = p_t.matcher(data_split[0]);
+            Matcher m_t2 = p_t2.matcher(data_split[0]);
+            if (m_t.find()&&!(m_t2.find()))result= result + 2;
+
+            Matcher m_t3 = p_t.matcher(data_split[data_split.length-1]);
+            Matcher m_t4 = p_t2.matcher(data_split[data_split.length-1]);
+            if (m_t3.find()&&!(m_t4.find()))result= result + 1;
+        }
+        return result;
+    }
+
+
+
+
+
+        //Aメロ(Verse 1)のコード進行生成
+        public String NextChord(String chordsALL,String PrevChord) {
+            String result="";
+            if(PrevChord.equals(""))return null;
+            //String[] data_split = chordsALL.split(PrevChord, 0);
+            SparseArray<String[]> map = new SparseArray<>();
+            String[] a=new String[3];
+            a[0]="test";
+            a[1]="dayo";
+            a[2]="dayo";
+            map.put(2,a);
+            String[] b=map.get(2);
+
+            for (String key : b){
+                result=result+key;
+            }
+
+
+            return result;
+        }
+    */
 
 
 
