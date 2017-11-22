@@ -42,24 +42,31 @@ public class FragmentTab extends Fragment {
             String lyricsALL = "";
             String chords = "";
             String comment = "";
+            String start="<\\$";
+            String finish="\\$>";
 
 
             LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout);
 
 
+
+            //Key=・GetFirstChordの表示
             if(index==2){
                 TextView key_text = new TextView(getActivity());
                 key_text.setTextSize(16);
-                //key_text.setGravity(Gravity.RIGHT);
                 key_text.setTextColor(Color.DKGRAY);
                 key_text.setText(String.format("%s", Key));
                 layout.addView(key_text);
-            }
+           }
 
 
 
             for (int i = 0; i < data_split.length; i++) {
 
+
+
+                // ||???||を|start ??? finish|に変更してバグを防ぐ
+                data_split[i] = Pattern.compile("\\|\\|(.*?)\\|\\|").matcher(data_split[i]).replaceAll("\\|"+start+"$1"+finish+"\\|");
 
                 // { Curly Bracketだけを探す
                 Matcher mcb1 = Pattern.compile("^\\{").matcher(data_split[i]);
@@ -74,10 +81,13 @@ public class FragmentTab extends Fragment {
                     flag=0;
                     data_split[i]=mcb2.replaceAll("");
                 }
+
+
                 String ls;
                 int f=0;
                 //[]と||の両方を探す
                 Matcher m = Pattern.compile("[|\\[].*?[|\\]]").matcher(data_split[i]);
+
 
                 //[]だけを探す(Aメロとかのために)
                 Pattern p2 = Pattern.compile("^\\[.*?\\]");
@@ -85,7 +95,15 @@ public class FragmentTab extends Fragment {
                 //||だけを探す(歌詞+コードの*をつけるため)
                 Pattern p3 = Pattern.compile("\\|.*?\\|");
 
+                //::だけを探す
+                Pattern p5 = Pattern.compile("::");
+                //||?||だけを探す
+                Pattern p6 = Pattern.compile("\\|"+start+"(.*?)"+finish+"\\|");
 
+                String junk;
+                junk=p5.matcher(data_split[i]).replaceAll("|");
+                junk=p6.matcher(junk).replaceAll("");
+                lyricsALL = lyricsALL + Pattern.compile("[|\\[].*?[|\\]]").matcher(junk).replaceAll("");
 
                 Matcher m4 = p2.matcher(data_split[i]);
                 if(m4.find()&&m4.replaceAll("").trim().equals("")){
@@ -93,6 +111,8 @@ public class FragmentTab extends Fragment {
                 }
 
                 ls = m4.replaceAll("");
+                ls = p5.matcher(ls).replaceAll("|");
+                ls = p6.matcher(ls).replaceAll("|$1|");
                 Matcher m3 = p3.matcher(ls);
                 //前奏の****にならないように
                 if(m3.find()&&m3.replaceAll("").trim().equals("")){
@@ -111,7 +131,8 @@ public class FragmentTab extends Fragment {
                     }
                 }
 
-                lyricsALL = lyricsALL + m.replaceAll("");
+
+                chords = Pattern.compile("::.*?::").matcher(chords).replaceAll(" , ");
 
 
                 if(flag==0) {
@@ -119,6 +140,7 @@ public class FragmentTab extends Fragment {
                     if (!(chords.equals(""))) {
                         chords = chords + " |";
                     }
+                    chords = Pattern.compile(start+"(.*?)"+finish).matcher(chords).replaceAll(" $1 (x2) ");
 
                     TextView textView = new TextView(getActivity());
                     textView.setTextSize(20);
@@ -128,7 +150,6 @@ public class FragmentTab extends Fragment {
                     TextView Tcomment = new TextView(getActivity());
                     Tcomment.setTextSize(22);
                     Tcomment.setTextColor(Color.BLACK);
-                    //Tcomment.setGravity(Gravity.CENTER);
                     switch (index) {
                         case 0:
                             Tcomment.setText(String.format("%s", comment));

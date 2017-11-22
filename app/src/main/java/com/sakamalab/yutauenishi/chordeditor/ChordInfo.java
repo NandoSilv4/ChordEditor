@@ -73,9 +73,9 @@ public class ChordInfo extends AppCompatActivity {
 
 
         //String cp=AC.ChordProgression(chords,"2,2,4,4,2,2,4,4");
-        SparseArray<String[]> map2= new SparseArray<>();
+        SparseArray<String[]> map2;
         map2=AC.StringToMap(chords);
-        String test=AC.MapToString(map2);
+        String test=AC.GetFirstChord(map2);
 
 
         TextView textView = (TextView) findViewById(R.id.text);

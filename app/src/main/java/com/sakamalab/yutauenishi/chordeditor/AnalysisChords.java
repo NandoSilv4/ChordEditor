@@ -32,10 +32,9 @@ public class AnalysisChords extends AppCompatActivity {
         return text;
     }
 
-
     //歌詞+コードからコードだけを抜き出す。
     public String GetChords(String text){
-        Pattern p3 = Pattern.compile("\\|.*?\\|");
+
         String chords;
         String chordsALL = "";
         text=FlatToSharp(text);
@@ -49,15 +48,18 @@ public class AnalysisChords extends AppCompatActivity {
             data_split[i]=mcb1.replaceAll("");
         }
         */
-
+        Pattern p1 = Pattern.compile("\\|.*?\\|");
         if(text!=null) {
-            text=Pattern.compile("\\[(.*?)\\]").matcher(text).replaceAll("|\\[$1\\]|");
+            text=Pattern.compile("\\[(.*?)\\]").matcher(text).replaceAll("\\|\\[$1\\]\\|");
+            text=Pattern.compile("\\{(.*?)\\n+?(.*?)\\}").matcher(text).replaceAll("$1$2");text=Pattern.compile("\\{(.*?)\\n+?(.*?)\\}").matcher(text).replaceAll("$1$2");
+            text=Pattern.compile("::.*?::").matcher(text).replaceAll("-,");
+            text=Pattern.compile("\\|\\|(.*?)\\|\\|").matcher(text).replaceAll("|$1,$1|");
             String[] data_split = text.split("\\n", 0);
             for (String data_s : data_split) {
                 chords="";
-                Matcher m3 = p3.matcher(data_s);
-                while (m3.find()){
-                    chords=chords+m3.group().substring(1, m3.group().length() - 1)+",";
+                Matcher m1 = p1.matcher(data_s);
+                while (m1.find()){
+                    chords=chords+m1.group().substring(1, m1.group().length() - 1)+",";
                 }
                 if(!(chords.equals("")))chordsALL=chordsALL+chords+"\n";
             }
@@ -65,7 +67,6 @@ public class AnalysisChords extends AppCompatActivity {
 
         return chordsALL;
     }
-
 
 
     //コード解析するさいの＃など
@@ -100,8 +101,6 @@ public class AnalysisChords extends AppCompatActivity {
     }
 
 
-
-
     //エディットページの#などの実装
     public String HalfUpDownEdit(String text,int count){
 
@@ -111,8 +110,17 @@ public class AnalysisChords extends AppCompatActivity {
         }
         String s="\\[\\$";
         String f="\\$\\]";
+        String s2="<\\$";
+        String f2="\\$>";
+
+        text = Pattern.compile("::(.*?)::").matcher(text).replaceAll("|"+s2+"$1"+f2+"|");
+
+
+
+
 
         text = Pattern.compile("\\|(.*?)\\|").matcher(text).replaceAll(s+"$1"+f);
+
         for(int i=0; i<count; i++) {
             //まず間違いがあったら訂正する  必要なかった
             //text = Pattern.compile("\\|B#(.*?)\\|").matcher(text).replaceAll("\\|C$1\\|");
@@ -135,11 +143,10 @@ public class AnalysisChords extends AppCompatActivity {
 
         }
         text = Pattern.compile(s+"(.*?)"+f).matcher(text).replaceAll("\\|$1\\|");
+        text = Pattern.compile("\\|"+s2+"(.*?)"+f2+"\\|").matcher(text).replaceAll("::$1::");
 
         return text;
     }
-
-
 
     //targetの文字がchordsで何回つかわれているか数える
     public int Counter(String chords,String target,int f){//f=1完全一致f=0頭一致
@@ -167,10 +174,27 @@ public class AnalysisChords extends AppCompatActivity {
         return num;
     }
 
-
-
-
-
+    //コード一文字目を上記に基づいて数字化する
+    public  int ChordToNo(char first){
+        switch (first){
+            case 'C':
+                return 0;
+            case 'D':
+                return 2;
+            case 'E':
+                return 4;
+            case 'F':
+                return 5;
+            case 'G':
+                return 7;
+            case 'A':
+                return 9;
+            case 'B':
+                return 11;
+            default:
+                return -1;
+        }
+    }
 
     //曲のキーを返す
     public String FindKey(String chords){
@@ -211,13 +235,6 @@ public class AnalysisChords extends AppCompatActivity {
         return return_s;
     }
 
-
-
-
-
-
-
-
     //曲で使われているすべてのコードの種類と出現回数
     public HashMap<String, Integer> UsedChord(String chords){
         HashMap<String,Integer> map = new HashMap<>();
@@ -241,8 +258,6 @@ public class AnalysisChords extends AppCompatActivity {
     }
 
 
-
-
     //UCの出力を入力し、ランダムで１つのコードを出力
     public String RandomChoice(HashMap<String, Integer> UC){
         String result="";
@@ -262,10 +277,7 @@ public class AnalysisChords extends AppCompatActivity {
         return result;
     }
 
-
-
-
-
+    //コードデータからランダムでコード生成
     public String ChordProgression(String chords,String rule) {
         String result="";
         HashMap<String,Integer> map;
@@ -281,7 +293,6 @@ public class AnalysisChords extends AppCompatActivity {
 
         return result;
     }
-
 
     //コードデータをStringからSparseArrayに変更
     public SparseArray<String[]> StringToMap(String chordsALL) {
@@ -303,10 +314,7 @@ public class AnalysisChords extends AppCompatActivity {
         return map;
     }
 
-
-
-
-    //コードデータをSparseArrayに変更
+    //コードデータをSparseArrayからStringに変更
     public String MapToString(SparseArray<String[]> map) {
         String result="";
         if(map==null)return result;
@@ -322,49 +330,12 @@ public class AnalysisChords extends AppCompatActivity {
         return result;
     }
 
-
-
-
-
-    /*
-    0  C
-    1  C#
-    2  D
-    3  D#
-    4  E
-    5  F
-    6  F#
-    7  G
-    8  G#
-    9  A
-    10 A#
-    11 B
-     */
-    //コード一文字目を上記に基づいて数字化する
-    public  int ChordToNo(char first){
-        switch (first){
-            case 'C':
-                return 0;
-            case 'D':
-                return 2;
-            case 'E':
-                return 4;
-            case 'F':
-                return 5;
-            case 'G':
-                return 7;
-            case 'A':
-                return 9;
-            case 'B':
-                return 11;
-            default:
-                return -1;
-        }
+    //一番最初のコードを返す
+    public String GetFirstChord(SparseArray<String[]> map) {
+        if(map.size()==0)return null;
+        String[] chord=map.get(map.keyAt(0));
+        return chord[0];
     }
-
-
-
-
 
     public HashMap<String, Integer> ChordType(String type,HashMap<String, Integer> map){
         int root=map.get("root");
@@ -418,17 +389,12 @@ public class AnalysisChords extends AppCompatActivity {
             case "7aug":break;
             case "9":break;
             case "11":break;
-
             case "M7aug":break;
 
             default:
         }
         return map;
     }
-
-
-
-
 
     //コードのルートを見つけ、和音の構成音を見つける
     public HashMap<String, Integer> ChordNameAnalysis(String chord){
@@ -469,21 +435,21 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
-  /*  public String ToRomanNumeral(String text){
-        text=Pattern.compile("C").matcher(text).replaceAll("Ⅰ");
-        text=Pattern.compile("D").matcher(text).replaceAll("Ⅱ");
-        text=Pattern.compile("E").matcher(text).replaceAll("Ⅲ");
-        text=Pattern.compile("F").matcher(text).replaceAll("Ⅳ");
-        text=Pattern.compile("G").matcher(text).replaceAll("Ⅴ");
-        text=Pattern.compile("A").matcher(text).replaceAll("Ⅵ");
-        text=Pattern.compile("B").matcher(text).replaceAll("Ⅶ");
-        text=Pattern.compile("#").matcher(text).replaceAll("+");
-        return text;
-    }
-
-
-    //最初、最後のコードがC(ルート)か調べ、点数出す。あんま意味ないかも
+    /*
+    0  C
+    1  C#
+    2  D
+    3  D#
+    4  E
+    5  F
+    6  F#
+    7  G
+    8  G#
+    9  A
+    10 A#
+    11 B
+     */
+  /*//最初、最後のコードがC(ルート)か調べ、点数出す。あんま意味ないかも
     public int FirstLastChord(String chords){
         int result=0;
         chords=Pattern.compile("\\n").matcher(chords).replaceAll("");
