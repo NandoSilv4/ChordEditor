@@ -66,7 +66,7 @@ public class FragmentTab extends Fragment {
 
 
                 // ||???||を|start ??? finish|に変更してバグを防ぐ
-                data_split[i] = Pattern.compile("\\|\\|(.*?)\\|\\|").matcher(data_split[i]).replaceAll("\\|"+start+"$1"+finish+"\\|");
+                data_split[i] = Pattern.compile("\\|:(.*?):\\|").matcher(data_split[i]).replaceAll("\\|"+start+"$1"+finish+"\\|");
 
                 // { Curly Bracketだけを探す
                 Matcher mcb1 = Pattern.compile("^\\{").matcher(data_split[i]);
@@ -78,15 +78,14 @@ public class FragmentTab extends Fragment {
                 // } Curly Bracketだけを探す
                 Matcher mcb2 = Pattern.compile("\\}").matcher(data_split[i]);
                 if(mcb2.find()){
-                    flag=0;
+                    flag=-1;
                     data_split[i]=mcb2.replaceAll("");
                 }
 
 
                 String ls;
                 int f=0;
-                //[]と||の両方を探す
-                Matcher m = Pattern.compile("[|\\[].*?[|\\]]").matcher(data_split[i]);
+
 
 
                 //[]だけを探す(Aメロとかのために)
@@ -114,16 +113,27 @@ public class FragmentTab extends Fragment {
                 ls = p5.matcher(ls).replaceAll("|");
                 ls = p6.matcher(ls).replaceAll("|$1|");
                 Matcher m3 = p3.matcher(ls);
-                //前奏の****にならないように
+
+
+            /*//前奏の****にならないように
                 if(m3.find()&&m3.replaceAll("").trim().equals("")){
                     lyrics="";
                     f=1;
                 }else {
                     lyrics = lyrics + m3.replaceAll("*");
                 }
+                */
 
+
+                if(!(m3.find()&&m3.replaceAll("").trim().equals(""))){
+                    lyrics = lyrics + m3.replaceAll("*");
+                }
+
+
+                //[]と||の両方を探す
+                Matcher m = Pattern.compile("[|\\[].*?[|\\]]").matcher(Pattern.compile("::").matcher(data_split[i]).replaceAll(":<|>:"));
                 while (m.find()) {
-                    Matcher m2 = p2.matcher(m.group());
+                    Matcher m2 = Pattern.compile("^\\[.*?\\]").matcher(m.group());
                     if (m2.find()) {
                         comment=m2.group();
                     } else {
@@ -132,8 +142,10 @@ public class FragmentTab extends Fragment {
                 }
 
 
-                chords = Pattern.compile("::.*?::").matcher(chords).replaceAll(" , ");
 
+                chords = Pattern.compile(":<.*?>:").matcher(chords).replaceAll(" , ");
+
+                if(flag==-1)flag=0;
 
                 if(flag==0) {
 

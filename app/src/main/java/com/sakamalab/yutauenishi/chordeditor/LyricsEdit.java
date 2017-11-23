@@ -147,7 +147,6 @@ public class LyricsEdit extends AppCompatActivity {
         text = text.replaceAll("'", "''");
         AnalysisChords AC = new AnalysisChords();
         chord = AC.GetChords(text);
-        Log.i("テスト  ", "ファイル保存！！"+chord);
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql = "UPDATE note SET " +
                 "data = '"+ text +"'," +

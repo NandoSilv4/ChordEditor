@@ -2,6 +2,7 @@ package com.sakamalab.yutauenishi.chordeditor;
 
 
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
@@ -34,26 +35,28 @@ public class AnalysisChords extends AppCompatActivity {
 
     //歌詞+コードからコードだけを抜き出す。
     public String GetChords(String text){
-
+        Log.i("テスト  ", "GetChords！！");
         String chords;
         String chordsALL = "";
         text=FlatToSharp(text);
 
-        /*int flag=0;
-        // { Curly Bracketだけを探す
-        Pattern pcb1 = Pattern.compile("^\\{");
-        Matcher mcb1 = pcb1.matcher(data_split[i]);
-        if(mcb1.find()){
-            flag=1;
-            data_split[i]=mcb1.replaceAll("");
-        }
-        */
+
         Pattern p1 = Pattern.compile("\\|.*?\\|");
         if(text!=null) {
             text=Pattern.compile("\\[(.*?)\\]").matcher(text).replaceAll("\\|\\[$1\\]\\|");
-            text=Pattern.compile("\\{(.*?)\\n+?(.*?)\\}").matcher(text).replaceAll("$1$2");text=Pattern.compile("\\{(.*?)\\n+?(.*?)\\}").matcher(text).replaceAll("$1$2");
-            text=Pattern.compile("::.*?::").matcher(text).replaceAll("-,");
-            text=Pattern.compile("\\|\\|(.*?)\\|\\|").matcher(text).replaceAll("|$1,$1|");
+            Matcher ma=Pattern.compile("\\{(?:.|\\n)*?\\}").matcher(text);
+            while (ma.find()){
+                Matcher m2=Pattern.compile("\\n").matcher(ma.group());
+                String new_text=ma.group();
+                while (m2.find()){
+                    new_text=Pattern.compile("\\n").matcher(new_text).replaceAll("");
+                }
+                text = text.replace(ma.group(),new_text);
+            }
+
+
+            text=Pattern.compile("::(?:.|\\n)*?::").matcher(text).replaceAll("-,");
+            text=Pattern.compile("\\|:(.*?):\\|").matcher(text).replaceAll("|$1,$1|");
             String[] data_split = text.split("\\n", 0);
             for (String data_s : data_split) {
                 chords="";
