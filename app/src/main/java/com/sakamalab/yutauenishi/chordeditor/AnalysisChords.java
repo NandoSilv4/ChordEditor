@@ -54,7 +54,6 @@ public class AnalysisChords extends AppCompatActivity {
                 text = text.replace(ma.group(),new_text);
             }
 
-
             text=Pattern.compile("::(?:.|\\n)*?::").matcher(text).replaceAll("-,");
             text=Pattern.compile("\\|:(.*?):\\|").matcher(text).replaceAll("|$1,$1|");
             String[] data_split = text.split("\\n", 0);
