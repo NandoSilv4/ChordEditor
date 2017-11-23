@@ -150,6 +150,7 @@ public class AnalysisChords extends AppCompatActivity {
         return text;
     }
 
+
     //targetの文字がchordsで何回つかわれているか数える
     public int Counter(String chords,String target,int f){//f=1完全一致f=0頭一致
         int num=0;
@@ -298,17 +299,18 @@ public class AnalysisChords extends AppCompatActivity {
 
     //コードデータをStringからSparseArrayに変更
     public SparseArray<String[]> StringToMap(String chordsALL) {
-        chordsALL=Pattern.compile("\\[.*?\\],").matcher(chordsALL).replaceAll("");
+
         if(chordsALL.equals(""))return null;
+        chordsALL=Pattern.compile("\\[.*?\\],").matcher(chordsALL).replaceAll("");
 
         String[] data_line = chordsALL.split("\\n", 0);
         SparseArray<String[]> map = new SparseArray<>();
 
 
         for(int i=0;i<data_line.length;i++){
-            if(!(data_line[i].equals(""))) {
+            if(!(data_line[i].equals(""))&&!(data_line[i].equals(","))) {
                 String[] data_chord = data_line[i].split(",", 0);
-                map.put(i,data_chord);
+                if(data_chord.length!=0)map.put(i,data_chord);
             }
         }
 
@@ -332,12 +334,33 @@ public class AnalysisChords extends AppCompatActivity {
         return result;
     }
 
-    //一番最初のコードを返す
-    public String GetFirstChord(SparseArray<String[]> map) {
-        if(map.size()==0)return null;
-        String[] chord=map.get(map.keyAt(0));
-        return chord[0];
+
+    //行 l 列 r　で指定された場所のコードをmapから取り出して返す。
+    public String Choose_One(SparseArray<String[]> map,int l,int r) {
+        if(map==null)return null;
+        l=l-1;
+        r=r-1;
+        int key = map.keyAt(l);
+        String[] chord=map.get(key);
+        return chord[r];
     }
+
+    //Aメロを抜き出す
+    public String SelectPart(String chords,String choices) {
+
+        String result="";
+        if(chords.equals(""))return chords;
+        String[] SP_chords1 = chords.split("\\["+choices+"\\],*(\\n)*", 0);
+        if(SP_chords1.length<2)return chords;
+        String[] SP_chords2 = SP_chords1[1].split("\\[.*?\\],*(\\n)*", 0);
+        if(SP_chords2.length==0)return chords;
+
+        return SP_chords2[0];
+    }
+
+
+
+
 
     public HashMap<String, Integer> ChordType(String type,HashMap<String, Integer> map){
         int root=map.get("root");

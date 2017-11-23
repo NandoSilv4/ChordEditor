@@ -74,8 +74,10 @@ public class ChordInfo extends AppCompatActivity {
 
         //String cp=AC.ChordProgression(chords,"2,2,4,4,2,2,4,4");
         SparseArray<String[]> map2;
+        chords=AC.SelectPart(chords,"Aメロ");
         map2=AC.StringToMap(chords);
-        String test=AC.GetFirstChord(map2);
+
+        String test=AC.Choose_One(map2,1,2);
 
 
         TextView textView = (TextView) findViewById(R.id.text);
