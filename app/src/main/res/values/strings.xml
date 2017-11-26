@@ -7,5 +7,8 @@
     <string name="action_else">その他</string>
     <string name="lylics_edit_e1">記入してください</string>
     <string name="title_image">Chord Editor</string>
+    <string name="hint">ヒント</string>
+    <string name="action_new">新規作成</string>
+    <string name="ai">AI</string>
 
 </resources>
