@@ -9,8 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MyOpenHelper extends SQLiteOpenHelper {
 
-    public MyOpenHelper(Context context) {
-        super(context, "Note.db", null, 1);
+    MyOpenHelper(Context context) {
+        super(context, "Note.db", null, 2);
     }
 
     @Override
@@ -19,6 +19,7 @@ public class MyOpenHelper extends SQLiteOpenHelper {
                 "title TEXT," +
                 "data TEXT," +
                 "chords TEXT," +
+                "key INTEGER," +
                 "artist TEXT," +
                 "year INTEGER," +
                 "month INTEGER," +
@@ -28,8 +29,10 @@ public class MyOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //if( oldVersion == 1 && newVersion == 2 ){
-        //    db.execSQL("ALTER TABLE note ADD datetime TEXT;" );
-        //}
+        if( oldVersion == 1 && newVersion == 2 ){
+            db.execSQL("ALTER TABLE note ADD key INTEGER AFTER chords;" );
+            String sql = "UPDATE note SET key = 20;";
+            db.execSQL(sql);
+        }
     }
 }

@@ -180,21 +180,6 @@ public class SongList extends AppCompatActivity {
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        // UPナビゲーションを有効化する
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent dbIntent = new Intent(getApplication(),MainActivity.class);
-                startActivity(dbIntent);
-                overridePendingTransition(0, 0);
-            }
-        });
-        */
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -219,6 +204,11 @@ public class SongList extends AppCompatActivity {
                                 .setNegativeButton("Cancel", null)
                                 .show();
                         Log.i("テスト  ", "ヒント");
+                        return true;
+                    case R.id.action_AI:
+                        Intent dbIntent = new Intent(getApplication(), AI.class);
+                        startActivity(dbIntent);
+                        Log.i("テスト  ", "AIページに移行");
                         return true;
                     default:
                         return false;
@@ -248,9 +238,6 @@ public class SongList extends AppCompatActivity {
         toolbar();
 
 
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor c = db.query("note", new String[] { "id", "title", "artist","year","month","day"}, null,null, null, null, null,null);
-        boolean mov = c.moveToFirst();
 
 
         // ListView を取得
@@ -282,31 +269,9 @@ public class SongList extends AppCompatActivity {
 
 
 
-        // SearchViewにOnQueryChangeListenerを設定
-        // SearchView を取得
-        //SearchView search = (SearchView) findViewById(R.id.searchView);
-        //search.setOnQueryTextListener(
-        //    new SearchView.OnQueryTextListener(){
-        //        public boolean onQueryTextChange(String text){
-        //            Filter filter = ((Filterable) listView.getAdapter()).getFilter();
-        //            if(text==null || text.equals("")){
-        //                filter.filter(null);
-        //            }else{
-        //                filter.filter(text);
-        //            }
-        //            return false;
-        //        }
-
-        //        public boolean onQueryTextSubmit(String arg0){
-        //            return false;
-        //        }
-        //    }
-        //);
-
-
-
-
-
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.query("note", new String[] { "id", "title", "artist","year","month","day"}, null,null, null, null, null,null);
+        boolean mov = c.moveToFirst();
 
         int i=1;
         while (mov) {

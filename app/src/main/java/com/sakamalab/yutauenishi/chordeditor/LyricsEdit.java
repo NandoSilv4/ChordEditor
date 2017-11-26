@@ -144,13 +144,19 @@ public class LyricsEdit extends AppCompatActivity {
         EditText editText = (EditText) findViewById(R.id.edit1);
         String text = editText.getText().toString();
         String chord;
+        int key_i;
         text = text.replaceAll("'", "''");
         AnalysisChords AC = new AnalysisChords();
+
+
         chord = AC.GetChords(text);
+        key_i = AC.FindKey(chord);
+        chord = AC.ChangeKeyToC(chord);
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql = "UPDATE note SET " +
                 "data = '"+ text +"'," +
                 "chords = '"+ chord +"'," +
+                "key = '"+ key_i +"'," +
                 "year = "+ sYear +"," +
                 "month = "+ sMonth +"," +
                 "day = "+ sDate +" WHERE id = "+ id +";";

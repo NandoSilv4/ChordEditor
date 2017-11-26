@@ -206,8 +206,10 @@ public class SongPage extends AppCompatActivity {
         Intent intent = getIntent();
         id = intent.getIntExtra("id",1);
 
+
+
         SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "select title,data,artist,chords from note where id ="+ id +";";
+        String sql = "select title,data,artist,chords,key from note where id ="+ id +";";
         Cursor c = db.rawQuery(sql,null);
         c.moveToFirst();
 
@@ -215,11 +217,19 @@ public class SongPage extends AppCompatActivity {
         String data = c.getString(1);
         String artist = c.getString(2);
         chords = c.getString(3);
+        int key_i = c.getInt(4);
         toolbar(title,artist);
 
 
-        AnalysisChords AC=new AnalysisChords();
-        String Key=AC.FindKey(chords);
+
+        String Chord_No[] = {"C", "C#","D","D#","E","F","F#","G","G#","A","A#","B"};
+        String Key;
+        if(key_i<13){
+            Key="Key="+Chord_No[key_i];
+        }else{
+            Key="Key=?";
+        }
+
 
 
 

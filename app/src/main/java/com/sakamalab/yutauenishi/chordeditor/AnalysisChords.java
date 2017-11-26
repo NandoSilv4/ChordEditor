@@ -4,8 +4,6 @@ package com.sakamalab.yutauenishi.chordeditor;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -77,6 +75,16 @@ public class AnalysisChords extends AppCompatActivity {
         while(count<0){//ハーフダウンの場合
             count=12+count;
         }
+        String s2="<\\$";
+        String f2="\\$>";
+        //[]内を変更しないために
+        text = Pattern.compile("\\[(.*?)B(.*?)\\]").matcher(text).replaceAll("[$1"+s2+"b"+f2+"$2]");
+        text = Pattern.compile("\\[(.*?)A(.*?)\\]").matcher(text).replaceAll("[$1"+s2+"a"+f2+"$2]");
+        text = Pattern.compile("\\[(.*?)G(.*?)\\]").matcher(text).replaceAll("[$1"+s2+"g"+f2+"$2]");
+        text = Pattern.compile("\\[(.*?)F(.*?)\\]").matcher(text).replaceAll("[$1"+s2+"f"+f2+"$2]");
+        text = Pattern.compile("\\[(.*?)E(.*?)\\]").matcher(text).replaceAll("[$1"+s2+"e"+f2+"$2]");
+        text = Pattern.compile("\\[(.*?)D(.*?)\\]").matcher(text).replaceAll("[$1"+s2+"d"+f2+"$2]");
+        text = Pattern.compile("\\[(.*?)C(.*?)\\]").matcher(text).replaceAll("[$1"+s2+"c"+f2+"$2]");
 
         for(int i=0; i<count; i++) {
             //まず間違いがあったら訂正する
@@ -98,6 +106,18 @@ public class AnalysisChords extends AppCompatActivity {
             //XをCに戻す
             text = Pattern.compile("X").matcher(text).replaceAll("C");
         }
+
+        //[]内を変更しないために
+        text = Pattern.compile(s2+"b"+f2).matcher(text).replaceAll("B");
+        text = Pattern.compile(s2+"a"+f2).matcher(text).replaceAll("A");
+        text = Pattern.compile(s2+"g"+f2).matcher(text).replaceAll("G");
+        text = Pattern.compile(s2+"f"+f2).matcher(text).replaceAll("F");
+        text = Pattern.compile(s2+"e"+f2).matcher(text).replaceAll("E");
+        text = Pattern.compile(s2+"d"+f2).matcher(text).replaceAll("D");
+        text = Pattern.compile(s2+"c"+f2).matcher(text).replaceAll("C");
+
+
+
 
         return text;
     }
@@ -199,17 +219,16 @@ public class AnalysisChords extends AppCompatActivity {
         }
     }
 
+
+    //String Key[] = {"C", "C#","D","D#","E","F","F#","G","G#","A","A#","B"};
     //曲のキーを返す
-    public String FindKey(String chords){
-        String return_s;
+    public int FindKey(String chords){
+        int return_i;
         int C,Dm,Em,F,G,Am;
         int sum[] = {0, 0, 0, 0, 0,0,0,0,0,0,0,0};
-        String Key[] = {"C", "C#","D","D#","E","F","F#","G","G#","A","A#","B"};
         int max=0;
         int max_i=-1;
         int sub_max=0;
-
-
 
         for(int i=0;i<12;i++) {
             C = Counter(chords, "C",0) - Counter(chords, "C#",0);
@@ -230,13 +249,23 @@ public class AnalysisChords extends AppCompatActivity {
 
         if(sub_max==max){
             //解析不能
-            return_s="Key=?";
+            return_i=20;
         }else{
-            return_s="Key="+Key[max_i];//12-max_iカポするとCで弾ける
+            return_i=max_i;//12-max_iカポするとCで弾ける=
         }
-
-        return return_s;
+        return return_i;
     }
+
+    //KeyをCにする
+    public String ChangeKeyToC(String chords){
+        String result_s;
+        int num=FindKey(chords);
+        result_s = HalfUpDown(chords, -num);
+        String Key[] = {"C", "C#","D","D#","E","F","F#","G","G#","A","A#","B"};
+        Log.i("テスト  ", "GetChords！！"+result_s+Key[num]);
+        return result_s;
+    }
+
 
     //曲で使われているすべてのコードの種類と出現回数
     public HashMap<String, Integer> UsedChord(String chords){
@@ -261,41 +290,7 @@ public class AnalysisChords extends AppCompatActivity {
     }
 
 
-    //UCの出力を入力し、ランダムで１つのコードを出力
-    public String RandomChoice(HashMap<String, Integer> UC){
-        String result="";
-        ArrayList<String> array = new ArrayList<>();
-        int max=0;
-        if(UC!=null) {
-            for (String key : UC.keySet()) {
-                Integer n_times = UC.get(key);
-                for(int j=0;j<n_times;j++){
-                    array.add(key);
-                    max++;
-                }
-            }
-            int ran = (int)(Math.random()*(max));
-            result=array.get(ran);
-        }
-        return result;
-    }
 
-    //コードデータからランダムでコード生成
-    public String ChordProgression(String chords,String rule) {
-        String result="";
-        HashMap<String,Integer> map;
-        map=UsedChord(chords);
-        String[] rule_split = rule.split(",", 0);
-
-        for (String rule_s : rule_split){
-            for(int j=0;j<Integer.valueOf(rule_s);j++){
-                result=result+"|"+RandomChoice(map);
-            }
-            result=result+"|\n";
-        }
-
-        return result;
-    }
 
     //コードデータをStringからSparseArrayに変更
     public SparseArray<String[]> StringToMap(String chordsALL) {
@@ -348,18 +343,14 @@ public class AnalysisChords extends AppCompatActivity {
     //Aメロを抜き出す
     public String SelectPart(String chords,String choices) {
 
-        String result="";
         if(chords.equals(""))return chords;
         String[] SP_chords1 = chords.split("\\["+choices+"\\],*(\\n)*", 0);
-        if(SP_chords1.length<2)return chords;
+        if(SP_chords1.length<2)return "";
         String[] SP_chords2 = SP_chords1[1].split("\\[.*?\\],*(\\n)*", 0);
-        if(SP_chords2.length==0)return chords;
+        if(SP_chords2.length==0)return "";
 
         return SP_chords2[0];
     }
-
-
-
 
 
     public HashMap<String, Integer> ChordType(String type,HashMap<String, Integer> map){
@@ -473,54 +464,46 @@ public class AnalysisChords extends AppCompatActivity {
     9  A
     10 A#
     11 B
-     */
-  /*//最初、最後のコードがC(ルート)か調べ、点数出す。あんま意味ないかも
-    public int FirstLastChord(String chords){
-        int result=0;
-        chords=Pattern.compile("\\n").matcher(chords).replaceAll("");
-        chords=Pattern.compile("\\[.*?\\],").matcher(chords).replaceAll("");
-        Pattern p_t,p_t2;
-        p_t= Pattern.compile("^C.*");
-        p_t2= Pattern.compile("^C#.*");
-        if(chords!=null) {
-            String[] data_split = chords.split(",", 0);
-            Matcher m_t = p_t.matcher(data_split[0]);
-            Matcher m_t2 = p_t2.matcher(data_split[0]);
-            if (m_t.find()&&!(m_t2.find()))result= result + 2;
 
-            Matcher m_t3 = p_t.matcher(data_split[data_split.length-1]);
-            Matcher m_t4 = p_t2.matcher(data_split[data_split.length-1]);
-            if (m_t3.find()&&!(m_t4.find()))result= result + 1;
+
+        //UCの出力を入力し、ランダムで１つのコードを出力
+    public String RandomChoice(HashMap<String, Integer> UC){
+        String result="";
+        ArrayList<String> array = new ArrayList<>();
+        int max=0;
+        if(UC!=null) {
+            for (String key : UC.keySet()) {
+                Integer n_times = UC.get(key);
+                for(int j=0;j<n_times;j++){
+                    array.add(key);
+                    max++;
+                }
+            }
+            int ran = (int)(Math.random()*(max));
+            result=array.get(ran);
         }
         return result;
     }
 
 
 
+        //コードデータからランダムでコード生成
+    public String ChordProgression(String chords,String rule) {
+        String result="";
+        HashMap<String,Integer> map;
+        map=UsedChord(chords);
+        String[] rule_split = rule.split(",", 0);
 
-
-        //Aメロ(Verse 1)のコード進行生成
-        public String NextChord(String chordsALL,String PrevChord) {
-            String result="";
-            if(PrevChord.equals(""))return null;
-            //String[] data_split = chordsALL.split(PrevChord, 0);
-            SparseArray<String[]> map = new SparseArray<>();
-            String[] a=new String[3];
-            a[0]="test";
-            a[1]="dayo";
-            a[2]="dayo";
-            map.put(2,a);
-            String[] b=map.get(2);
-
-            for (String key : b){
-                result=result+key;
+        for (String rule_s : rule_split){
+            for(int j=0;j<Integer.valueOf(rule_s);j++){
+                result=result+"|"+RandomChoice(map);
             }
-
-
-            return result;
+            result=result+"|\n";
         }
-    */
 
+        return result;
+    }
 
+     */
 
 }
