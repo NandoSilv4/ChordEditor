@@ -174,9 +174,11 @@ public class AnalysisChords extends AppCompatActivity {
     //targetの文字がchordsで何回つかわれているか数える
     public int Counter(String chords,String target,int f){//f=1完全一致f=0頭一致
         int num=0;
-        chords=Pattern.compile("\\n").matcher(chords).replaceAll("");
-        chords=Pattern.compile("\\[.*?\\],").matcher(chords).replaceAll("");
+
         if(chords!=null) {
+            chords=Pattern.compile("\\n").matcher(chords).replaceAll("");
+            chords=Pattern.compile("\\[.*?\\],").matcher(chords).replaceAll("");
+            if(chords==null)return 0;
             String[] data_split = chords.split(",", 0);
             Pattern p_t;
             switch (f){
@@ -261,8 +263,6 @@ public class AnalysisChords extends AppCompatActivity {
         String result_s;
         int num=FindKey(chords);
         result_s = HalfUpDown(chords, -num);
-        String Key[] = {"C", "C#","D","D#","E","F","F#","G","G#","A","A#","B"};
-        Log.i("テスト  ", "GetChords！！"+result_s+Key[num]);
         return result_s;
     }
 

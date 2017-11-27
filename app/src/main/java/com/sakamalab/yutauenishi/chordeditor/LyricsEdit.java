@@ -143,7 +143,7 @@ public class LyricsEdit extends AppCompatActivity {
         int sDate = cal.get(Calendar.DATE);         //日を取得
         EditText editText = (EditText) findViewById(R.id.edit1);
         String text = editText.getText().toString();
-        String chord;
+        String chord="";
         int key_i;
         text = text.replaceAll("'", "''");
         AnalysisChords AC = new AnalysisChords();
