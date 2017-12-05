@@ -74,6 +74,25 @@ public class AnalysisChords extends AppCompatActivity {
     }
 
 
+    //UCの出力を入力し、ランダムで１つのコードを出力
+    public String UCtoString(HashMap<String, Integer> UC){
+        Log.i("テスト  ", "UCtoString start");
+        String result="";
+        if(!UC.isEmpty()) {
+            for (String key : UC.keySet()) {
+                Integer n_times = UC.get(key);
+                result=result+key+"が"+Integer.toString(n_times)+"回\n";
+            }
+        }
+
+        Log.i("テスト  ", "UCtoString finish");
+        return result;
+    }
+
+
+
+
+
     //♭を全部なくし、＃にする
     public String FlatToSharp(String text){
 
@@ -466,6 +485,7 @@ public class AnalysisChords extends AppCompatActivity {
 
     //UCの出力を入力し、ランダムで１つのコードを出力
     public String RandomChoice(HashMap<String, Integer> UC){
+        Log.i("テスト  ", "RandomChoice start");
         String result="";
         ArrayList<String> array = new ArrayList<>();
         int max=0;
@@ -480,6 +500,8 @@ public class AnalysisChords extends AppCompatActivity {
             int ran = (int)(Math.random()*(max));
             result=array.get(ran);
         }
+
+        Log.i("テスト  ", "RandomChoice finish");
         return result;
     }
 
@@ -522,6 +544,7 @@ public class AnalysisChords extends AppCompatActivity {
 
     //曲で使われているすべてのコードの種類と出現回数
     public HashMap<String, Integer> UsedChord(String chords){
+        Log.i("テスト  ", "UsedChord start");
         HashMap<String,Integer> map = new HashMap<>();
         int num;
         int con=0;
@@ -538,6 +561,7 @@ public class AnalysisChords extends AppCompatActivity {
                 chords = Pattern.compile(",("+data_split[1]+",)+").matcher(chords).replaceAll(",");
             }
         }
+        Log.i("テスト  ", "UsedChord finish");
         return map;
     }
 
@@ -584,10 +608,12 @@ public class AnalysisChords extends AppCompatActivity {
 
 
     public SparseArray<String[]> FirstChordProgression(String f_chord,int line_counter, HashMap<String, List<String>> NC_list_map) {
+        Log.i("テスト  ", "FirstChordProgression start");
         SparseArray<String[]> new_chord_map = new SparseArray<>();
         String[] new_chord_p= new String[4];
         List<String> next_list;
         if(NC_list_map==null) {
+            Log.i("テスト  ", "FCP return null");
             return null;
         }
 
@@ -595,12 +621,17 @@ public class AnalysisChords extends AppCompatActivity {
             new_chord_p[0]=f_chord;
             for(int j=1;j<4;j++){
                 next_list=NC_list_map.get(GetChordRoot(new_chord_p[j-1]));//f_chord→GetChordRoot(f_chord)
+                if(next_list==null){
+                    Log.i("テスト  ", "FCP失敗　再帰呼出し");
+                    return FirstChordProgression(f_chord,line_counter,NC_list_map);
+                }
                 int ran = (int)(Math.random()*(next_list.size()));
                 String next_chord=next_list.get(ran);
                 new_chord_p[j]=next_chord;
             }
             new_chord_map.put(i,new_chord_p);
         }
+
         return new_chord_map;
     }
 

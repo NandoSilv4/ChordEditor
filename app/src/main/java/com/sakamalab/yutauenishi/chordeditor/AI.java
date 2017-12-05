@@ -63,82 +63,91 @@ public class AI extends AppCompatActivity {
 
         boolean mov = c.moveToFirst();
         if(!mov)return;
-        SparseArray<String[]> map,new_chord_map;
-        String allChords="";
-        String first_chord="";
-        String line_numALL="";
+        SparseArray<String[]> map_A;
+        HashMap<String, List<String>> Connect_map_A = new HashMap<>();
+        String allChords_A="------[Aメロ]------\n";
+        String allChords_B="------[Bメロ]------\n";
+        String first_chord_A,line_n_A,chords_A;
+        first_chord_A=line_n_A="";
 
 
-        HashMap<String, List<String>> List_map = new HashMap<>();
 
-        Log.i("テスト  ", "1dayo");
+        SparseArray<String[]> map_B;
+        HashMap<String, List<String>> Connect_map_B = new HashMap<>();
+        String first_chord_B,line_n_B,chords_B;
+        first_chord_B=line_n_B="";
+
+
         while (mov) {
             String chords = c.getString(0);
-            chords=AC.SelectPart(chords,"Aメロ");
-
             chords=AC.UnityRowNumber(chords);
 
-            map=AC.StringToMap(chords);
-            first_chord=first_chord+AC.GetChordRoot(AC.Choose_One(map,1,1))+",";
-            if(map!=null) {
-                line_numALL = line_numALL + String.valueOf(map.size()) + ",";
-            }
+            //----------[Aメロ]-----------------------------------------------------------
+            chords_A=AC.SelectPart(chords,"Aメロ");
+            allChords_A=allChords_A+chords_A+"\n";
+            map_A=AC.StringToMap(chords_A);
+            first_chord_A=first_chord_A+AC.GetChordRoot(AC.Choose_One(map_A,1,1))+",";
+            if(map_A!=null) line_n_A = line_n_A + String.valueOf(map_A.size()) + ",";
+            Connect_map_A=AC.NextChordAnalysis(map_A,Connect_map_A);
+            //----------[Aメロ]-----------------------------------------------------------
 
-            chords=AC.MapToString(map);
-            allChords=allChords+chords+"\n";
-            List_map=AC.NextChordAnalysis(map,List_map);
+            //----------[Bメロ]-----------------------------------------------------------
+            chords_B=AC.SelectPart(chords,"Bメロ");
+            allChords_B=allChords_B+chords_B+"\n";
+            map_B=AC.StringToMap(chords_B);
+            first_chord_B=first_chord_B+AC.GetChordRoot(AC.Choose_One(map_B,1,1))+",";
+            if(map_B!=null) line_n_B = line_n_B + String.valueOf(map_B.size()) + ",";
+            Connect_map_B=AC.NextChordAnalysis(map_B,Connect_map_B);
+            //----------[Bメロ]-----------------------------------------------------------
+
 
             mov = c.moveToNext();
         }
 
 
+        HashMap<String,Integer> UC_A,UC_B;
+        //----------[Aメロ]-----------------------------------------------------------
+        UC_A=AC.UsedChord(first_chord_A);
+        first_chord_A=AC.RandomChoice(UC_A);//first_chord_Aの更新（新しい物を決める)
+        line_n_A=AC.RandomChoice(AC.UsedChord(line_n_A));//line_n_Aの更新（新しい物を決める)
+        int new_line_n_A=0;
+        if(!line_n_A.equals(""))new_line_n_A=Integer.parseInt(line_n_A);
+
+        map_A=AC.FirstChordProgression(first_chord_A, new_line_n_A, Connect_map_A);//map_Aの使いまわし
+        String new_A=AC.MapToString(map_A);
+        //----------[Aメロ]-----------------------------------------------------------
 
 
+        //----------[Bメロ]-----------------------------------------------------------
+        UC_B=AC.UsedChord(first_chord_B);
+        first_chord_B=AC.RandomChoice(UC_B);//first_chord_Bの更新（新しい物を決める)
+        line_n_B=AC.RandomChoice(AC.UsedChord(line_n_B));//line_n_Bの更新（新しい物を決める)
+        int new_line_n_B=0;
+        if(!line_n_B.equals(""))new_line_n_B=Integer.parseInt(line_n_B);
 
+        map_B=AC.FirstChordProgression(first_chord_B, new_line_n_B, Connect_map_B);//map_Bの使いまわし
+        Log.i("テスト  ", "FirstChordProgression finish");
+        String new_B=AC.MapToString(map_B);
+        //----------[Bメロ]-----------------------------------------------------------
 
+        String UC;
+        UC=AC.UCtoString(UC_A);
+        UC="[Aメロ]\n"+UC+"\n[Bメロ]\n"+AC.UCtoString(UC_B);
 
-
-        HashMap<String,Integer> hash_map;
-        hash_map=AC.UsedChord(first_chord);
-        String uc="";
-        for (String key : hash_map.keySet()) {
-            Integer n_times = hash_map.get(key);
-            uc=uc+key+"が"+n_times+"回\n";
-        }
-
-        HashMap<String,Integer> hash_map2;
-        hash_map2=AC.UsedChord(line_numALL);
-        String uc2="";
-        for (String key : hash_map2.keySet()) {
-            Integer n_times = hash_map2.get(key);
-            uc2=uc2+key+"行が"+n_times+"回\n";
-        }
-
-        String new_first_chord=AC.RandomChoice(hash_map);
-        String ln=AC.RandomChoice(hash_map2);
-        int new_line_number=0;
-        if(!ln.equals("")){
-            new_line_number=Integer.parseInt(ln);
-        }
-
-
-        new_chord_map=AC.FirstChordProgression(new_first_chord,new_line_number,List_map);
-        String new_chords=AC.MapToString(new_chord_map);
-
-
-
-
+        new_A="[Aメロ]\n"+new_A+"[Bメロ]\n"+new_B;
         TextView textView = (TextView) findViewById(R.id.text_1);
-        textView.setText(allChords);
+        textView.setText(new_A);
 
         TextView textView2 = (TextView) findViewById(R.id.text_2);
-        textView2.setText(uc);
+        textView2.setText(UC);
 
         TextView textView3 = (TextView) findViewById(R.id.text_3);
-        textView3.setText(uc2);
+        textView3.setText("");
 
+
+        allChords_A=allChords_A+allChords_B;
         TextView textView4 = (TextView) findViewById(R.id.text_4);
-        textView4.setText(new_chords);
+        textView4.setText(allChords_A);
 
 
         c.close();
