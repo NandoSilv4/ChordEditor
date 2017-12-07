@@ -74,24 +74,6 @@ public class AnalysisChords extends AppCompatActivity {
     }
 
 
-    //UCの出力を入力し、ランダムで１つのコードを出力
-    public String UCtoString(HashMap<String, Integer> UC){
-        Log.i("テスト  ", "UCtoString start");
-        String result="";
-        if(!UC.isEmpty()) {
-            for (String key : UC.keySet()) {
-                Integer n_times = UC.get(key);
-                result=result+key+"が"+Integer.toString(n_times)+"回\n";
-            }
-        }
-
-        Log.i("テスト  ", "UCtoString finish");
-        return result;
-    }
-
-
-
-
 
     //♭を全部なくし、＃にする
     public String FlatToSharp(String text){
@@ -114,13 +96,12 @@ public class AnalysisChords extends AppCompatActivity {
         return text;
     }
 
-
+    //-,をなくして、1行に4個コードがある状態に統一
     public String UnityRowNumber(String chordsALL) {
         if(chordsALL.equals(""))return "";
         chordsALL=Pattern.compile("-,").matcher(chordsALL).replaceAll("<->");
         return chordsALL;
     }
-
 
     //コード一文字目を下記に基づいて数字化する
     public  int ChordToNo(char first){
@@ -157,6 +138,18 @@ public class AnalysisChords extends AppCompatActivity {
                 return -1;
         }
     }
+
+
+    //行 l 列 r　で指定された場所のコードをmapから取り出して返す。
+    public String Choose_One(SparseArray<String[]> map,int l,int r) {
+        if(map==null)return "";
+        l=l-1;
+        r=r-1;
+        int key = map.keyAt(l);
+        String[] chord=map.get(key);
+        return chord[r];
+    }
+
 
     //コード解析するさいの＃など
     public String HalfUpDown(String text,int count){
@@ -211,7 +204,6 @@ public class AnalysisChords extends AppCompatActivity {
         return text;
     }
 
-
     //エディットページの#などの実装
     public String HalfUpDownEdit(String text,int count){
 
@@ -259,8 +251,6 @@ public class AnalysisChords extends AppCompatActivity {
         return text;
     }
 
-
-
     //コードのルートを見つけ、和音の構成音を見つける
     public HashMap<String, Integer> ChordNameAnalysis(String chord){
         HashMap<String,Integer> map= new HashMap<>();
@@ -296,7 +286,6 @@ public class AnalysisChords extends AppCompatActivity {
                 return map;
         }
     }
-
 
     //歌詞+コードからコードだけを抜き出す。
     public String GetChords(String text){
@@ -338,6 +327,36 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
+    //コードのルートを見つける
+    public String GetChordRoot(String chord){
+        String root;
+        if(chord.equals(""))return "";
+        switch (chord.length()) {
+            case 1:
+                return chord;
+            case 2:
+                root=chord.substring(0, 1);
+                if(chord.charAt(1)=='#'||chord.charAt(1)=='m'){
+                    root=chord;
+                }
+                return root;
+            default:
+                if(chord.charAt(1)=='#'){
+                    root=chord.substring(0, 2);
+                    if(chord.charAt(2)=='m'&&chord.charAt(3)!='a'){
+                        root=chord.substring(0, 3);
+                    }
+                }else{
+                    root=chord.substring(0, 1);
+                    if(chord.charAt(1)=='m'&& chord.charAt(2)!='a'){
+                        root=chord.substring(0, 2);
+                    }
+                }
+                return root;
+        }
+    }
+
+
 
     //targetの文字がchordsで何回つかわれているか数える
     public int Counter(String chords,String target,int f){//f=1完全一致f=0頭一致
@@ -348,6 +367,7 @@ public class AnalysisChords extends AppCompatActivity {
             chords=Pattern.compile("\\[.*?\\],").matcher(chords).replaceAll("");
             if(chords==null)return 0;
             String[] data_split = chords.split(",", 0);
+            if(target.equals(""))return data_split.length;
             Pattern p_t;
             switch (f){
                 case 0:
@@ -368,6 +388,30 @@ public class AnalysisChords extends AppCompatActivity {
     }
 
 
+    //全体のコード数に対して、ダイアトニックコードが半分もなかった場合のみ　0以外の値を返す　返す値はキーの
+    public int CheckPartKey(String chords){
+        int return_i=0;
+        int C,Dm,Em,F,G,Am;
+        int sum;
+        int c_num_all;
+
+
+        c_num_all=Counter(chords,"",0);
+        C = Counter(chords, "C",0) - Counter(chords, "C#",0);
+        Dm = Counter(chords, "Dm",0);
+        Em = Counter(chords, "Em",0);
+        F = Counter(chords, "F",0) - Counter(chords, "F#",0);
+        G = Counter(chords, "G",0) - Counter(chords, "G#",0);
+        Am = Counter(chords, "Am",0);
+        sum = C + Dm + Em + F + G + Am;
+
+        if(sum<c_num_all/2){
+            return_i=FindKey(chords);
+        }
+
+        return return_i;
+    }
+
 
     //String Key[] = {"C", "C#","D","D#","E","F","F#","G","G#","A","A#","B"};
     //曲のキーを返す
@@ -378,7 +422,6 @@ public class AnalysisChords extends AppCompatActivity {
         int max=0;
         int max_i=-1;
         int sub_max=0;
-
         for(int i=0;i<12;i++) {
             C = Counter(chords, "C",0) - Counter(chords, "C#",0);
             Dm = Counter(chords, "Dm",0);
@@ -387,6 +430,9 @@ public class AnalysisChords extends AppCompatActivity {
             G = Counter(chords, "G",0) - Counter(chords, "G#",0);
             Am = Counter(chords, "Am",0);
             sum[i] = C + Dm + Em + F + G + Am;
+
+
+
             if(max<sum[i]){
                 max=sum[i];
                 max_i=i;
@@ -395,17 +441,15 @@ public class AnalysisChords extends AppCompatActivity {
             }
             chords=HalfUpDown(chords,-1);
         }
-
         if(sub_max==max){
             //解析不能
             return_i=20;
         }else{
             return_i=max_i;//12-max_iカポするとCで弾ける=
         }
+        Log.i("テスト  ", "fin"+return_i);
         return return_i;
     }
-
-
 
     //KeyをCにする
     public String ChangeKeyToC(String chords){
@@ -454,16 +498,6 @@ public class AnalysisChords extends AppCompatActivity {
     }
 
 
-    //行 l 列 r　で指定された場所のコードをmapから取り出して返す。
-    public String Choose_One(SparseArray<String[]> map,int l,int r) {
-        if(map==null)return "";
-        l=l-1;
-        r=r-1;
-        int key = map.keyAt(l);
-        String[] chord=map.get(key);
-        return chord[r];
-    }
-
     //Aメロを抜き出す
     public String SelectPart(String chords,String choices) {
 
@@ -475,11 +509,6 @@ public class AnalysisChords extends AppCompatActivity {
 
         return SP_chords2[0];
     }
-
-
-
-
-
 
 
 
@@ -504,41 +533,6 @@ public class AnalysisChords extends AppCompatActivity {
         Log.i("テスト  ", "RandomChoice finish");
         return result;
     }
-
-
-
-
-
-    //コードのルートを見つける
-    public String GetChordRoot(String chord){
-        String root;
-        if(chord.equals(""))return "";
-        switch (chord.length()) {
-            case 1:
-                return chord;
-            case 2:
-                root=chord.substring(0, 1);
-                if(chord.charAt(1)=='#'||chord.charAt(1)=='m'){
-                    root=chord;
-                }
-                return root;
-            default:
-                if(chord.charAt(1)=='#'){
-                    root=chord.substring(0, 2);
-                    if(chord.charAt(2)=='m'&&chord.charAt(3)!='a'){
-                        root=chord.substring(0, 3);
-                    }
-                }else{
-                    root=chord.substring(0, 1);
-                    if(chord.charAt(1)=='m'&& chord.charAt(2)!='a'){
-                        root=chord.substring(0, 2);
-                    }
-                }
-                return root;
-        }
-    }
-
-
 
 
 
@@ -569,14 +563,6 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
     //出現コードの次のコードの割合を記憶
     public HashMap<String, List<String>> NextChordAnalysis(SparseArray<String[]> chords_map, HashMap<String, List<String>> result_map){
         if(chords_map==null)return result_map;
@@ -592,11 +578,15 @@ public class AnalysisChords extends AppCompatActivity {
                 target_list=result_map.get(target);
                 if(target_list==null){
                     List<String> new_list = new ArrayList<>();
-                    new_list.add(GetChordRoot(target_str[j+1]));
-                    result_map.put(target,new_list);
+                    if(!target_str[j+1].equals(target_str[j])) {
+                        new_list.add(GetChordRoot(target_str[j+1]));
+                        result_map.put(target, new_list);
+                    }
                 }else{
-                    target_list.add(GetChordRoot(target_str[j+1]));
-                    result_map.put(target,target_list);
+                    if(!target_str[j+1].equals(target_str[j])) {
+                        target_list.add(GetChordRoot(target_str[j+1]));
+                        result_map.put(target, target_list);
+                    }
                 }
             }
         }
@@ -607,33 +597,156 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-    public SparseArray<String[]> FirstChordProgression(String f_chord,int line_counter, HashMap<String, List<String>> NC_list_map) {
+    //1行目のコード進行生成
+    public SparseArray<String[]> FirstChordProgression(String f_chord,int line_counter, HashMap<String, List<String>> NC_list_map, HashMap<String, Integer> Length_map) {
         Log.i("テスト  ", "FirstChordProgression start");
+
         SparseArray<String[]> new_chord_map = new SparseArray<>();
         String[] new_chord_p= new String[4];
+        String[] used_chord = {"0","1","2","3"};
+        String next_chord="";
+        int[] length_i = new int[4];
+        int point=0;
+        int ran;
+        int flag;
         List<String> next_list;
-        if(NC_list_map==null) {
+        if(NC_list_map==null||Length_map==null) {
             Log.i("テスト  ", "FCP return null");
             return null;
         }
 
-        for(int i=0;i<line_counter;i++){
-            new_chord_p[0]=f_chord;
-            for(int j=1;j<4;j++){
-                next_list=NC_list_map.get(GetChordRoot(new_chord_p[j-1]));//f_chord→GetChordRoot(f_chord)
-                if(next_list==null){
-                    Log.i("テスト  ", "FCP失敗　再帰呼出し");
-                    return FirstChordProgression(f_chord,line_counter,NC_list_map);
-                }
-                int ran = (int)(Math.random()*(next_list.size()));
-                String next_chord=next_list.get(ran);
-                new_chord_p[j]=next_chord;
+
+        String length_s=RandomChoice(Length_map);
+        length_i[0]=Integer.parseInt(length_s.substring(0, 1));
+        length_i[1]=Integer.parseInt(length_s.substring(1, 2));
+        length_i[2]=Integer.parseInt(length_s.substring(2, 3));
+        length_i[3]=Integer.parseInt(length_s.substring(3, 4));
+
+
+        new_chord_p[0]=f_chord;
+        new_chord_p=Check_FCP(length_i,new_chord_p,0,f_chord);
+        used_chord[point]=f_chord;
+        point++;
+
+        Log.i("テスト  ", "パターンは"+length_s);
+
+        for(int j=1;j<4;j++){
+            if(length_i[j]!=point)continue;
+            next_list=NC_list_map.get(GetChordRoot(new_chord_p[j-1]));
+            if(next_list==null){
+                Log.i("テスト  ", "FCP失敗　再帰呼出し");
+                return FirstChordProgression(f_chord,line_counter,NC_list_map,Length_map);
             }
+            flag=0;
+            int count=0;
+            while(flag==0){
+                flag=1;
+                ran = (int)(Math.random()*(next_list.size()));
+                next_chord=next_list.get(ran);
+                for(int k=0;k<point;k++){
+                    if(next_chord.equals(used_chord[k]))flag=0;
+                }
+                count++;
+                if(count>100) {
+                    Log.i("テスト  ", "無限ループミス");
+                    break;
+                }
+            }
+            new_chord_p[j]=next_chord;
+            new_chord_p=Check_FCP(length_i,new_chord_p,j,next_chord);
+            used_chord[point]=next_chord;
+            point++;
+        }
+        //行はとりあえずline_counter回コピペする
+        for(int i=0;i<line_counter;i++){
             new_chord_map.put(i,new_chord_p);
         }
-
+        Log.i("テスト  ", "コードは"+new_chord_p[0]+","+new_chord_p[1]+","+new_chord_p[2]+","+new_chord_p[3]+",");
         return new_chord_map;
     }
+
+
+
+
+    //FirstChordProgressionで使う。１行のコード進行で、同じコードを使う場所に一気にコードを入れる。
+    public String[] Check_FCP(int[] length_i,String[] new_chord_p,int i,String chord){
+
+        for(int j=i+1;j<4;j++){
+            if(length_i[i]==length_i[j]){
+                new_chord_p[j]=chord;
+                Log.i("テスト  ", "Check_FCP "+chord+"  "+j);
+            }
+        }
+        return new_chord_p;
+    }
+
+
+
+
+    //UCの出力を入力し、ランダムで１つのコードを出力
+    public String UCtoString(HashMap<String, Integer> UC){
+        Log.i("テスト  ", "UCtoString start");
+        String result="";
+        if(!UC.isEmpty()) {
+            for (String key : UC.keySet()) {
+                Integer n_times = UC.get(key);
+                result=result+key+"が"+Integer.toString(n_times)+"回\n";
+            }
+        }
+
+        Log.i("テスト  ", "UCtoString finish");
+        return result;
+    }
+
+
+
+
+    //コードの長さを解析
+    public HashMap<String, Integer> ChordLengthAnalysis(String chord,HashMap<String, Integer> map) {
+        int[] result = new int[4];
+        String sum;
+        int point = 0;
+        result[0] = 10;
+        result[1] = 10;
+        result[2] = 10;
+        result[3] = 10;
+        if (chord.equals("")) return map;
+
+        String[] line_s = chord.split(",", 0);
+
+        for (int i = 0; i < 4; i++) {
+            if(result[i]>i) {
+                result[i]=point;
+                for (int j = i + 1; j < 4; j++) {
+                    if (line_s[i].equals(line_s[j])) {
+                        result[j] = point;
+                    }
+                }
+                point++;
+            }
+        }
+
+        if(result[3]==10)return map;
+
+        sum=    String.valueOf(result[0])+
+                String.valueOf(result[1])+
+                String.valueOf(result[2])+
+                String.valueOf(result[3]);
+
+        if(map.isEmpty()) {
+            map.put(sum, 1);
+        }else{
+            Integer n_times = map.get(sum);
+            if(n_times==null){
+                map.put(sum, 1);
+            }else{
+                map.put(sum, n_times+1);
+            }
+        }
+        return map;
+    }
+
+
 
 
 
@@ -677,6 +790,41 @@ public class AnalysisChords extends AppCompatActivity {
         }
         return result_map;
     }
+
+
+
+
+
+
+
+
+
+    //最初、最後のコードがC(ルート)か調べ、点数出す。あんま意味ないかも
+    public int FirstLastChord(String chords){
+        int result=0;
+        chords=Pattern.compile("\\n").matcher(chords).replaceAll("");
+        chords=Pattern.compile("\\[.*?\\],").matcher(chords).replaceAll("");
+        Pattern p_t,p_t2;
+        p_t= Pattern.compile("^C.*");
+        p_t2= Pattern.compile("^C#.*");
+        if(chords!=null) {
+            String[] data_split = chords.split(",", 0);
+            Matcher m_t = p_t.matcher(data_split[0]);
+            Matcher m_t2 = p_t2.matcher(data_split[0]);
+            if (m_t.find()&&!(m_t2.find()))result= result + 1;
+
+            //Matcher m_t3 = p_t.matcher(data_split[data_split.length-1]);
+            //Matcher m_t4 = p_t2.matcher(data_split[data_split.length-1]);
+            //if (m_t3.find()&&!(m_t4.find()))result= result + 1;
+        }
+        return result;
+    }
+
+
+
+
+
+
 
      */
 
