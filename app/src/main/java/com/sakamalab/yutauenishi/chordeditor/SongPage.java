@@ -38,68 +38,92 @@ public class SongPage extends AppCompatActivity {
 
 
 
-    SoundPool s_00,s_01,s_02,s_03,s_04,s_05,s_06,s_07,s_08,s_09,s_10,s_11;
-    int ID_00,ID_01,ID_02,ID_03,ID_04,ID_05,ID_06,ID_07,ID_08,ID_09,ID_10,ID_11;
+
+
+
+
+
+
+
+    SoundPool S_Pool;
+    int[] S_ID_load=new int[12];
+    int[] S_ID_stop=new int[12];
     public void SoundPlay(HashMap<String, Integer> SM){
         for (String ToneName : SM.keySet()) {
             Integer tone = SM.get(ToneName);
             switch (tone){
-                case 0:s_00.play(ID_00, 0.9f, 0.9f, 0, 0, 1.0f);break;
-                case 1:s_01.play(ID_01, 0.9f, 0.9f, 0, 0, 1.0f);break;
-                case 2:s_02.play(ID_02, 0.9f, 0.9f, 0, 0, 1.0f);break;
-                case 3:s_03.play(ID_03, 0.9f, 0.9f, 0, 0, 1.0f);break;
-                case 4:s_04.play(ID_04, 0.9f, 0.9f, 0, 0, 1.0f);break;
-                case 5:s_05.play(ID_05, 0.9f, 0.9f, 0, 0, 1.0f);break;
-                case 6:s_06.play(ID_06, 0.9f, 0.9f, 0, 0, 1.0f);break;
-                case 7:s_07.play(ID_07, 0.9f, 0.9f, 0, 0, 1.0f);break;
-                case 8:s_08.play(ID_08, 0.9f, 0.9f, 0, 0, 1.0f);break;
-                case 9:s_09.play(ID_09, 0.9f, 0.9f, 0, 0, 1.0f);break;
-                case 10:s_10.play(ID_10, 0.9f, 0.9f, 0, 0, 1.0f);break;
-                case 11:s_11.play(ID_11, 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 0:S_ID_stop[0]=S_Pool.play(S_ID_load[0], 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 1:S_ID_stop[1]=S_Pool.play(S_ID_load[1], 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 2:S_ID_stop[2]=S_Pool.play(S_ID_load[2], 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 3:S_ID_stop[3]=S_Pool.play(S_ID_load[3], 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 4:S_ID_stop[4]=S_Pool.play(S_ID_load[4], 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 5:S_ID_stop[5]=S_Pool.play(S_ID_load[5], 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 6:S_ID_stop[6]=S_Pool.play(S_ID_load[6], 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 7:S_ID_stop[7]=S_Pool.play(S_ID_load[7], 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 8:S_ID_stop[8]=S_Pool.play(S_ID_load[8], 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 9:S_ID_stop[9]=S_Pool.play(S_ID_load[9], 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 10:S_ID_stop[10]=S_Pool.play(S_ID_load[10], 0.9f, 0.9f, 0, 0, 1.0f);break;
+                case 11:S_ID_stop[11]=S_Pool.play(S_ID_load[11], 0.9f, 0.9f, 0, 0, 1.0f);break;
+            }
+        }
+    }
+    public void SoundStop(HashMap<String, Integer> SM){
+        for (String ToneName : SM.keySet()) {
+            Integer tone = SM.get(ToneName);
+            switch (tone){
+                case 0:S_Pool.stop(S_ID_stop[0]);break;
+                case 1:S_Pool.stop(S_ID_stop[1]);break;
+                case 2:S_Pool.stop(S_ID_stop[2]);break;
+                case 3:S_Pool.stop(S_ID_stop[3]);break;
+                case 4:S_Pool.stop(S_ID_stop[4]);break;
+                case 5:S_Pool.stop(S_ID_stop[5]);break;
+                case 6:S_Pool.stop(S_ID_stop[6]);break;
+                case 7:S_Pool.stop(S_ID_stop[7]);break;
+                case 8:S_Pool.stop(S_ID_stop[8]);break;
+                case 9:S_Pool.stop(S_ID_stop[9]);break;
+                case 10:S_Pool.stop(S_ID_stop[10]);break;
+                case 11:S_Pool.stop(S_ID_stop[11]);break;
             }
         }
     }
     public void SoundLoad(){
-        s_00= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
-        s_01= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
-        s_02= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
-        s_03= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
-        s_04= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
-        s_05= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
-        s_06= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
-        s_07= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
-        s_08= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
-        s_09= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
-        s_10= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
-        s_11= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
-        ID_00=s_00.load(this,R.raw.sound_00,1);
-        ID_01=s_01.load(this,R.raw.sound_01,1);
-        ID_02=s_02.load(this,R.raw.sound_02,1);
-        ID_03=s_03.load(this,R.raw.sound_03,1);
-        ID_04=s_04.load(this,R.raw.sound_04,1);
-        ID_05=s_05.load(this,R.raw.sound_05,1);
-        ID_06=s_06.load(this,R.raw.sound_06,1);
-        ID_07=s_07.load(this,R.raw.sound_07,1);
-        ID_08=s_08.load(this,R.raw.sound_08,1);
-        ID_09=s_09.load(this,R.raw.sound_09,1);
-        ID_10=s_10.load(this,R.raw.sound_10,1);
-        ID_11=s_11.load(this,R.raw.sound_11,1);
+        Log.i("テスト  ", "SoundPool00");
+
+        S_Pool= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
+
+        S_ID_load[0]=S_Pool.load(this,R.raw.sound_00,1);
+        S_ID_load[1]=S_Pool.load(this,R.raw.sound_01,1);
+        S_ID_load[2]=S_Pool.load(this,R.raw.sound_02,1);
+        S_ID_load[3]=S_Pool.load(this,R.raw.sound_03,1);
+        S_ID_load[4]=S_Pool.load(this,R.raw.sound_04,1);
+        S_ID_load[5]=S_Pool.load(this,R.raw.sound_05,1);
+        S_ID_load[6]=S_Pool.load(this,R.raw.sound_06,1);
+        S_ID_load[7]=S_Pool.load(this,R.raw.sound_07,1);
+        S_ID_load[8]=S_Pool.load(this,R.raw.sound_08,1);
+        S_ID_load[9]=S_Pool.load(this,R.raw.sound_09,1);
+        S_ID_load[10]=S_Pool.load(this,R.raw.sound_10,1);
+        S_ID_load[11]=S_Pool.load(this,R.raw.sound_11,1);
+
     }
     public void SoundRelease() {
-        s_00.release();
-        s_01.release();
-        s_02.release();
-        s_03.release();
-        s_04.release();
-        s_05.release();
-        s_06.release();
-        s_07.release();
-        s_08.release();
-        s_09.release();
-        s_10.release();
-        s_11.release();
+        S_Pool.release();
+        S_Pool.release();
+        S_Pool.release();
+        S_Pool.release();
+        S_Pool.release();
+        S_Pool.release();
+        S_Pool.release();
+        S_Pool.release();
+        S_Pool.release();
+        S_Pool.release();
+        S_Pool.release();
+        S_Pool.release();
     }
+
+
+
     int count=0;
+    HashMap<String, Integer> old_map;
     public void Play() {
         String chords2;
         chords2= Pattern.compile("\\n").matcher(chords).replaceAll("");
@@ -108,10 +132,16 @@ public class SongPage extends AppCompatActivity {
         if(!chords2.equals("")){
             String[] data_split = chords2.split(",", 0);
             if(data_split.length-1>count) {
+                if(old_map!=null){
+                    SoundStop(old_map);
+                }
                 SoundMap = AC.ChordNameAnalysis(data_split[count]);
+
                 SoundPlay(SoundMap);
+                old_map=SoundMap;
                 count++;
             }else{
+                if(old_map!=null)SoundStop(old_map);
                 SoundMap = AC.ChordNameAnalysis(data_split[count]);
                 SoundPlay(SoundMap);
                 count=0;
@@ -141,6 +171,11 @@ public class SongPage extends AppCompatActivity {
                     .show();
         }
     }
+
+
+
+
+
 
 
     // ツールバー
