@@ -45,7 +45,7 @@ public class SongPage extends AppCompatActivity {
 
 
 
-    SoundPool S_Pool;
+    SoundPool S_Pool= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
     int[] S_ID_load=new int[12];
     int[] S_ID_stop=new int[12];
     public void SoundPlay(HashMap<String, Integer> SM){
@@ -88,8 +88,6 @@ public class SongPage extends AppCompatActivity {
     }
     public void SoundLoad(){
         Log.i("テスト  ", "SoundPool00");
-
-        S_Pool= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
 
         S_ID_load[0]=S_Pool.load(this,R.raw.sound_00,1);
         S_ID_load[1]=S_Pool.load(this,R.raw.sound_01,1);

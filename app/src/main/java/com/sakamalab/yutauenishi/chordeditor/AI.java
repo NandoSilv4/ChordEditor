@@ -39,7 +39,7 @@ public class AI extends AppCompatActivity {
 
 
 
-    SoundPool S_Pool;
+    SoundPool S_Pool= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
     int[] S_ID_load=new int[12];
     int[] S_ID_stop=new int[12];
     public void SoundPlay(HashMap<String, Integer> SM){
@@ -82,8 +82,6 @@ public class AI extends AppCompatActivity {
     }
     public void SoundLoad(){
         Log.i("テスト  ", "SoundPool00");
-
-        S_Pool= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
 
         S_ID_load[0]=S_Pool.load(this,R.raw.sound_00,1);
         S_ID_load[1]=S_Pool.load(this,R.raw.sound_01,1);
@@ -373,6 +371,15 @@ public class AI extends AppCompatActivity {
         allChords_A=allChords_A+allChords_B;
         TextView textView4 = (TextView) findViewById(R.id.text_4);
         textView4.setText(allChords_A);
+
+
+
+        String test=AC.GetChordRoot("A#m")+"\n"+AC.GetChordRoot("Amaj7")+"\n"+AC.GetChordRoot("A#madd9")+"\n"+AC.GetChordRoot("Amadd9");
+        TextView textView5 = (TextView) findViewById(R.id.text_5);
+        textView5.setText(test);
+
+
+
 
 
         c.close();

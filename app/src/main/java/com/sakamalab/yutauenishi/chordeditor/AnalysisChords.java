@@ -340,21 +340,80 @@ public class AnalysisChords extends AppCompatActivity {
                     root=chord;
                 }
                 return root;
+            case 3:case 4:
+                if(chord.charAt(1)=='#'){
+                    root=chord.substring(0,2);
+                    if(chord.charAt(2)=='m'){
+                        root=chord.substring(0,3);
+                    }
+                }else{
+                    root=chord.substring(1);
+                    if(chord.charAt(1)=='m'){
+                        root=chord.substring(0,2);
+                    }
+                }
+                return root;
             default:
                 if(chord.charAt(1)=='#'){
                     root=chord.substring(0, 2);
-                    if(chord.charAt(2)=='m'&&chord.charAt(3)!='a'){
+                    if(chord.charAt(2)=='m'&&!(chord.charAt(3)=='a'&&chord.charAt(4)=='j')){
                         root=chord.substring(0, 3);
                     }
                 }else{
                     root=chord.substring(0, 1);
-                    if(chord.charAt(1)=='m'&& chord.charAt(2)!='a'){
+                    if(chord.charAt(1)=='m'&&!(chord.charAt(2)=='a'&&chord.charAt(3)=='j')){
                         root=chord.substring(0, 2);
                     }
                 }
                 return root;
         }
     }
+
+
+
+    //コードのルート以外を見つける
+    public String GetChordsType(String chord){
+        String sub;
+        if(chord.equals(""))return "";
+        switch (chord.length()) {
+            case 1:
+                return "";
+            case 2:
+                sub=chord.substring(1);
+                if(chord.charAt(1)=='#'||chord.charAt(1)=='m'){
+                    sub="";
+                }
+                return sub;
+            case 3:case 4:
+                if(chord.charAt(1)=='#'){
+                    sub=chord.substring(2);
+                    if(chord.charAt(2)=='m'){
+                        sub=chord.substring(3);
+                    }
+                }else{
+                    sub=chord.substring(1);
+                    if(chord.charAt(1)=='m'){
+                        sub=chord.substring(2);
+                    }
+                }
+                return sub;
+            default:
+                if(chord.charAt(1)=='#'){
+                    sub=chord.substring(2);
+                    if(chord.charAt(2)=='m'&&!(chord.charAt(3)=='a'&&chord.charAt(4)=='j')){
+                        sub=chord.substring(3);
+                    }
+                }else{
+                    sub=chord.substring(1);
+                    if(chord.charAt(1)=='m'&&!(chord.charAt(2)=='a'&&chord.charAt(3)=='j')){
+                        sub=chord.substring(2);
+                    }
+                }
+                return sub;
+
+        }
+    }
+
 
 
 
