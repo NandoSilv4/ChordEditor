@@ -19,44 +19,44 @@ public class AnalysisChords extends AppCompatActivity {
         switch(type){
             //対応済
             case "add9":
-                map.put("sub3", (root+2)%12);break;
+                map.put("sub3", (root+2)%24);break;
             case "aug":
-                map.put("sub2", (root+8)%12);break;
+                map.put("sub2", (root+8)%24);break;
             case "dim":
-                map.put("sub1", (root+3)%12);map.put("sub2", (root+6)%12);map.put("sub3", (root+9)%12);break;
+                map.put("sub1", (root+3)%24);map.put("sub2", (root+6)%24);map.put("sub3", (root+9)%24);break;
             case "sus4":
-                map.put("sub1", (root+5)%12);break;
+                map.put("sub1", (root+5)%24);break;
             case "m":
-                map.put("sub1", (root+3)%12);break;
+                map.put("sub1", (root+3)%24);break;
             case "m6":
-                map.put("sub1", (root+3)%12);
-                map.put("sub3", (root+9)%12);break;
+                map.put("sub1", (root+3)%24);
+                map.put("sub3", (root+9)%24);break;
             case "m7":
-                map.put("sub1", (root+3)%12);
-                map.put("sub3", (root+10)%12);break;
+                map.put("sub1", (root+3)%24);
+                map.put("sub3", (root+10)%24);break;
             case "maj7":case "Maj7":case "M7":
-                map.put("sub3", (root+11)%12);break;
+                map.put("sub3", (root+11)%24);break;
             case "mM7":case "m+7":case "mMaj7":
-                map.put("sub1", (root+3)%12);
-                map.put("sub3", (root+11)%12);break;
+                map.put("sub1", (root+3)%24);
+                map.put("sub3", (root+11)%24);break;
             case "6":
-                map.put("sub3", (root+9)%12);break;
+                map.put("sub3", (root+9)%24);break;
             case "69":case "6/9":case "6(9)":
-                map.put("sub3", (root+9)%12);
-                map.put("sub4", (root+2)%12);break;
+                map.put("sub3", (root+9)%24);
+                map.put("sub4", (root+2)%24);break;
             case "7":
-                map.put("sub3", (root+10)%12);break;
+                map.put("sub3", (root+10)%24);break;
             case "7sus4":
-                map.put("sub1", (root+5)%12);
-                map.put("sub3", (root+10)%12);break;
+                map.put("sub1", (root+5)%24);
+                map.put("sub3", (root+10)%24);break;
             case "m7(b5)":case "m7♭5":case "m7(-5)":case "m7-5":
-                map.put("sub1", (root+3)%12);
-                map.put("sub2", (root+6)%12);
-                map.put("sub3", (root+10)%12);
+                map.put("sub1", (root+3)%24);
+                map.put("sub2", (root+6)%24);
+                map.put("sub3", (root+10)%24);
                 break;
             case "7(b5)":case "7♭5":case "7(-5)":case "7-5":
-                map.put("sub2", (root+6)%12);
-                map.put("sub3", (root+10)%12);
+                map.put("sub2", (root+6)%24);
+                map.put("sub3", (root+10)%24);
                 break;
 
 
@@ -73,6 +73,42 @@ public class AnalysisChords extends AppCompatActivity {
         return map;
     }
 
+
+    //コードのルートを見つけ、和音の構成音を見つける
+    public HashMap<String, Integer> ChordNameAnalysis(String chord){
+        HashMap<String,Integer> map= new HashMap<>();
+        int root;
+        String type;
+        switch (chord.length()) {
+            case 0:
+                return null;
+            case 1:
+                root=ChordToNo(chord.charAt(0));
+                map.put("root", root);
+                map.put("sub1", (root+4)%24);
+                map.put("sub2", (root+7)%24);
+                return map;
+            default:
+                root=ChordToNo(chord.charAt(0));
+                if(chord.charAt(1)=='#'){
+                    root++;
+                    if(chord.length()==2){
+                        map.put("root", root);
+                        map.put("sub1", (root+4)%24);
+                        map.put("sub2", (root+7)%24);
+                        return map;
+                    }
+                    type=chord.substring(2);
+                }else{
+                    type=chord.substring(1);
+                }
+                map.put("root", root);
+                map.put("sub1", (root+4)%24);
+                map.put("sub2", (root+7)%24);
+                map=ChordType(type,map);
+                return map;
+        }
+    }
 
 
     //♭を全部なくし、＃にする
@@ -251,41 +287,6 @@ public class AnalysisChords extends AppCompatActivity {
         return text;
     }
 
-    //コードのルートを見つけ、和音の構成音を見つける
-    public HashMap<String, Integer> ChordNameAnalysis(String chord){
-        HashMap<String,Integer> map= new HashMap<>();
-        int root;
-        String type;
-        switch (chord.length()) {
-            case 0:
-                return null;
-            case 1:
-                root=ChordToNo(chord.charAt(0));
-                map.put("root", root);
-                map.put("sub1", (root+4)%12);
-                map.put("sub2", (root+7)%12);
-                return map;
-            default:
-                root=ChordToNo(chord.charAt(0));
-                if(chord.charAt(1)=='#'){
-                    root++;
-                    if(chord.length()==2){
-                        map.put("root", root);
-                        map.put("sub1", (root+4)%12);
-                        map.put("sub2", (root+7)%12);
-                        return map;
-                    }
-                    type=chord.substring(2);
-                }else{
-                    type=chord.substring(1);
-                }
-                map.put("root", root);
-                map.put("sub1", (root+4)%12);
-                map.put("sub2", (root+7)%12);
-                map=ChordType(type,map);
-                return map;
-        }
-    }
 
     //歌詞+コードからコードだけを抜き出す。
     public String GetChords(String text){
