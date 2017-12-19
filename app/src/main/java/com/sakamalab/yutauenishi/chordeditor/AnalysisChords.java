@@ -290,7 +290,6 @@ public class AnalysisChords extends AppCompatActivity {
 
     //歌詞+コードからコードだけを抜き出す。
     public String GetChords(String text){
-        Log.i("テスト  ", "GetChords！！");
         String chords;
         String chordsALL = "";
         text=FlatToSharp(text);
@@ -507,7 +506,7 @@ public class AnalysisChords extends AppCompatActivity {
         }else{
             return_i=max_i;//12-max_iカポするとCで弾ける=
         }
-        Log.i("テスト  ", "fin"+return_i);
+
         return return_i;
     }
 
@@ -574,7 +573,6 @@ public class AnalysisChords extends AppCompatActivity {
 
     //UCの出力を入力し、ランダムで１つのコードを出力
     public String RandomChoice(HashMap<String, Integer> UC){
-        Log.i("テスト  ", "RandomChoice start");
         String result="";
         ArrayList<String> array = new ArrayList<>();
         int max=0;
@@ -590,7 +588,6 @@ public class AnalysisChords extends AppCompatActivity {
             result=array.get(ran);
         }
 
-        Log.i("テスト  ", "RandomChoice finish");
         return result;
     }
 
@@ -598,7 +595,6 @@ public class AnalysisChords extends AppCompatActivity {
 
     //曲で使われているすべてのコードの種類と出現回数
     public HashMap<String, Integer> UsedChord(String chords){
-        Log.i("テスト  ", "UsedChord start");
         HashMap<String,Integer> map = new HashMap<>();
         int num;
         int con=0;
@@ -615,7 +611,6 @@ public class AnalysisChords extends AppCompatActivity {
                 chords = Pattern.compile(",("+data_split[1]+",)+").matcher(chords).replaceAll(",");
             }
         }
-        Log.i("テスト  ", "UsedChord finish");
         return map;
     }
 
@@ -659,7 +654,6 @@ public class AnalysisChords extends AppCompatActivity {
 
     //1行目のコード進行生成
     public SparseArray<String[]> FirstChordProgression(String f_chord,int line_counter, HashMap<String, List<String>> NC_list_map, HashMap<String, Integer> Length_map) {
-        Log.i("テスト  ", "FirstChordProgression start");
 
         SparseArray<String[]> new_chord_map = new SparseArray<>();
         String[] new_chord_p= new String[4];
@@ -745,7 +739,6 @@ public class AnalysisChords extends AppCompatActivity {
 
     //UCの出力を入力し、ランダムで１つのコードを出力
     public String UCtoString(HashMap<String, Integer> UC){
-        Log.i("テスト  ", "UCtoString start");
         String result="";
         if(!UC.isEmpty()) {
             for (String key : UC.keySet()) {
@@ -753,16 +746,14 @@ public class AnalysisChords extends AppCompatActivity {
                 result=result+key+"が"+Integer.toString(n_times)+"回\n";
             }
         }
-
-        Log.i("テスト  ", "UCtoString finish");
         return result;
     }
 
 
 
 
-    //コードの長さを解析
-    public HashMap<String, Integer> ChordLengthAnalysis(String chord,HashMap<String, Integer> map) {
+    //コードの長さや1行の特徴を解析
+    public HashMap<String, Integer> ChordLengthAnalysis2(String chord,HashMap<String, Integer> map) {
         int[] result = new int[4];
         String sum;
         int point = 0;
@@ -792,6 +783,127 @@ public class AnalysisChords extends AppCompatActivity {
                 String.valueOf(result[1])+
                 String.valueOf(result[2])+
                 String.valueOf(result[3]);
+
+        if(map.isEmpty()) {
+            map.put(sum, 1);
+        }else{
+            Integer n_times = map.get(sum);
+            if(n_times==null){
+                map.put(sum, 1);
+            }else{
+                map.put(sum, n_times+1);
+            }
+        }
+        return map;
+    }
+
+
+
+    //コードの長さや1行の特徴を解析
+    public HashMap<String, Integer> ChordLengthAnalysis(String ALL_songs,int num) {
+        int[] result = new int[4];
+        HashMap<String, Integer> Length_map= new HashMap<>();
+        String sum;
+        num--;//num行目を解析する[num-1]
+        if (ALL_songs.equals("")||num<0) return null;
+        String[] song = ALL_songs.split("<->\n", 0);
+
+
+        for(String chord:song) {
+            int point = 0;
+            result[0] = 10;
+            result[1] = 10;
+            result[2] = 10;
+            result[3] = 10;
+            if (chord.equals("")) continue;
+            String[] c_s = chord.split("\\n", 0);
+            if (c_s[num].equals("")) continue;
+            String[] line_s = c_s[num].split(",", 0);
+            if (line_s.length<4) continue;
+            for (int i = 0; i < 4; i++) {
+                if (result[i] > i) {
+                    result[i] = point;
+                    for (int j = i + 1; j < 4; j++) {
+                        if (line_s[i].equals(line_s[j])) {
+                            result[j] = point;
+                        }
+                    }
+                    point++;
+                }
+            }
+
+            if (result[3] == 10)continue;
+
+            sum = String.valueOf(result[0]) +
+                    String.valueOf(result[1]) +
+                    String.valueOf(result[2]) +
+                    String.valueOf(result[3]);
+
+            if (Length_map.isEmpty()) {
+                Length_map.put(sum, 1);
+            } else {
+                Integer n_times = Length_map.get(sum);
+                if (n_times == null) {
+                    Length_map.put(sum, 1);
+                } else {
+                    Length_map.put(sum, n_times + 1);
+                }
+            }
+
+
+        }
+
+        return Length_map;
+    }
+
+
+
+
+
+
+
+
+    //構成を解析。行を比較して0123などの文字で表す
+    public HashMap<String, Integer>LineAnalysis(String chord,HashMap<String, Integer> map,int num) {
+        String[] box;
+        if(num<1)return null;
+        num--;//1個目のコードはbox[0]に入るから
+        if (chord.equals("")) return map;
+        String[] split_c = chord.split("\\n", 0);
+        int[] result = new int[split_c.length];
+        String[] line=new String[split_c.length];
+        for (int i=0;i<split_c.length;i++){
+            result[i]=10;
+            line[i]="";
+        }
+
+
+
+        for (int i = 0; i < split_c.length; i++) {
+            if(!split_c[i].equals("")){
+                box = split_c[i].split(",", 0);
+                if(box.length<num)return null;
+                line[i]=box[num];
+            }else return null;
+        }
+
+
+        String sum="";
+        int point = 0;
+        for (int i = 0; i < line.length; i++) {
+            if(result[i]>i) {
+                result[i]=point;
+                for (int j = i + 1; j < line.length; j++) {
+                    if (line[i].equals(line[j])) {
+                        result[j] = point;
+                    }
+
+                }
+                point++;
+            }
+        }
+
+        for (int r_i : result)sum=sum+String.valueOf(r_i);
 
         if(map.isEmpty()) {
             map.put(sum, 1);

@@ -28,6 +28,17 @@
                 android:padding="10dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
+            <Button
+                android:id="@+id/good"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="good" />
+            <Button
+                android:id="@+id/bad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="reload"
+                android:text="bad(もう一度)" />
             <TextView
                 android:id="@+id/text_2"
                 android:layout_width="match_parent"

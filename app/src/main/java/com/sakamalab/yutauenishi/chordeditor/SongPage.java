@@ -111,7 +111,6 @@ public class SongPage extends AppCompatActivity {
         }
     }
     public void SoundLoad(){
-        Log.i("テスト  ", "SoundPool00");
 
 
 
