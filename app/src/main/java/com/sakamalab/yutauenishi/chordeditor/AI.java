@@ -284,26 +284,15 @@ public class AI extends AppCompatActivity {
                 case 20:
                     break;
                 case 0:
-                    allChords_A=allChords_A+chords_A+"<->\n";
-
-                    //----------↓構成の特徴解析↓----------
-                    Line_A_1=AC.LineAnalysis(chords_A,Line_A_1,1);
-                    Line_A_2=AC.LineAnalysis(chords_A,Line_A_2,2);
-                    Line_A_3=AC.LineAnalysis(chords_A,Line_A_3,3);
-                    Line_A_4=AC.LineAnalysis(chords_A,Line_A_4,4);
-                    //----------↑構成の特徴解析↑----------
+                    allChords_A=allChords_A+chords_A+"<!!>\n";
                     map_A=AC.StringToMap(chords_A);
-                    first_chord_A=first_chord_A+AC.GetChordRoot(AC.Choose_One(map_A,1,1))+",";
                     if(map_A!=null) line_n_A = line_n_A + String.valueOf(map_A.size()) + ",";
-                    Connect_map_A=AC.NextChordAnalysis(map_A,Connect_map_A);
                     break;
                 default:
                     chords_A = AC.HalfUpDown(chords_A, -sc);
                     allChords_A=allChords_A+chords_A+"\n";
                     map_A=AC.StringToMap(chords_A);
-                    first_chord_A=first_chord_A+AC.GetChordRoot(AC.Choose_One(map_A,1,1))+",";
                     if(map_A!=null) line_n_A = line_n_A + String.valueOf(map_A.size()) + ",";
-                    Connect_map_A=AC.NextChordAnalysis(map_A,Connect_map_A);
             }
             //----------[Aメロ]-----------------------------------------------------------
 
@@ -312,9 +301,8 @@ public class AI extends AppCompatActivity {
             sc=AC.CheckPartKey(chords_B);
             switch(sc){
                 case 0:
-                    allChords_B=allChords_B+chords_B+"<->\n";
+                    allChords_B=allChords_B+chords_B+"<!!>\n";
                     map_B=AC.StringToMap(chords_B);
-                    first_chord_B=first_chord_B+AC.GetChordRoot(AC.Choose_One(map_B,1,1))+",";
                     if(map_B!=null) line_n_B = line_n_B + String.valueOf(map_B.size()) + ",";
                     Connect_map_B=AC.NextChordAnalysis(map_B,Connect_map_B);
                     break;
@@ -324,7 +312,6 @@ public class AI extends AppCompatActivity {
                     chords_B = AC.HalfUpDown(chords_B, -sc);
                     allChords_B=allChords_B+chords_B+"\n";
                     map_B=AC.StringToMap(chords_B);
-                    first_chord_B=first_chord_B+AC.GetChordRoot(AC.Choose_One(map_B,1,1))+",";
                     if(map_B!=null) line_n_B = line_n_B + String.valueOf(map_B.size()) + ",";
                     Connect_map_B=AC.NextChordAnalysis(map_B,Connect_map_B);
             }
@@ -338,24 +325,35 @@ public class AI extends AppCompatActivity {
 
 
         HashMap<String,Integer> UC_A,UC_B;
+
+
+
+
+
         //----------[Aメロ]-----------------------------------------------------------
-        UC_A=AC.UsedChord(first_chord_A);
-        first_chord_A=AC.RandomChoice(UC_A);//first_chord_Aの更新（新しい物を決める)
-        line_n_A=AC.RandomChoice(AC.UsedChord(line_n_A));//line_n_Aの更新（新しい物を決める)
+
+        //----------↓構成の特徴解析↓----------
         int new_line_n_A=0;
-        if(!line_n_A.equals(""))new_line_n_A=Integer.parseInt(line_n_A);
-        Length_map_A=AC.ChordLengthAnalysis(allChords_A,1); //1行の特徴やコードの長さを解析
-        map_A=AC.FirstChordProgression(first_chord_A, new_line_n_A, Connect_map_A,Length_map_A);//map_Aの使いまわし
+        if(!line_n_A.equals(""))new_line_n_A=Integer.parseInt(AC.RandomChoice(AC.UsedChord(line_n_A)));//new_line_n_Aは新しいコード進行の行数
+        SparseArray<String[]> SA_matrix =AC.ConstMatrix(allChords_A,new_line_n_A);
+        String AboutConst=AC.RandomChoice(AC.SumLineElement(SA_matrix));
+        //----------↑構成の特徴解析↑----------
+
+        map_A=AC.GetNewChords(allChords_A,allChords_B,AboutConst);
+
         String new_A=AC.MapToString(map_A);
         //----------[Aメロ]-----------------------------------------------------------
 
 
+
+
+
+
+
         //----------[Bメロ]-----------------------------------------------------------
-        UC_B=AC.UsedChord(first_chord_B);
-        first_chord_B=AC.RandomChoice(UC_B);//first_chord_Bの更新（新しい物を決める)
-        line_n_B=AC.RandomChoice(AC.UsedChord(line_n_B));//line_n_Bの更新（新しい物を決める)
+        first_chord_B=AC.GetNewFirstChord(allChords_B);//first_chord_Aの更新（新しい物を決める)
         int new_line_n_B=0;
-        if(!line_n_B.equals(""))new_line_n_B=Integer.parseInt(line_n_B);
+        if(!line_n_B.equals(""))new_line_n_B=Integer.parseInt(AC.RandomChoice(AC.UsedChord(line_n_B)));//new_line_n_Bは新しいコード進行の行数
         Length_map_B=AC.ChordLengthAnalysis(allChords_B,1);//1行の特徴やコードの長さを解析
         map_B=AC.FirstChordProgression(first_chord_B, new_line_n_B, Connect_map_B,Length_map_B);//map_Bの使いまわ
         String new_B=AC.MapToString(map_B);
@@ -365,12 +363,19 @@ public class AI extends AppCompatActivity {
 
 
 
-
-        String test="\n[Aメロ]\n"+AC.UCtoString(Line_A_1)+"\n"+AC.UCtoString(Line_A_2)+"\n"+AC.UCtoString(Line_A_3)+"\n"+AC.UCtoString(Line_A_4);
-
-
         new_A="[Aメロ],\n"+new_A+"[Bメロ],\n"+new_B;
         chords=new_A;
+
+                /*
+        //----------↓構成の特徴解析↓----------
+        Line_A_1=AC.LineAnalysis(allChords_A,1,0);
+        Line_A_2=AC.LineAnalysis(allChords_A,2,0);
+        Line_A_3=AC.LineAnalysis(allChords_A,3,0);
+        Line_A_4=AC.LineAnalysis(allChords_A,4,0);
+        //----------↑構成の特徴解析↑----------
+        String test="\n[Aメロ]\n"+AC.UCtoString(Line_A_1)+"\n"+AC.UCtoString(Line_A_2)+"\n"+AC.UCtoString(Line_A_3)+"\n"+AC.UCtoString(Line_A_4);
+        */
+
 
         //String UC="[Aメロ]\n"+AC.UCtoString(UC_A)+"\n[Bメロ]\n"+AC.UCtoString(UC_B);
 
@@ -385,7 +390,7 @@ public class AI extends AppCompatActivity {
         textView.setText(new_A);
 
         TextView textView2 = (TextView) findViewById(R.id.text_2);
-        textView2.setText(test);
+        textView2.setText("");
 
 
 
