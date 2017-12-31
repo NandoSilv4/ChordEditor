@@ -688,7 +688,7 @@ public class AnalysisChords extends AppCompatActivity {
     }
 
 
-    //numは行数指定
+    //構成の解析
     public SparseArray<String[]> ConstMatrix(String ALL_chords,int num){
         SparseArray<String[]> SA_matrix = new SparseArray<>();
 
@@ -705,37 +705,136 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-    //numは行数指定
+
+
+    //構成を解析。行を比較して0123などの文字で表す　numは行数、line_nはフィルター。何行のものを調べるかの。
+    public String[] LineAnalysis(String chord,int line_n) {
+        String[] box;
+
+
+        if (chord.equals("")) return null;
+
+        String[] split_c = chord.split("\\n", 0);
+        int[] result = new int[split_c.length];
+        String[] line = new String[split_c.length];
+        String[] sum = new String[4];
+        if(split_c.length!=line_n && line_n!=0)return null;
+        String[] new_matrix=new String[line_n];
+        for(int i=0;i<line_n;i++)new_matrix[i]="";
+
+
+        for(int num=0;num<4;num++) {
+            sum[num]="";
+            for (int i = 0; i < split_c.length; i++) {
+                result[i] = 10;
+                line[i] = "";
+                if (!split_c[i].equals("")) {
+                    box = split_c[i].split(",", 0);
+                    if (box.length < num) return null;
+                    line[i] = box[num];
+                } else return null;
+
+            }
+
+            int point = 0;
+            for (int i = 0; i < line.length; i++) {
+                if (result[i] > i) {
+                    result[i] = point;
+                    for (int j = i + 1; j < line.length; j++) {
+                        if (line[i].equals(line[j])) {
+                            result[j] = point;
+                        }
+
+                    }
+                    point++;
+                }
+            }
+
+            for (int r_i : result) sum[num] = sum[num] + String.valueOf(r_i);
+
+
+            String[] sum_box = sum[num].split("", 0);
+            for(int x=0;x<line_n;x++){
+                new_matrix[x]=new_matrix[x]+sum_box[x+1];
+            }
+
+        }
+
+
+
+
+
+
+        for(int x=0;x<line_n;x++){
+            new_matrix[x]=new_matrix[x]+","+split_c[x].replaceAll(",", "");;
+        }
+
+        return new_matrix;
+    }
+
+    //指定された文字をマップに入れる。もしすでにある要素の場合、カウント(Integer)を増やす
+    public HashMap<String, Integer> PutMap(HashMap<String, Integer> PM,String text){
+        if (PM.isEmpty()) {
+            PM.put(text, 1);
+        } else {
+            Integer n_times = PM.get(text);
+            if (n_times == null) {
+                PM.put(text, 1);
+            } else {
+                PM.put(text, n_times + 1);
+            }
+        }
+        return PM;
+    }
+
+    HashMap<String,Integer> Change_Map = new HashMap<>();
+
+    //numは行数指定 行を比較してox!で行を分別
     public HashMap<String, Integer> SumLineElement(SparseArray<String[]> SA_matrix){
         HashMap<String,Integer> map = new HashMap<>();
-
+        String save[]=new String[4];
         for(int i=0;i<SA_matrix.size();i++){
+
             int key = SA_matrix.keyAt(i);
             String[] chord=SA_matrix.get(key);
             if(chord==null)continue;
             String sum_s="";
             for(String FE_chord:chord){
-                String[] split_c = FE_chord.split("", 0);
-                int sum=Integer.parseInt(split_c[1])+Integer.parseInt(split_c[2])+Integer.parseInt(split_c[3])+Integer.parseInt(split_c[4]);
-                if(sum<3){
-                    sum_s=sum_s+"o";
-                }else if(6<sum){
-                    sum_s=sum_s+"!";
-                }else{
-                    sum_s=sum_s+"x";
-                }
-            }
-            if (map.isEmpty()) {
-                map.put(sum_s, 1);
-            } else {
-                Integer n_times = map.get(sum_s);
-                if (n_times == null) {
-                    map.put(sum_s, 1);
-                } else {
-                    map.put(sum_s, n_times + 1);
-                }
-            }
+                String[] s = FE_chord.split(",", 0);//今、FE_chordには 0101,CGCGのような文字が入っている
+                String[] split_num = s[0].split("", 0);//0101を1文字づつsplit_cに入れる
+                String[] split_chord = s[1].split("", 0);//CGCGを1文字づつsplit_chordに入れる
+                int sum=Integer.parseInt(split_num[1])+Integer.parseInt(split_num[2])+Integer.parseInt(split_num[3])+Integer.parseInt(split_num[4]);
+                int flag[];
 
+
+
+                Log.i("テスト  ", "Change_Map0"+"---"+s[0]+"---"+s[1]);
+                switch(sum){
+                    case 0:
+                        sum_s=sum_s+"o";
+                        break;
+                    case 1:case 2:
+                        sum_s=sum_s+"o";
+                        //---------------↓↓↓どう変わったかをマップに入れる↓↓↓-------------------
+                        for(int v=1;v<split_num.length;v++){
+                            save[v-1]="";
+
+                            if(Integer.parseInt(split_num[v])==0)save[v-1]=split_chord[v];
+                            Log.i("テスト  ", "Change_Map1");
+                            if(Integer.parseInt(split_num[v])==1)Change_Map=PutMap(Change_Map,save[v-1]+","+split_chord[v]);
+                            Log.i("テスト  ", "Change_Map2");
+                        }
+                        //---------------↑↑↑どう変わったかをマップに入れる↑↑↑-------------------
+                        break;
+                    case 3:case 4:case 5:
+                        sum_s=sum_s+"x";
+                        break;
+                    default:
+                        sum_s=sum_s+"!";
+                }
+
+            }
+            map=PutMap(map,sum_s);
         }
 
         return map;
@@ -747,7 +846,7 @@ public class AnalysisChords extends AppCompatActivity {
 
 
     //1行目のコード進行生成
-    public String[] FirstChordProgression(String f_chord, HashMap<String, List<String>> NC_list_map, HashMap<String, Integer> Length_map) {
+    public String[] FirstChordProgression(String f_chord, HashMap<String, List<String>> NC_list_map, HashMap<String, Integer> Length_map,String avoid_l) {
 
         String[] new_chord_p= new String[4];
         String[] used_chord = {"0","1","2","3"};
@@ -782,7 +881,7 @@ public class AnalysisChords extends AppCompatActivity {
             next_list=NC_list_map.get(GetChordRoot(new_chord_p[j-1]));
             if(next_list==null){
                 Log.i("テスト  ", "FCP失敗　再帰呼出し");
-                return FirstChordProgression(f_chord,NC_list_map,Length_map);
+                return FirstChordProgression(f_chord,NC_list_map,Length_map,avoid_l);
             }
             flag=0;
             int count=0;
@@ -804,7 +903,10 @@ public class AnalysisChords extends AppCompatActivity {
             used_chord[point]=next_chord;
             point++;
         }
-
+        if(new_chord_p[3].equals(avoid_l)){
+            Log.i("テスト  ", "もう一度");
+            return FirstChordProgression(f_chord,NC_list_map,Length_map,avoid_l);
+        }
         /*
         String[] str=Line_Const.split("");//str[0]は空白
 
@@ -825,23 +927,22 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-    //1行目のコード進行生成
+    //曲全体のコードを決める
     public SparseArray<String[]> GetNewChords(String allChords_A,String allChords_B,String A_Const) {
 
         SparseArray<String[]> new_chord_map = new SparseArray<>();
 
 
 
-        String first_chord=GetNewFirstChord(allChords_A);//最初のコード決定
+        String first_chord=GetNewFirstChord(allChords_A,"");//最初のコード決定
         HashMap<String, List<String>> Connect_map =NextChordAnalysis(allChords_A);//コードの連結を調べる
         HashMap<String, Integer> Length_map=ChordLengthAnalysis(allChords_A,1); //1行の特徴やコードの長さを解析
-        String[] First_CP=FirstChordProgression(first_chord, Connect_map,Length_map);//最初の行のコード進行を調べる
-
-
-        String sub_chord=GetNewFirstChord(allChords_B);//最初のコード決定
+        String[] First_CP=FirstChordProgression(first_chord, Connect_map,Length_map,"");//最初の行のコード進行を調べる
+        String last_chord=First_CP[3];
+        String sub_f_chord=GetNewFirstChord(allChords_B,last_chord);//サブコードの最初のコードを決定
         HashMap<String, List<String>> Connect_map_sub =NextChordAnalysis(allChords_B);//コードの連結を調べる
         HashMap<String, Integer> Length_map_sub=ChordLengthAnalysis(allChords_B,1); //1行の特徴やコードの長さを解析
-        String[] sub_CP=FirstChordProgression(sub_chord, Connect_map_sub,Length_map_sub);//最初の行のコード進行を調べる
+        String[] sub_CP=FirstChordProgression(sub_f_chord, Connect_map_sub,Length_map_sub,first_chord);//最初の行のコード進行を調べる
 
 
 
@@ -1115,72 +1216,13 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-    //構成を解析。行を比較して0123などの文字で表す　numは行数、line_nはフィルター。何行のものを調べるかの。
-    public String[] LineAnalysis(String chord,int line_n) {
-        String[] box;
-
-
-        if (chord.equals("")) return null;
-
-        String[] split_c = chord.split("\\n", 0);
-        int[] result = new int[split_c.length];
-        String[] line = new String[split_c.length];
-        String[] sum = new String[4];
-        if(split_c.length!=line_n && line_n!=0)return null;
-
-        for(int num=0;num<4;num++) {
-            sum[num]="";
-            for (int i = 0; i < split_c.length; i++) {
-                result[i] = 10;
-                line[i] = "";
-                if (!split_c[i].equals("")) {
-                    box = split_c[i].split(",", 0);
-                    if (box.length < num) return null;
-                    line[i] = box[num];
-                } else return null;
-
-            }
-
-
-
-            int point = 0;
-            for (int i = 0; i < line.length; i++) {
-                if (result[i] > i) {
-                    result[i] = point;
-                    for (int j = i + 1; j < line.length; j++) {
-                        if (line[i].equals(line[j])) {
-                            result[j] = point;
-                        }
-
-                    }
-                    point++;
-                }
-            }
-
-            for (int r_i : result) sum[num] = sum[num] + String.valueOf(r_i);
-        }
-
-
-        String[] new_matrix=new String[line_n];
-        for(int i=0;i<line_n;i++)new_matrix[i]="";
-        for(int i=0;i<4;i++){
-            String[] sum_box = sum[i].split("", 0);
-            for(int x=0;x<line_n;x++)new_matrix[x]=new_matrix[x]+sum_box[x+1];
-        }
-
-        return new_matrix;
-    }
 
 
 
 
 
 
-
-
-
-
-    public String GetNewFirstChord(String ALL_chords) {
+    public String GetNewFirstChord(String ALL_chords,String avoid_f) {
         SparseArray<String[]> map;
         String first_chord="";
         if (ALL_chords.equals("")) return "";
@@ -1190,8 +1232,10 @@ public class AnalysisChords extends AppCompatActivity {
             first_chord=first_chord+GetChordRoot(Choose_One(map,1,1))+",";
         }
         HashMap<String,Integer> UC=UsedChord(first_chord);
+        String result=RandomChoice(UC);
+        while(avoid_f.equals(result))result=RandomChoice(UC);
 
-        return RandomChoice(UC);
+        return result;
     }
 
 

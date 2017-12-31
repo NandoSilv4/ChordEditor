@@ -256,10 +256,6 @@ public class AI extends AppCompatActivity {
         boolean mov = c.moveToFirst();
         if(!mov)return;
         SparseArray<String[]> map_A;
-        HashMap<String, List<String>> Connect_map_A = new HashMap<>();
-        HashMap<String, Integer> Length_map_A= new HashMap<>();
-        HashMap<String, Integer> Line_A_1,Line_A_2,Line_A_3,Line_A_4;
-        Line_A_1= new HashMap<>();Line_A_2= new HashMap<>();Line_A_3= new HashMap<>();Line_A_4= new HashMap<>();
         String allChords_A="";
         String allChords_B="";
         String first_chord_A,line_n_A,chords_A;
@@ -335,6 +331,7 @@ public class AI extends AppCompatActivity {
         //----------↓構成の特徴解析↓----------
         int new_line_n_A=0;
         if(!line_n_A.equals(""))new_line_n_A=Integer.parseInt(AC.RandomChoice(AC.UsedChord(line_n_A)));//new_line_n_Aは新しいコード進行の行数
+
         SparseArray<String[]> SA_matrix =AC.ConstMatrix(allChords_A,new_line_n_A);
         String AboutConst=AC.RandomChoice(AC.SumLineElement(SA_matrix));
         //----------↑構成の特徴解析↑----------
@@ -351,7 +348,7 @@ public class AI extends AppCompatActivity {
 
 
         //----------[Bメロ]-----------------------------------------------------------
-        first_chord_B=AC.GetNewFirstChord(allChords_B);//first_chord_Aの更新（新しい物を決める)
+        first_chord_B=AC.GetNewFirstChord(allChords_B,"");//first_chord_Aの更新（新しい物を決める)
         int new_line_n_B=0;
         if(!line_n_B.equals(""))new_line_n_B=Integer.parseInt(AC.RandomChoice(AC.UsedChord(line_n_B)));//new_line_n_Bは新しいコード進行の行数
         Length_map_B=AC.ChordLengthAnalysis(allChords_B,1);//1行の特徴やコードの長さを解析
