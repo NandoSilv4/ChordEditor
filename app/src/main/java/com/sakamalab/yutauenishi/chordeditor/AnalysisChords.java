@@ -731,7 +731,7 @@ public class AnalysisChords extends AppCompatActivity {
                 if (!split_c[i].equals("")) {
                     box = split_c[i].split(",", 0);
                     if (box.length < num) return null;
-                    line[i] = box[num];
+                    line[i] = GetChordRoot(box[num]);//ルートが同じ場合同じとみなす。line[i] = box[num]だとCとCadd9は別
                 } else return null;
 
             }
@@ -763,10 +763,8 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
-
         for(int x=0;x<line_n;x++){
-            new_matrix[x]=new_matrix[x]+","+split_c[x].replaceAll(",", "");;
+            new_matrix[x]=new_matrix[x]+","+split_c[x].replaceAll(",", "<!>");
         }
 
         return new_matrix;
@@ -792,42 +790,48 @@ public class AnalysisChords extends AppCompatActivity {
     //numは行数指定 行を比較してox!で行を分別
     public HashMap<String, Integer> SumLineElement(SparseArray<String[]> SA_matrix){
         HashMap<String,Integer> map = new HashMap<>();
-        String save[]=new String[4];
+
         for(int i=0;i<SA_matrix.size();i++){
 
             int key = SA_matrix.keyAt(i);
             String[] chord=SA_matrix.get(key);
             if(chord==null)continue;
             String sum_s="";
+
+
+            String save_0[]=new String[chord.length];
+
             for(String FE_chord:chord){
                 String[] s = FE_chord.split(",", 0);//今、FE_chordには 0101,CGCGのような文字が入っている
                 String[] split_num = s[0].split("", 0);//0101を1文字づつsplit_cに入れる
-                String[] split_chord = s[1].split("", 0);//CGCGを1文字づつsplit_chordに入れる
+                String[] split_chord = s[1].split("<!>", 0);//CGCGを1文字づつsplit_chordに入れる
                 int sum=Integer.parseInt(split_num[1])+Integer.parseInt(split_num[2])+Integer.parseInt(split_num[3])+Integer.parseInt(split_num[4]);
-                int flag[];
+
 
 
 
                 Log.i("テスト  ", "Change_Map0"+"---"+s[0]+"---"+s[1]);
                 switch(sum){
                     case 0:
+                        //---------------↓↓↓0の部分をセーブしておくsave_0[]=split_chord[]↓↓↓-------------------
+                        save_0=split_chord;
+                        //---------------↑↑↑どう変わったかをマップに入れる↑↑↑-------------------
                         sum_s=sum_s+"o";
                         break;
                     case 1:case 2:
-                        sum_s=sum_s+"o";
                         //---------------↓↓↓どう変わったかをマップに入れる↓↓↓-------------------
                         for(int v=1;v<split_num.length;v++){
-                            save[v-1]="";
-
-                            if(Integer.parseInt(split_num[v])==0)save[v-1]=split_chord[v];
-                            Log.i("テスト  ", "Change_Map1");
-                            if(Integer.parseInt(split_num[v])==1)Change_Map=PutMap(Change_Map,save[v-1]+","+split_chord[v]);
-                            Log.i("テスト  ", "Change_Map2");
+                            if(Integer.parseInt(split_num[v])==1){
+                                Change_Map=PutMap(Change_Map,save_0[v-1]+","+split_chord[v-1]);
+                                Log.i("テスト  ", v+"Change_Map---"+save_0[v-1]+","+split_chord[v-1]);
+                            }
                         }
                         //---------------↑↑↑どう変わったかをマップに入れる↑↑↑-------------------
+                        sum_s=sum_s+"o";
                         break;
                     case 3:case 4:case 5:
                         sum_s=sum_s+"x";
+                        Log.i("テスト  ","sum>2");
                         break;
                     default:
                         sum_s=sum_s+"!";
@@ -981,7 +985,7 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
+    /*
     //UCの出力を入力し、ランダムで１つのコードを出力
     public String UCtoString(HashMap<String, Integer> UC){
         String result="";
@@ -993,7 +997,7 @@ public class AnalysisChords extends AppCompatActivity {
         }
         return result;
     }
-
+    */
 
 
 
@@ -1168,7 +1172,6 @@ public class AnalysisChords extends AppCompatActivity {
             if(split_c.length!=line_n && line_n!=0)continue;
             int[] result = new int[split_c.length];
             String[] line = new String[split_c.length];
-            int flag=0;
             for (int i = 0; i < split_c.length; i++) {
                 result[i] = 10;
                 line[i] = "";
