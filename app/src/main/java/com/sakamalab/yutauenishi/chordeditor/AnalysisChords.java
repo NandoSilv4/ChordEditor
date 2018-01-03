@@ -4,7 +4,6 @@ package com.sakamalab.yutauenishi.chordeditor;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
