@@ -370,7 +370,7 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-    //コードのルート以外を見つける
+    /*//コードのルート以外を見つける
     public String GetChordsType(String chord){
         String sub;
         if(chord.equals(""))return "";
@@ -412,8 +412,7 @@ public class AnalysisChords extends AppCompatActivity {
 
         }
     }
-
-
+    */
 
 
     //targetの文字がchordsで何回つかわれているか数える
@@ -984,19 +983,7 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-    /*
-    //UCの出力を入力し、ランダムで１つのコードを出力
-    public String UCtoString(HashMap<String, Integer> UC){
-        String result="";
-        if(!UC.isEmpty()) {
-            for (String key : UC.keySet()) {
-                Integer n_times = UC.get(key);
-                result=result+key+"が"+Integer.toString(n_times)+"回\n";
-            }
-        }
-        return result;
-    }
-    */
+
 
 
 
@@ -1154,8 +1141,26 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
+    public String GetNewFirstChord(String ALL_chords,String avoid_f) {
+        SparseArray<String[]> map;
+        String first_chord="";
+        if (ALL_chords.equals("")) return "";
+        String[] song = ALL_chords.split("<!!>\n", 0);
+        for(String chords:song) {
+            map = StringToMap(chords);
+            first_chord=first_chord+GetChordRoot(Choose_One(map,1,1))+",";
+        }
+        HashMap<String,Integer> UC=UsedChord(first_chord);
+        String result=RandomChoice(UC);
+        while(avoid_f.equals(result))result=RandomChoice(UC);
+
+        return result;
+    }
 
 
+
+
+    /*
     //構成を解析。行を比較して0123などの文字で表す　numは行数、line_nはフィルター。何行のものを調べるかの。
     public HashMap<String, Integer>LineAnalysis(String ALL_songs,int num,int line_n) {
         String[] box;
@@ -1213,32 +1218,28 @@ public class AnalysisChords extends AppCompatActivity {
         }
         return Line_map;
     }
+    */
 
 
-
-
-
-
-
-
-
-
-
-    public String GetNewFirstChord(String ALL_chords,String avoid_f) {
-        SparseArray<String[]> map;
-        String first_chord="";
-        if (ALL_chords.equals("")) return "";
-        String[] song = ALL_chords.split("<!!>\n", 0);
-        for(String chords:song) {
-            map = StringToMap(chords);
-            first_chord=first_chord+GetChordRoot(Choose_One(map,1,1))+",";
+    /*
+    //UCの出力を入力し、ランダムで１つのコードを出力
+    public String UCtoString(HashMap<String, Integer> UC){
+        String result="";
+        if(!UC.isEmpty()) {
+            for (String key : UC.keySet()) {
+                Integer n_times = UC.get(key);
+                result=result+key+"が"+Integer.toString(n_times)+"回\n";
+            }
         }
-        HashMap<String,Integer> UC=UsedChord(first_chord);
-        String result=RandomChoice(UC);
-        while(avoid_f.equals(result))result=RandomChoice(UC);
-
         return result;
     }
+    */
+
+
+
+
+
+
 
 
 

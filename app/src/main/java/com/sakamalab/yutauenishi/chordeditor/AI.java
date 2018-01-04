@@ -258,21 +258,20 @@ public class AI extends AppCompatActivity {
         SparseArray<String[]> map_A;
         String allChords_A="";
         String allChords_B="";
-        String first_chord_A,line_n_A,chords_A;
-        first_chord_A=line_n_A="";
+        String line_n_A,chords_A;
+        line_n_A="";
 
 
         SparseArray<String[]> map_B;
         HashMap<String, List<String>> Connect_map_B = new HashMap<>();
-        HashMap<String, Integer> Length_map_B= new HashMap<>();
+        HashMap<String, Integer> Length_map_B;
         String first_chord_B,line_n_B,chords_B;
-        first_chord_B=line_n_B="";
+        line_n_B="";
         int sc;
 
         while (mov) {
             String chords = c.getString(0);
             chords=AC.UnityRowNumber(chords);
-            String[] line_s;
             //----------[Aメロ]-----------------------------------------------------------
             chords_A=AC.SelectPart(chords,"Aメロ");
             sc=AC.CheckPartKey(chords_A);
@@ -320,7 +319,6 @@ public class AI extends AppCompatActivity {
         }
 
 
-        HashMap<String,Integer> UC_A,UC_B;
 
 
 
