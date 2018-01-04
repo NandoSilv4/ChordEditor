@@ -2,13 +2,16 @@ package com.sakamalab.yutauenishi.chordeditor;
 
 
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.Cursor;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -43,7 +46,34 @@ public class AI extends AppCompatActivity {
     }
 
 
-    SoundPool S_Pool= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
+
+
+
+
+    //SoundPoolの設定　バージョンによって処理分け
+    @SuppressWarnings("deprecation")//警告を消す
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private SoundPool buildSoundPool(int poolMax)
+    {
+        SoundPool pool;
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            pool = new SoundPool(poolMax, AudioManager.STREAM_MUSIC, 0);
+        }
+        else {
+            AudioAttributes attr = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build();
+            pool = new SoundPool.Builder()
+                    .setAudioAttributes(attr)
+                    .setMaxStreams(poolMax)
+                    .build();
+        }
+        return pool;
+    }
+
+    SoundPool S_Pool= buildSoundPool(6);
     int[] S_ID_load=new int[24];
     int[] S_ID_stop=new int[24];
     public void SoundPlay(HashMap<String, Integer> SM){
@@ -141,9 +171,6 @@ public class AI extends AppCompatActivity {
     public void SoundRelease() {
         S_Pool.release();
     }
-
-
-
     int count=0;
     HashMap<String, Integer> old_map;
     public void Play() {
