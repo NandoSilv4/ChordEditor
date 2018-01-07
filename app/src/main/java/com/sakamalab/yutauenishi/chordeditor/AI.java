@@ -356,12 +356,9 @@ public class AI extends AppCompatActivity {
         //----------↓構成の特徴解析↓----------
         int new_line_n_A=0;
         if(!line_n_A.equals(""))new_line_n_A=Integer.parseInt(AC.RandomChoice(AC.UsedChord(line_n_A)));//new_line_n_Aは新しいコード進行の行数
-
-        SparseArray<String[]> SA_matrix =AC.ConstMatrix(allChords_A,new_line_n_A);
-        String AboutConst=AC.RandomChoice(AC.SumLineElement(SA_matrix));
         //----------↑構成の特徴解析↑----------
 
-        map_A=AC.GetNewChords(allChords_A,allChords_B,AboutConst);
+        map_A=AC.GetNewChords(allChords_A,allChords_B,new_line_n_A);
 
         String new_A=AC.MapToString(map_A);
         //----------[Aメロ]-----------------------------------------------------------
