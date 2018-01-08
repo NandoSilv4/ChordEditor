@@ -841,7 +841,7 @@ public class AnalysisChords extends AppCompatActivity {
                         //---------------↓↓↓どう変わったかをマップに入れる↓↓↓-------------------
                         for(int v=1;v<split_num.length;v++){
                             if(Integer.parseInt(split_num[v])==1){
-                                Change_Map=PutMap_SS(Change_Map,save_0[v-1],split_chord[v-1]);
+                                Change_Map=PutMap_SS(Change_Map,GetChordRoot(save_0[v-1]),GetChordRoot(split_chord[v-1]));
                                 Log.i("テスト  ", v+"Change_Map---"+save_0[v-1]+","+split_chord[v-1]);
                             }
                         }
