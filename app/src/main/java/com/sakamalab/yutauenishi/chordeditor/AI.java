@@ -22,9 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Pattern;
 
 
@@ -275,7 +273,6 @@ public class AI extends AppCompatActivity {
         setContentView(R.layout.ai);
         toolbar("AI","learning");
 
-
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql = "select chords from note;";
         Cursor c = db.rawQuery(sql,null);
@@ -283,17 +280,10 @@ public class AI extends AppCompatActivity {
         boolean mov = c.moveToFirst();
         if(!mov)return;
         SparseArray<String[]> map_A;
-        String allChords_A="";
-        String allChords_B="";
-        String line_n_A,chords_A;
-        line_n_A="";
-
-
         SparseArray<String[]> map_B;
-        HashMap<String, List<String>> Connect_map_B = new HashMap<>();
-        HashMap<String, Integer> Length_map_B;
-        String first_chord_B,line_n_B,chords_B;
-        line_n_B="";
+        String allChords_A,line_n_A,chords_A,allChords_B,line_n_B,chords_B;
+        allChords_A=line_n_A=allChords_B=line_n_B="";
+
         int sc;
 
         while (mov) {
@@ -303,12 +293,12 @@ public class AI extends AppCompatActivity {
             chords_A=AC.SelectPart(chords,"Aメロ");
             sc=AC.CheckPartKey(chords_A);
             switch(sc){
-                case 20:
-                    break;
                 case 0:
                     allChords_A=allChords_A+chords_A+"<!!>\n";
                     map_A=AC.StringToMap(chords_A);
                     if(map_A!=null) line_n_A = line_n_A + String.valueOf(map_A.size()) + ",";
+                    break;
+                case 20:
                     break;
                 default:
                     chords_A = AC.HalfUpDown(chords_A, -sc);
@@ -326,7 +316,6 @@ public class AI extends AppCompatActivity {
                     allChords_B=allChords_B+chords_B+"<!!>\n";
                     map_B=AC.StringToMap(chords_B);
                     if(map_B!=null) line_n_B = line_n_B + String.valueOf(map_B.size()) + ",";
-                    Connect_map_B=AC.NextChordAnalysis(map_B,Connect_map_B);
                     break;
                 case 20:
                     break;
@@ -335,107 +324,47 @@ public class AI extends AppCompatActivity {
                     allChords_B=allChords_B+chords_B+"\n";
                     map_B=AC.StringToMap(chords_B);
                     if(map_B!=null) line_n_B = line_n_B + String.valueOf(map_B.size()) + ",";
-                    Connect_map_B=AC.NextChordAnalysis(map_B,Connect_map_B);
             }
-
-
             //----------[Bメロ]-----------------------------------------------------------
-
 
             mov = c.moveToNext();
         }
 
 
+        //----------新しいコード進行生成-----------------------------------------------------------
+        String new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
+        //----------新しいコード進行生成-----------------------------------------------------------
 
 
 
-
-
-        //----------[Aメロ]-----------------------------------------------------------
-
-        //----------↓構成の特徴解析↓----------
-        int new_line_n_A=0;
-        if(!line_n_A.equals(""))new_line_n_A=Integer.parseInt(AC.RandomChoice(AC.UsedChord(line_n_A)));//new_line_n_Aは新しいコード進行の行数
-        //----------↑構成の特徴解析↑----------
-
-        map_A=AC.GetNewChords(allChords_A,allChords_B,new_line_n_A);
-
-        String new_A=AC.MapToString(map_A);
-        //----------[Aメロ]-----------------------------------------------------------
-
-
-
-
-
-
-
-        //----------[Bメロ]-----------------------------------------------------------
-        first_chord_B=AC.GetNewFirstChord(allChords_B,"");//first_chord_Aの更新（新しい物を決める)
-        int new_line_n_B=0;
-        if(!line_n_B.equals(""))new_line_n_B=Integer.parseInt(AC.RandomChoice(AC.UsedChord(line_n_B)));//new_line_n_Bは新しいコード進行の行数
-        Length_map_B=AC.ChordLengthAnalysis(allChords_B,1);//1行の特徴やコードの長さを解析
-        map_B=AC.FirstChordProgression(first_chord_B, new_line_n_B, Connect_map_B,Length_map_B);//map_Bの使いまわ
-        String new_B=AC.MapToString(map_B);
-        //----------[Bメロ]-----------------------------------------------------------
-
-
-
-
-
-        new_A="[Aメロ],\n"+new_A+"[Bメロ],\n"+new_B;
-        chords=new_A;
-
-                /*
-        //----------↓構成の特徴解析↓----------
-        Line_A_1=AC.LineAnalysis(allChords_A,1,0);
-        Line_A_2=AC.LineAnalysis(allChords_A,2,0);
-        Line_A_3=AC.LineAnalysis(allChords_A,3,0);
-        Line_A_4=AC.LineAnalysis(allChords_A,4,0);
-        //----------↑構成の特徴解析↑----------
-        String test="\n[Aメロ]\n"+AC.UCtoString(Line_A_1)+"\n"+AC.UCtoString(Line_A_2)+"\n"+AC.UCtoString(Line_A_3)+"\n"+AC.UCtoString(Line_A_4);
-        */
-
-
-        //String UC="[Aメロ]\n"+AC.UCtoString(UC_A)+"\n[Bメロ]\n"+AC.UCtoString(UC_B);
-
-
-        //String Length="[Aメロ]\n"+AC.UCtoString(Length_map_A)+"\n[Bメロ]\n"+AC.UCtoString(Length_map_B)+"\n[ランダム]\n"+
-        //        AC.RandomChoice(Length_map_A)+"\n"+AC.RandomChoice(Length_map_B);
+        chords=new_CP;
 
         allChords_A="------[Aメロ]------\n"+allChords_A+"------[Bメロ]------\n"+allChords_B;
 
 
         TextView textView = (TextView) findViewById(R.id.text_1);
-        textView.setText(new_A);
+        textView.setText(new_CP);
+
 
         TextView textView2 = (TextView) findViewById(R.id.text_2);
         textView2.setText("");
-
 
 
         TextView textView3 = (TextView) findViewById(R.id.text_3);
         textView3.setText("");
 
 
-
         TextView textView4 = (TextView) findViewById(R.id.text_4);
         textView4.setText("");
-
 
 
         TextView textView5 = (TextView) findViewById(R.id.text_5);
         textView5.setText(allChords_A);
 
 
-
-
-
         c.close();
         db.close();
     }
-
-
-
 
 
 
