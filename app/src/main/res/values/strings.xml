@@ -15,5 +15,7 @@
     <string name="flat">♭</string>
     <string name="sharp">#</string>
     <string name="analysis">コード解析</string>
+    <string name="save">SAVE</string>
+    <string name="remake">remake</string>
 
 </resources>

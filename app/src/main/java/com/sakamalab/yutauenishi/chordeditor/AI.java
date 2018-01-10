@@ -6,8 +6,10 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -16,12 +18,18 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -44,7 +52,9 @@ public class AI extends AppCompatActivity {
     }
 
 
-
+    public void save(View v) {
+        TitleAsk(-1);
+    }
 
 
 
@@ -174,7 +184,7 @@ public class AI extends AppCompatActivity {
     public void Play() {
         String chords2;
         chords2= Pattern.compile("\\n").matcher(chords).replaceAll("");
-        chords2=Pattern.compile("\\[.*?\\],").matcher(chords2).replaceAll("");
+        chords2=Pattern.compile("\\[.*?\\]").matcher(chords2).replaceAll("");
         HashMap<String, Integer> SoundMap;
         if(!chords2.equals("")){
             String[] data_split = chords2.split(",", 0);
@@ -261,6 +271,139 @@ public class AI extends AppCompatActivity {
 
 
     }
+
+
+
+
+
+
+    //新規作成時タイトルを聞く
+    public void TitleAsk(final int flag){
+        //テキスト入力を受け付けるビューを作成します。
+        //外枠とパーツの作成
+        final LinearLayout layout = new LinearLayout(getApplicationContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        final LinearLayout Hlayout1 = new LinearLayout(getApplicationContext());
+        Hlayout1.setOrientation(LinearLayout.HORIZONTAL);
+        final LinearLayout Hlayout2 = new LinearLayout(getApplicationContext());
+        Hlayout2.setOrientation(LinearLayout.HORIZONTAL);
+
+
+
+        final EditText editView = new EditText(AI.this);
+        final EditText editView2 = new EditText(AI.this);
+        editView.setInputType(InputType.TYPE_CLASS_TEXT );
+        editView2.setInputType(InputType.TYPE_CLASS_TEXT );
+
+        //メッセージの設定
+        final TextView song_title = new TextView(getApplicationContext());
+        final TextView artist = new TextView(getApplicationContext());
+        song_title.setText(" 　曲名:");
+        song_title.setTextColor(Color.BLACK);
+        song_title.setTextSize(18);
+        artist.setText(" 作者名:");
+        artist.setTextColor(Color.BLACK);
+        artist.setTextSize(18);
+        //外枠にパーツを組み込む
+        Hlayout1.addView(song_title);
+        Hlayout1.addView(editView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        Hlayout2.addView(artist);
+        Hlayout2.addView(editView2, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        layout.addView(Hlayout1);
+        layout.addView(Hlayout2);
+
+        AlertDialog.Builder b = new AlertDialog.Builder(AI.this);
+        b.setTitle(" ");
+        b.setView(layout);
+        b.setPositiveButton(android.R.string.ok, null);
+        b.setNegativeButton(android.R.string.cancel, null);
+
+
+        final AlertDialog dialog = b.show();
+        Button buttonP = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        Button buttonN = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        final SQLiteDatabase db = helper.getReadableDatabase();
+        final String old_title;
+
+        if(flag>=0){
+            String sql = "select title,artist from note where id ="+ flag +";";
+            Cursor c = db.rawQuery(sql,null);
+            c.moveToFirst();
+            old_title = c.getString(0);
+            editView.setText(old_title);
+            String art = c.getString(1);
+            editView2.setText(art);
+            c.close();
+        }else {
+            old_title = "";
+        }
+        // 通常のViewのように実装します。
+        buttonP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = editView.getText().toString().trim();
+                String artist = editView2.getText().toString().trim();
+                artist = artist.replaceAll("'", "''");
+                title = title.replaceAll("'", "''");
+                if (title.equals("")) {
+                    Toast.makeText(AI.this, "タイトルを正しく入力してください。", Toast.LENGTH_SHORT).show();
+                }else{
+
+                    String sql = "select * from note where title ='"+ title +"';";
+                    Cursor c = db.rawQuery(sql,null);
+                    boolean torf = c.moveToFirst();//cの中をすべて見終わるまでまでtrue
+                    if(torf){
+                        if(old_title.equals(title)){//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!artist更新ZZZZZZZZZZZZ!!!!!!!!!!!!
+                            String sql1 = "update note set artist = '"+ artist +"' where id = "+flag+";";
+                            db.execSQL(sql1);
+                            Intent dbIntent = new Intent(getApplication(), AI.class);
+                            //dbIntent.putExtra("id", flag);
+                            startActivity(dbIntent);
+                            overridePendingTransition(0, 0);
+                            dialog.dismiss();
+                        }else{
+                            Toast.makeText(AI.this, "すでに存在するタイトルです。", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    }else {
+                        if(flag<0) {
+                            int recode = (int) DatabaseUtils.queryNumEntries(db, "note");
+                            String data=AC.Chords_Adjust_Note(chords);
+                            String sql2 = "insert into note(title,artist,data,chords) values('" + title + "','"+ artist +"','"+ data +"','"+ chords +"');";
+                            db.execSQL(sql2);
+                            Intent dbIntent = new Intent(getApplication(), LyricsEdit.class);
+                            dbIntent.putExtra("id", recode + 1);
+                            startActivity(dbIntent);
+                            overridePendingTransition(0, 0);
+                            dialog.dismiss();
+                        }else{
+                            String sql3 = "update note set title = '"+ title +"' where id = "+flag+";";
+                            db.execSQL(sql3);
+                            String sql4 = "update note set artist = '"+ artist +"' where id = "+flag+";";
+                            db.execSQL(sql4);
+                            Intent dbIntent = new Intent(getApplication(), AI.class);
+                            //dbIntent.putExtra("id", flag);
+                            startActivity(dbIntent);
+                            dialog.dismiss();
+                        }
+                    }
+                    c.close();
+                }
+
+                db.close();
+            }
+        });
+
+        // 通常のViewのように実装します。
+        buttonN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+
 
 
 

@@ -1064,7 +1064,7 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-        return "[Aメロ],\n"+MapToString(new_chord_map_A)+"[Bメロ],\n"+MapToString(new_chord_map_B);
+        return "[Aメロ]\n"+MapToString(new_chord_map_A)+"[Bメロ]\n"+MapToString(new_chord_map_B);
     }
 
 
@@ -1086,7 +1086,19 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
+    public String Chords_Adjust_Note(String chords){
+        String result="";
+        if(chords!=null) {
+            chords=chords.replaceAll(",\n", "|\n");
+            chords=chords.replaceAll(",", "||");
+            String[] c_s = chords.split("\n", 0);
+            for (String chord : c_s) {
+                result = result + "|" + chord+"\n";
+            }
+            result=result.replaceAll("\\|\\[", "\\[");
+        }
+        return result;
+    }
 
 
 

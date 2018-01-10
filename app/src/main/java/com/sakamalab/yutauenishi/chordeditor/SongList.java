@@ -142,7 +142,6 @@ public class SongList extends AppCompatActivity {
                             overridePendingTransition(0, 0);
                             dialog.dismiss();
                         }else{
-
                             String sql3 = "update note set title = '"+ title +"' where id = "+flag+";";
                             db.execSQL(sql3);
                             String sql4 = "update note set artist = '"+ artist +"' where id = "+flag+";";

@@ -32,13 +32,14 @@
                 android:id="@+id/good"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="good" />
+                android:onClick="save"
+                android:text="@string/save" />
             <Button
                 android:id="@+id/bad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="reload"
-                android:text="bad(もう一度)" />
+                android:text="@string/remake" />
             <TextView
                 android:id="@+id/text_2"
                 android:layout_width="match_parent"
