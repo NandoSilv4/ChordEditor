@@ -329,6 +329,8 @@ public class AnalysisChords extends AppCompatActivity {
     //コードのルートを見つける
     public String GetChordRoot(String chord){
         String root;
+        chord=chord.replaceAll("^(.*?)/","");//分数コードの場合、分母をルートと見なすため、/より前を消す
+        chord=chord.replaceAll("^(.*?)on","");//分数コードの場合、分母をルートと見なすため、/より前を消す
         if(chord.equals(""))return "";
         switch (chord.length()) {
             case 1:
@@ -346,7 +348,7 @@ public class AnalysisChords extends AppCompatActivity {
                         root=chord.substring(0,3);
                     }
                 }else{
-                    root=chord.substring(1);
+                    root=chord.substring(0,1);
                     if(chord.charAt(1)=='m'){
                         root=chord.substring(0,2);
                     }

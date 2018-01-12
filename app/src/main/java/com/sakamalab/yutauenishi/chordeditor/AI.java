@@ -478,8 +478,6 @@ public class AI extends AppCompatActivity {
         String new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
         //----------新しいコード進行生成-----------------------------------------------------------
 
-
-
         chords=new_CP;
 
         allChords_A="------[Aメロ]------\n"+allChords_A+"------[Bメロ]------\n"+allChords_B;
