@@ -634,6 +634,58 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
+    //出現コードの次のコードの割合を記憶
+    public HashMap<String, List<String>> NextChordAnalysis(String ALL_songs){
+
+
+        SparseArray<String[]> chords_map;
+        HashMap<String, List<String>> result_map=new HashMap<>();
+
+        if (ALL_songs.equals("")) return null;
+        String[] song = ALL_songs.split("<!!>\n", 0);
+
+
+        for(String chord:song) {
+
+            chords_map=StringToMap(chord);
+            if (chords_map == null) continue;
+            String target;
+            String[] target_str;
+
+            for (int i = 0; i < chords_map.size(); i++) {
+                int key = chords_map.keyAt(i);
+                target_str = chords_map.get(key);
+                for (int j = 0; j < 3; j++) {
+                    List<String> target_list;
+                    target = GetChordRoot(target_str[j]);
+                    target_list = result_map.get(target);
+                    if (target_list == null) {
+                        List<String> new_list = new ArrayList<>();
+                        if (!target_str[j + 1].equals(target_str[j])) {
+                            new_list.add(GetChordRoot(target_str[j + 1]));
+                            result_map.put(target, new_list);
+                        }
+                    } else {
+                        if (!target_str[j + 1].equals(target_str[j])) {
+                            target_list.add(GetChordRoot(target_str[j + 1]));
+                            result_map.put(target, target_list);
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+        return result_map;
+    }
+
+
+
+
+
+
+
     //構成を解析。行を比較して0123などの文字で表す　numは行数、line_nはフィルター。何行のものを調べるかの。
     public String[] LineAnalysis(String chord,int line_n) {
         String[] box;
@@ -735,6 +787,8 @@ public class AnalysisChords extends AppCompatActivity {
     HashMap<String, Integer> CM_for_Random_A = new HashMap<>();//0010など、変わってる部分を保存
     HashMap<String,String> Change_Map_B = new HashMap<>();//何が何に変わっているかを保存
     HashMap<String, Integer> CM_for_Random_B = new HashMap<>();//0010など、変わってる部分を保存
+    HashMap<String, List<String>> NC_list_map_A= new HashMap<>();//あるコードの次に来るコードを格納
+
 
     //numは行数指定 行を比較してox!で行を分別
     public HashMap<String, Integer> SumLineElement(SparseArray<String[]> SA_matrix,String part){
@@ -899,6 +953,28 @@ public class AnalysisChords extends AppCompatActivity {
         return Next_CP;
     }
 
+
+
+    public String GetNewFirstChord(String ALL_chords,String avoid_f) {
+        String result;
+            SparseArray<String[]> map;
+            String first_chord = "";
+            if (ALL_chords.equals("")) return "";
+            String[] song = ALL_chords.split("<!!>\n", 0);
+            for (String chords : song) {
+                map = StringToMap(chords);
+                first_chord = first_chord + GetChordRoot(Choose_One(map, 1, 1)) + ",";
+            }
+            HashMap<String, Integer> UC = UsedChord(first_chord);
+            result = RandomChoice(UC);
+            while (avoid_f.equals(result)) result = RandomChoice(UC);
+        return result;
+    }
+
+
+
+
+
     //1行目のコード進行生成
     public String[] FirstChordProgression(String f_chord, HashMap<String, List<String>> NC_list_map, HashMap<String, Integer> Length_map,String avoid_l) {
 
@@ -961,21 +1037,6 @@ public class AnalysisChords extends AppCompatActivity {
             Log.i("テスト  ", "もう一度");
             return FirstChordProgression(f_chord,NC_list_map,Length_map,avoid_l);
         }
-        /*
-        String[] str=Line_Const.split("");//str[0]は空白
-
-        for(String a:str)Log.i("テスト  ", a);
-        //行はとりあえずline_counter回コピペする
-        for(int i=1;i<str.length;i++){
-            if(str[i].equals("0")){
-                new_chord_map.put(i-1,new_chord_p);
-            }else{
-                new_chord_p[0]="?";new_chord_p[1]="?";new_chord_p[2]="?";new_chord_p[3]="?";
-                new_chord_map.put(i-1,new_chord_p);
-            }
-        }
-        Log.i("テスト  ", "コードは"+new_chord_p[0]+","+new_chord_p[1]+","+new_chord_p[2]+","+new_chord_p[3]+",");
-        */
         return new_chord_p;
     }
 
@@ -1003,13 +1064,26 @@ public class AnalysisChords extends AppCompatActivity {
         if(!line_n_A.equals(""))new_line_n_A=Integer.parseInt(RandomChoice(UsedChord(line_n_A)));//new_line_n_Aは新しいコード進行の行数
         SparseArray<String[]> SA_matrix_A =ConstMatrix(allChords_A,new_line_n_A);
         String A_Const=RandomChoice(SumLineElement(SA_matrix_A,"A"));//sumを使って 行を比較してox!で行を分別 oxox oooo oxoo ox oo
+        NC_list_map_A =NextChordAnalysis(allChords_A);//コードの連結を調べる
+        HashMap<String, Integer> Length_map=ChordLengthAnalysis(allChords_A,1); //1行の特徴やコードの長さを解析
         //----------↑Aメロ構成の特徴解析↑----------
+
+        //----------↓Bメロ構成の特徴解析↓----------
+        int new_line_n_B=0;
+        if(!line_n_B.equals(""))new_line_n_B=Integer.parseInt(RandomChoice(UsedChord(line_n_B)));//new_line_n_Bは新しいコード進行の行数
+        SparseArray<String[]> SA_matrix_B =ConstMatrix(allChords_B,new_line_n_B);
+        String B_Const=RandomChoice(SumLineElement(SA_matrix_B,"B"));//sumを使って 行を比較してox!で行を分別 oxox oooo oxoo ox oo
+        HashMap<String, List<String>> Connect_map_B =NextChordAnalysis(allChords_B);//コードの連結を調べる
+        HashMap<String, Integer> Length_map_B=ChordLengthAnalysis(allChords_B,1); //1行の特徴やコードの長さを解析
+        //----------↑Bメロ構成の特徴解析↑----------
+
+
+
+
 
         //----------↓Aメロ1行コード進行生成↓----------
         String first_chord_A=GetNewFirstChord(allChords_A,"");//最初のコード決定
-        HashMap<String, List<String>> Connect_map =NextChordAnalysis(allChords_A);//コードの連結を調べる
-        HashMap<String, Integer> Length_map=ChordLengthAnalysis(allChords_A,1); //1行の特徴やコードの長さを解析
-        String[] First_CP_A=FirstChordProgression(first_chord_A, Connect_map,Length_map,"");//最初の行のコード進行を決定
+        String[] First_CP_A=FirstChordProgression(first_chord_A, NC_list_map_A,Length_map,"");//最初の行のコード進行を決定
         new_chord_map_A.put(0,First_CP_A);//最初の行のコード進行をMAPに追加
         //----------↑Aメロ1行コード進行生成↑----------
 
@@ -1021,58 +1095,41 @@ public class AnalysisChords extends AppCompatActivity {
         HashMap<String, Integer> Length_map_sub_A=ChordLengthAnalysis(allChords_B,1); //1行の特徴やコードの長さを解析
         String[] sub_CP_A=FirstChordProgression(sub_f_chord_A, Connect_map_sub_A,Length_map_sub_A,first_chord_A);//最初の行のコード進行を調べる
         String[] str_A=A_Const.split("");//str[0]は空白 oxox oooo oxoo ox oo obob
-
         for(int i=1;i<str_A.length-1;i++){
             switch (str_A[i+1]){
                 case "o":
                     new_chord_map_A.put(i,First_CP_A);
-                    Log.i("テスト  ", "GetNewChords---o");
+                    last_chord_A=First_CP_A[3];
+                    //Log.i("テスト  ", "GetNewChords---o");
                     break;
                 case "b":
                     String[] next_line_A=GetNextLine(Position_Change_A[i],First_CP_A,"A");
                     new_chord_map_A.put(i,next_line_A);
-                    Log.i("テスト  ", "GetNewChords---b");
+                    last_chord_A=next_line_A[3];
+                    //Log.i("テスト  ", "GetNewChords---b");
                     break;
                 case "x":
                     new_chord_map_A.put(i,sub_CP_A);//Bメロのコード進行を2行目に設定
-                    Log.i("テスト  ", "GetNewChords---x");
+                    last_chord_A=sub_CP_A[3];
+                    //Log.i("テスト  ", "GetNewChords---x");
                     break;
                 default:
             }
 
-
-
-            /*if(str_A[i+1].equals("o")){
-                String[] next_line_A=GetNextLine(Position_Change_A[i],First_CP_A,"A");
-                new_chord_map_A.put(i,next_line_A);
-            }else if(str_A[i+1].equals("x")){
-                new_chord_map_A.put(i,sub_CP_A);//Bメロのコード進行を2行目に設定
-            }
-            */
         }
         //----------↑Aメロ2行目以降コード進行生成↑----------
 
 
 
 
-
-        //----------↓Bメロ構成の特徴解析↓----------
-        int new_line_n_B=0;
-        if(!line_n_B.equals(""))new_line_n_B=Integer.parseInt(RandomChoice(UsedChord(line_n_B)));//new_line_n_Bは新しいコード進行の行数
-        SparseArray<String[]> SA_matrix_B =ConstMatrix(allChords_B,new_line_n_B);
-        String B_Const=RandomChoice(SumLineElement(SA_matrix_B,"B"));//sumを使って 行を比較してox!で行を分別 oxox oooo oxoo ox oo
-        String[] Position_Change_B=Position_Change_Block(CM_for_Random_B,new_line_n_B);
-        //----------↑Bメロ構成の特徴解析↑----------
-
         //----------↓Bメロ1行コード進行生成↓----------
-        String first_chord_B=GetNewFirstChord(allChords_B,"");//最初のコード決定
-        HashMap<String, List<String>> Connect_map_B =NextChordAnalysis(allChords_B);//コードの連結を調べる
-        HashMap<String, Integer> Length_map_B=ChordLengthAnalysis(allChords_B,1); //1行の特徴やコードの長さを解析
+        String first_chord_B=GetNewFirstChord(allChords_B,last_chord_A);//最初のコード決定
         String[] First_CP_B=FirstChordProgression(first_chord_B, Connect_map_B,Length_map_B,"");//最初の行のコード進行を決定
         new_chord_map_B.put(0,First_CP_B);//最初の行のコード進行をMAPに追加
         //----------↑Bメロ1行コード進行生成↑----------
 
         //----------↓Bメロ2行目以降コード進行生成↓----------
+        String[] Position_Change_B=Position_Change_Block(CM_for_Random_B,new_line_n_B);
         String last_chord_B=First_CP_B[3];
         String sub_f_chord_B=GetNewFirstChord(allChords_B,last_chord_B);//サブコードの最初のコードを決定???????????????????????????
         HashMap<String, List<String>> Connect_map_sub_B =NextChordAnalysis(allChords_B);//コードの連結を調べる????????????????????????????????????????????
@@ -1192,75 +1249,10 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-    //出現コードの次のコードの割合を記憶
-    public HashMap<String, List<String>> NextChordAnalysis(String ALL_songs){
-
-
-        SparseArray<String[]> chords_map;
-        HashMap<String, List<String>> result_map=new HashMap<>();
-
-        if (ALL_songs.equals("")) return null;
-        String[] song = ALL_songs.split("<!!>\n", 0);
-
-
-        for(String chord:song) {
-
-            chords_map=StringToMap(chord);
-            if (chords_map == null) continue;
-            String target;
-            String[] target_str;
-
-            for (int i = 0; i < chords_map.size(); i++) {
-                int key = chords_map.keyAt(i);
-                target_str = chords_map.get(key);
-                for (int j = 0; j < 3; j++) {
-                    List<String> target_list;
-                    target = GetChordRoot(target_str[j]);
-                    target_list = result_map.get(target);
-                    if (target_list == null) {
-                        List<String> new_list = new ArrayList<>();
-                        if (!target_str[j + 1].equals(target_str[j])) {
-                            new_list.add(GetChordRoot(target_str[j + 1]));
-                            result_map.put(target, new_list);
-                        }
-                    } else {
-                        if (!target_str[j + 1].equals(target_str[j])) {
-                            target_list.add(GetChordRoot(target_str[j + 1]));
-                            result_map.put(target, target_list);
-                        }
-                    }
-                }
-            }
-
-
-        }
-
-        return result_map;
-    }
 
 
 
 
-
-
-
-
-
-    public String GetNewFirstChord(String ALL_chords,String avoid_f) {
-        SparseArray<String[]> map;
-        String first_chord="";
-        if (ALL_chords.equals("")) return "";
-        String[] song = ALL_chords.split("<!!>\n", 0);
-        for(String chords:song) {
-            map = StringToMap(chords);
-            first_chord=first_chord+GetChordRoot(Choose_One(map,1,1))+",";
-        }
-        HashMap<String,Integer> UC=UsedChord(first_chord);
-        String result=RandomChoice(UC);
-        while(avoid_f.equals(result))result=RandomChoice(UC);
-
-        return result;
-    }
 
 
 
@@ -1342,26 +1334,7 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
     /*
-    0  C
-    1  C#
-    2  D
-    3  D#
-    4  E
-    5  F
-    6  F#
-    7  G
-    8  G#
-    9  A
-    10 A#
-    11 B
-
 
     //構成を解析。行を比較して0123などの文字で表す
     public HashMap<String, Integer>LineAnalysis(String chord,HashMap<String, Integer> map,int num) {
