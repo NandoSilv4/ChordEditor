@@ -617,9 +617,6 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
-
-
     //構成の解析
     public SparseArray<String[]> ConstMatrix(String ALL_chords,int num){
         SparseArray<String[]> SA_matrix = new SparseArray<>();
@@ -637,8 +634,6 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-
-
     //構成を解析。行を比較して0123などの文字で表す　numは行数、line_nはフィルター。何行のものを調べるかの。
     public String[] LineAnalysis(String chord,int line_n) {
         String[] box;
@@ -650,7 +645,7 @@ public class AnalysisChords extends AppCompatActivity {
         int[] result = new int[split_c.length];
         String[] line = new String[split_c.length];
         String[] sum = new String[4];
-        if(split_c.length!=line_n && line_n!=0)return null;
+        if(split_c.length!=line_n || line_n==0)return null;
         String[] new_matrix=new String[line_n];
         for(int i=0;i<line_n;i++)new_matrix[i]="";
 
@@ -745,28 +740,32 @@ public class AnalysisChords extends AppCompatActivity {
     public HashMap<String, Integer> SumLineElement(SparseArray<String[]> SA_matrix,String part){
         HashMap<String,Integer> map = new HashMap<>();
 
-        for(int i=0;i<SA_matrix.size();i++){
+        String[] line = new String[10];//いらないだろうけど余分で10個用意しておく
+        int i;
+        for(i=0;i<line.length;i++){
+            line[i]="";
+        }
 
+        for(i=0;i<SA_matrix.size();i++){
             int key = SA_matrix.keyAt(i);
             String[] chord=SA_matrix.get(key);
             if(chord==null)continue;
             String sum_s="";
 
 
-            String save_0[]=new String[chord.length];
+            String save_0[]=new String[5];//最初は0が入るから横4つ分と空き1つ分の5
 
-            for(String FE_chord:chord){
-                String[] s = FE_chord.split(",", 0);//今、FE_chordには 0101,CGCGのような文字が入っている
+
+            for(String Chord_fe:chord){
+                String[] s = Chord_fe.split(",", 0);//今、FE_chordには 0101,CGCGのような文字が入っている
                 String[] split_num = s[0].split("", 0);//0101を1文字づつsplit_cに入れる
                 String[] split_chord = s[1].split("<!>", 0);//CGCGを1文字づつsplit_chordに入れる
                 int sum=Integer.parseInt(split_num[1])+Integer.parseInt(split_num[2])+Integer.parseInt(split_num[3])+Integer.parseInt(split_num[4]);
 
 
-
-
-
                 switch(sum){
                     case 0:
+                        //line[x]=line[x]+"0,";
                         //---------------↓↓↓0の部分をセーブしておくsave_0[]=split_chord[]↓↓↓-------------------
                         save_0=split_chord;
                         //---------------↑↑↑どう変わったかをマップに入れる↑↑↑-------------------
@@ -774,10 +773,10 @@ public class AnalysisChords extends AppCompatActivity {
                         break;
                     case 1:
                     case 2:
+                        //line[x]=line[x]+"1,";
                         //---------------↓↓↓どう変わったかをマップに入れる↓↓↓-------------------
                         for(int v=1;v<split_num.length;v++){
                             if(Integer.parseInt(split_num[v])==1){
-                                Log.i("テスト  ", "ここでエラーならpartがnull");
                                 if(part.equals("A")) Change_Map_A=PutMap_SS(Change_Map_A,GetChordRoot(save_0[v-1]),GetChordRoot(split_chord[v-1]));
                                 if(part.equals("B")) Change_Map_B=PutMap_SS(Change_Map_B,GetChordRoot(save_0[v-1]),GetChordRoot(split_chord[v-1]));
                             }
@@ -785,12 +784,10 @@ public class AnalysisChords extends AppCompatActivity {
                         //---------------↑↑↑どう変わったかをマップに入れる↑↑↑-------------------
                         if(part.equals("A")) CM_for_Random_A=PutMap(CM_for_Random_A,s[0]);
                         if(part.equals("B")) CM_for_Random_B=PutMap(CM_for_Random_B,s[0]);
-                        Log.i("テスト  ", "CM_for_Random"+"---"+s[0]);
-                        sum_s=sum_s+"o";
+                        sum_s=sum_s+"b";
                         break;
                     case 3:case 4:case 5:
                         sum_s=sum_s+"x";
-                        Log.i("テスト  ","sum>2");
                         break;
                     default:
                         sum_s=sum_s+"!";
@@ -800,6 +797,11 @@ public class AnalysisChords extends AppCompatActivity {
             map=PutMap(map,sum_s);
         }
 
+        /*for(i=0;i<line.length;i++){
+            Line_sum_A.put(i,line[i]);
+        }
+        */
+
         return map;
     }
 
@@ -807,7 +809,6 @@ public class AnalysisChords extends AppCompatActivity {
 
     //1行目を参考に2行目を考える
     public String[] GetNextLine(String Position_Change,String[] First_CP,String part){
-        Log.i("テスト  ", "GetNextLine  Start");
         if(Position_Change==null||First_CP==null) {
             Log.i("テスト  ", "GetNextLine return null");
             return null;
@@ -824,7 +825,6 @@ public class AnalysisChords extends AppCompatActivity {
                 Next_CP[0]=First_CP[0];
             }else {
                 String[] CM_txt = str.split(",");
-                Log.i("テスト  ", "CM_txt[(int)(Math.random()*(CM_txt.length))];");
                 Next_CP[0] = CM_txt[(int)(Math.random()*(CM_txt.length))];
             }
         }
@@ -840,7 +840,6 @@ public class AnalysisChords extends AppCompatActivity {
                 Next_CP[1]=First_CP[1];
             }else {
                 String[] CM_txt = str.split(",");
-                Log.i("テスト  ", "CM_txt[(int)(Math.random()*(CM_txt.length))];");
                 Next_CP[1] = CM_txt[(int) (Math.random() * (CM_txt.length))];
                 if(CM_txt.length>1) {
                     int i=0;
@@ -866,7 +865,6 @@ public class AnalysisChords extends AppCompatActivity {
                 Next_CP[2]=First_CP[2];
             }else {
                 String[] CM_txt = str.split(",");
-                Log.i("テスト  ", "CM_txt[(int)(Math.random()*(CM_txt.length))];");
                 Next_CP[2] = CM_txt[(int) (Math.random() * (CM_txt.length))];
                 if(CM_txt.length>1) {
                     int i=0;
@@ -892,7 +890,6 @@ public class AnalysisChords extends AppCompatActivity {
                 Next_CP[3]=First_CP[3];
             }else {
                 String[] CM_txt = str.split(",");
-                Log.i("テスト  ", "CM_txt[(int)(Math.random()*(CM_txt.length))];");
                 Next_CP[3] = CM_txt[(int) (Math.random() * (CM_txt.length))];
             }
         }
@@ -982,6 +979,17 @@ public class AnalysisChords extends AppCompatActivity {
         return new_chord_p;
     }
 
+    //コード進行をコピペする際に変わる部分をランダムで生成し、パートの全行のぶんを作る
+    public String[] Position_Change_Block(HashMap<String, Integer> CM_for_Random,int new_line_n){
+        String[] result=new String[new_line_n];
+        if(new_line_n==0)return null;
+        result[0]="0000";
+        for(int i=1;i<new_line_n;i++){
+            result[i]=RandomChoice(CM_for_Random);
+        }
+        return result;
+    }
+
 
 
     //曲全体のコードを決める
@@ -995,7 +1003,6 @@ public class AnalysisChords extends AppCompatActivity {
         if(!line_n_A.equals(""))new_line_n_A=Integer.parseInt(RandomChoice(UsedChord(line_n_A)));//new_line_n_Aは新しいコード進行の行数
         SparseArray<String[]> SA_matrix_A =ConstMatrix(allChords_A,new_line_n_A);
         String A_Const=RandomChoice(SumLineElement(SA_matrix_A,"A"));//sumを使って 行を比較してox!で行を分別 oxox oooo oxoo ox oo
-        String Position_Change_A=RandomChoice(CM_for_Random_A);//コード進行をコピペする際に変わる部分を１つランダムで生成　0010 0001 0000
         //----------↑Aメロ構成の特徴解析↑----------
 
         //----------↓Aメロ1行コード進行生成↓----------
@@ -1007,21 +1014,41 @@ public class AnalysisChords extends AppCompatActivity {
         //----------↑Aメロ1行コード進行生成↑----------
 
         //----------↓Aメロ2行目以降コード進行生成↓----------
+        String[] Position_Change_A=Position_Change_Block(CM_for_Random_A,new_line_n_A);//コード進行をコピペする際に変わる部分をランダムで生成し、パートの全行のぶんを作る
         String last_chord_A=First_CP_A[3];
         String sub_f_chord_A=GetNewFirstChord(allChords_B,last_chord_A);//サブコードの最初のコードを決定
         HashMap<String, List<String>> Connect_map_sub_A =NextChordAnalysis(allChords_B);//コードの連結を調べる
         HashMap<String, Integer> Length_map_sub_A=ChordLengthAnalysis(allChords_B,1); //1行の特徴やコードの長さを解析
         String[] sub_CP_A=FirstChordProgression(sub_f_chord_A, Connect_map_sub_A,Length_map_sub_A,first_chord_A);//最初の行のコード進行を調べる
-        String[] str_A=A_Const.split("");//str[0]は空白 oxox oooo oxoo ox oo
-        for(int i=2;i<str_A.length;i++){
-        if(str_A[i].equals("o")){
-                String[] next_line_A=GetNextLine(Position_Change_A,First_CP_A,"A");
-                new_chord_map_A.put(i-1,next_line_A);
-                Position_Change_A=RandomChoice(CM_for_Random_A);//更新する
-            }else if(str_A[i].equals("x")){
-                new_chord_map_A.put(i-1,sub_CP_A);//Bメロのコード進行を2行目に設定
+        String[] str_A=A_Const.split("");//str[0]は空白 oxox oooo oxoo ox oo obob
 
+        for(int i=1;i<str_A.length-1;i++){
+            switch (str_A[i+1]){
+                case "o":
+                    new_chord_map_A.put(i,First_CP_A);
+                    Log.i("テスト  ", "GetNewChords---o");
+                    break;
+                case "b":
+                    String[] next_line_A=GetNextLine(Position_Change_A[i],First_CP_A,"A");
+                    new_chord_map_A.put(i,next_line_A);
+                    Log.i("テスト  ", "GetNewChords---b");
+                    break;
+                case "x":
+                    new_chord_map_A.put(i,sub_CP_A);//Bメロのコード進行を2行目に設定
+                    Log.i("テスト  ", "GetNewChords---x");
+                    break;
+                default:
             }
+
+
+
+            /*if(str_A[i+1].equals("o")){
+                String[] next_line_A=GetNextLine(Position_Change_A[i],First_CP_A,"A");
+                new_chord_map_A.put(i,next_line_A);
+            }else if(str_A[i+1].equals("x")){
+                new_chord_map_A.put(i,sub_CP_A);//Bメロのコード進行を2行目に設定
+            }
+            */
         }
         //----------↑Aメロ2行目以降コード進行生成↑----------
 
@@ -1034,7 +1061,7 @@ public class AnalysisChords extends AppCompatActivity {
         if(!line_n_B.equals(""))new_line_n_B=Integer.parseInt(RandomChoice(UsedChord(line_n_B)));//new_line_n_Bは新しいコード進行の行数
         SparseArray<String[]> SA_matrix_B =ConstMatrix(allChords_B,new_line_n_B);
         String B_Const=RandomChoice(SumLineElement(SA_matrix_B,"B"));//sumを使って 行を比較してox!で行を分別 oxox oooo oxoo ox oo
-        String Position_Change_B=RandomChoice(CM_for_Random_B);//コード進行をコピペする際に変わる部分を１つランダムで生成　0010 0001 0000
+        String[] Position_Change_B=Position_Change_Block(CM_for_Random_B,new_line_n_B);
         //----------↑Bメロ構成の特徴解析↑----------
 
         //----------↓Bメロ1行コード進行生成↓----------
@@ -1052,13 +1079,12 @@ public class AnalysisChords extends AppCompatActivity {
         HashMap<String, Integer> Length_map_sub_B=ChordLengthAnalysis(allChords_B,1); //1行の特徴やコードの長さを解析
         String[] sub_CP_B=FirstChordProgression(sub_f_chord_B, Connect_map_sub_B,Length_map_sub_B,first_chord_B);//最初の行のコード進行を調べる
         String[] str_B=B_Const.split("");//str_B[0]は空白 oxox oooo oxoo ox oo
-        for(int i=2;i<str_B.length;i++){
-            if(str_B[i].equals("o")){
-                String[] next_line_B=GetNextLine(Position_Change_B,First_CP_B,"B");
-                new_chord_map_B.put(i-1,next_line_B);
-                Position_Change_B=RandomChoice(CM_for_Random_B);//更新する
-            }else if(str_B[i].equals("x")){
-                new_chord_map_B.put(i-1,sub_CP_B);//Bメロのコード進行を2行目に設定
+        for(int i=1;i<str_B.length-1;i++){
+            if(str_B[i+1].equals("o")){
+                String[] next_line_B=GetNextLine(Position_Change_B[i],First_CP_B,"B");
+                new_chord_map_B.put(i,next_line_B);
+            }else if(str_B[i+1].equals("x")){
+                new_chord_map_B.put(i,sub_CP_B);//Bメロのコード進行を2行目に設定
             }
         }
         //----------↑Bメロ2行目以降コード進行生成↑----------
