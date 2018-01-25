@@ -633,7 +633,7 @@ public class AnalysisChords extends AppCompatActivity {
     }
 
 
-
+    //装飾ありなし変更可能！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
     //出現コードの次のコードの割合を記憶
     public HashMap<String, List<String>> NextChordAnalysis(String ALL_songs){
 
@@ -658,16 +658,19 @@ public class AnalysisChords extends AppCompatActivity {
                 for (int j = 0; j < 3; j++) {
                     List<String> target_list;
                     target = GetChordRoot(target_str[j]);
+                    //target = target_str[j];
                     target_list = result_map.get(target);
                     if (target_list == null) {
                         List<String> new_list = new ArrayList<>();
                         if (!target_str[j + 1].equals(target_str[j])) {
                             new_list.add(GetChordRoot(target_str[j + 1]));
+                            //new_list.add(target_str[j + 1]);
                             result_map.put(target, new_list);
                         }
                     } else {
                         if (!target_str[j + 1].equals(target_str[j])) {
                             target_list.add(GetChordRoot(target_str[j + 1]));
+                            //target_list.add(target_str[j + 1]);
                             result_map.put(target, target_list);
                         }
                     }
@@ -1054,7 +1057,7 @@ public class AnalysisChords extends AppCompatActivity {
 
 
     //曲全体のコードを決める
-    public String GetNewChords(String allChords_A,String allChords_B,String line_n_A,String line_n_B) {
+    public String[] GetNewChords(String allChords_A,String allChords_B,String line_n_A,String line_n_B) {
 
         SparseArray<String[]> new_chord_map_A = new SparseArray<>();
         SparseArray<String[]> new_chord_map_B = new SparseArray<>();
@@ -1076,8 +1079,6 @@ public class AnalysisChords extends AppCompatActivity {
         HashMap<String, List<String>> Connect_map_B =NextChordAnalysis(allChords_B);//コードの連結を調べる
         HashMap<String, Integer> Length_map_B=ChordLengthAnalysis(allChords_B,1); //1行の特徴やコードの長さを解析
         //----------↑Bメロ構成の特徴解析↑----------
-
-
 
 
 
@@ -1147,9 +1148,10 @@ public class AnalysisChords extends AppCompatActivity {
         //----------↑Bメロ2行目以降コード進行生成↑----------
 
 
-
-
-        return "[Aメロ]\n"+MapToString(new_chord_map_A)+"[Bメロ]\n"+MapToString(new_chord_map_B);
+        String[] result = new String[2];
+        result[0] = "[Aメロ]\n" + MapToString(new_chord_map_A);
+        result[1] = "[Bメロ]\n"+MapToString(new_chord_map_B);
+        return result;
     }
 
 

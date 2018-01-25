@@ -46,9 +46,27 @@ public class AI extends AppCompatActivity {
     }
 
     public void reload(View v) {
-        Intent dbIntent = new Intent(getApplication(),AI.class);
-        startActivity(dbIntent);
-        overridePendingTransition(0, 0);
+        String[] new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
+        new_A=new_CP[0];new_B=new_CP[1];
+        TextView textView = (TextView) findViewById(R.id.text_1);
+        textView.setText(new_A);
+        TextView textView2 = (TextView) findViewById(R.id.text_2);
+        textView2.setText(new_B);
+        chords=new_A+new_B;
+    }
+    public void reload_A(View v) {
+        String[] new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
+        new_A=new_CP[0];
+        TextView textView = (TextView) findViewById(R.id.text_1);
+        textView.setText(new_CP[0]);
+        chords=new_A+new_B;
+    }
+    public void reload_B(View v) {
+        String[] new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
+        new_B=new_CP[1];
+        TextView textView = (TextView) findViewById(R.id.text_2);
+        textView.setText(new_CP[1]);
+        chords=new_A+new_B;
     }
 
 
@@ -408,6 +426,7 @@ public class AI extends AppCompatActivity {
 
 
 
+    String allChords_A,line_n_A,chords_A,allChords_B,line_n_B,chords_B,new_A,new_B;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -424,7 +443,6 @@ public class AI extends AppCompatActivity {
         if(!mov)return;
         SparseArray<String[]> map_A;
         SparseArray<String[]> map_B;
-        String allChords_A,line_n_A,chords_A,allChords_B,line_n_B,chords_B;
         allChords_A=line_n_A=allChords_B=line_n_B="";
 
         int sc;
@@ -475,20 +493,19 @@ public class AI extends AppCompatActivity {
 
 
         //----------新しいコード進行生成-----------------------------------------------------------
-        String new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
+        String[] new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
         //----------新しいコード進行生成-----------------------------------------------------------
-
-        chords=new_CP;
-
-        allChords_A="------[Aメロ]------\n"+allChords_A+"------[Bメロ]------\n"+allChords_B;
+        new_A=new_CP[0];
+        new_B=new_CP[1];
+        chords=new_A+new_B;
 
 
         TextView textView = (TextView) findViewById(R.id.text_1);
-        textView.setText(new_CP);
+        textView.setText(new_A);
 
 
         TextView textView2 = (TextView) findViewById(R.id.text_2);
-        textView2.setText("");
+        textView2.setText(new_B);
 
 
         TextView textView3 = (TextView) findViewById(R.id.text_3);
@@ -500,7 +517,7 @@ public class AI extends AppCompatActivity {
 
 
         TextView textView5 = (TextView) findViewById(R.id.text_5);
-        textView5.setText(allChords_A);
+        textView5.setText("");
 
 
         c.close();

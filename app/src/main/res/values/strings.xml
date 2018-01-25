@@ -16,6 +16,8 @@
     <string name="sharp">#</string>
     <string name="analysis">コード解析</string>
     <string name="save">SAVE</string>
-    <string name="remake">remake</string>
+    <string name="remake">remake all</string>
+    <string name="a_change">Aメロの変更</string>
+    <string name="b_change">Bメロの変更</string>
 
 </resources>
