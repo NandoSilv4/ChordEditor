@@ -509,7 +509,7 @@ public class AI extends AppCompatActivity {
 
 
         TextView textView3 = (TextView) findViewById(R.id.text_3);
-        textView3.setText("");
+        textView3.setText(allChords_A+"\n\n"+allChords_B);
 
 
         TextView textView4 = (TextView) findViewById(R.id.text_4);

@@ -1,6 +1,5 @@
 package com.sakamalab.yutauenishi.chordeditor;
 
-
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
@@ -958,19 +957,26 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-    public String GetNewFirstChord(String ALL_chords,String avoid_f) {
-        String result;
+    public String[] GetNewFirstLastChord(String ALL_chords,int line_n,String avoid_f) {
+
+        String[] result=new String [2];
             SparseArray<String[]> map;
             String first_chord = "";
-            if (ALL_chords.equals("")) return "";
+            String last_chord = "";
+            if (ALL_chords.equals("")) return null;
             String[] song = ALL_chords.split("<!!>\n", 0);
             for (String chords : song) {
+                if(chords.equals(""))continue;
                 map = StringToMap(chords);
+                if(map.size()!=line_n)continue;
                 first_chord = first_chord + GetChordRoot(Choose_One(map, 1, 1)) + ",";
+                last_chord = last_chord + GetChordRoot(Choose_One(map, map.size(), 4)) + ",";
             }
             HashMap<String, Integer> UC = UsedChord(first_chord);
-            result = RandomChoice(UC);
-            while (avoid_f.equals(result)) result = RandomChoice(UC);
+            result[0] = RandomChoice(UC);
+            HashMap<String, Integer> UC2 = UsedChord(last_chord);
+            result[1] = RandomChoice(UC2);
+            while (avoid_f.equals(result[0])) result[0] = RandomChoice(UC);
         return result;
     }
 
@@ -978,8 +984,12 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
+
+
+
+
     //1行目のコード進行生成
-    public String[] FirstChordProgression(String f_chord, HashMap<String, List<String>> NC_list_map, HashMap<String, Integer> Length_map,String avoid_l) {
+    public String[] FirstChordProgression(String f_chord, String l_chord,HashMap<String, List<String>> NC_list_map, HashMap<String, Integer> Length_map,String avoid_l) {
 
         String[] new_chord_p= new String[4];
         String[] used_chord = {"0","1","2","3"};
@@ -1014,7 +1024,7 @@ public class AnalysisChords extends AppCompatActivity {
             next_list=NC_list_map.get(GetChordRoot(new_chord_p[j-1]));
             if(next_list==null){
                 Log.i("テスト  ", "FCP失敗　再帰呼出し");
-                return FirstChordProgression(f_chord,NC_list_map,Length_map,avoid_l);
+                return FirstChordProgression(f_chord,l_chord,NC_list_map,Length_map,avoid_l);
             }
             flag=0;
             int count=0;
@@ -1025,10 +1035,13 @@ public class AnalysisChords extends AppCompatActivity {
                 for(int k=0;k<point;k++){
                     if(next_chord.equals(used_chord[k]))flag=0;
                 }
+                if(j==3&&!next_chord.equals(l_chord)&&!avoid_l.equals(l_chord)){
+                    flag=0;
+                }
                 count++;
-                if(count>100) {
+                if(count>50) {
                     Log.i("テスト  ", "無限ループミス");
-                    break;
+                    flag=1;
                 }
             }
             new_chord_p[j]=next_chord;
@@ -1038,8 +1051,9 @@ public class AnalysisChords extends AppCompatActivity {
         }
         if(new_chord_p[3].equals(avoid_l)){
             Log.i("テスト  ", "もう一度");
-            return FirstChordProgression(f_chord,NC_list_map,Length_map,avoid_l);
+            return FirstChordProgression(f_chord,l_chord,NC_list_map,Length_map,avoid_l);
         }
+
         return new_chord_p;
     }
 
@@ -1083,18 +1097,18 @@ public class AnalysisChords extends AppCompatActivity {
 
 
         //----------↓Aメロ1行コード進行生成↓----------
-        String first_chord_A=GetNewFirstChord(allChords_A,"");//最初のコード決定
-        String[] First_CP_A=FirstChordProgression(first_chord_A, NC_list_map_A,Length_map,"");//最初の行のコード進行を決定
+        String[] fl_chord_A=GetNewFirstLastChord(allChords_A,new_line_n_A,"");//最初のコード決定
+        String[] First_CP_A=FirstChordProgression(fl_chord_A[0],fl_chord_A[1], NC_list_map_A,Length_map,"");//最初の行のコード進行を決定
         new_chord_map_A.put(0,First_CP_A);//最初の行のコード進行をMAPに追加
         //----------↑Aメロ1行コード進行生成↑----------
 
         //----------↓Aメロ2行目以降コード進行生成↓----------
         String[] Position_Change_A=Position_Change_Block(CM_for_Random_A,new_line_n_A);//コード進行をコピペする際に変わる部分をランダムで生成し、パートの全行のぶんを作る
         String last_chord_A=First_CP_A[3];
-        String sub_f_chord_A=GetNewFirstChord(allChords_B,last_chord_A);//サブコードの最初のコードを決定
-        HashMap<String, List<String>> Connect_map_sub_A =NextChordAnalysis(allChords_B);//コードの連結を調べる
-        HashMap<String, Integer> Length_map_sub_A=ChordLengthAnalysis(allChords_B,1); //1行の特徴やコードの長さを解析
-        String[] sub_CP_A=FirstChordProgression(sub_f_chord_A, Connect_map_sub_A,Length_map_sub_A,first_chord_A);//最初の行のコード進行を調べる
+        String[] sub_fl_chord_A=GetNewFirstLastChord(allChords_A,new_line_n_A,last_chord_A);//サブコードの最初のコードを決定
+        HashMap<String, List<String>> Connect_map_sub_A =NextChordAnalysis(allChords_A);//コードの連結を調べる
+        HashMap<String, Integer> Length_map_sub_A=ChordLengthAnalysis(allChords_A,1); //1行の特徴やコードの長さを解析
+        String[] sub_CP_A=FirstChordProgression(sub_fl_chord_A[0],sub_fl_chord_A[1],Connect_map_sub_A,Length_map_sub_A,sub_fl_chord_A[0]);//最初の行のコード進行を調べる
         String[] str_A=A_Const.split("");//str[0]は空白 oxox oooo oxoo ox oo obob
         for(int i=1;i<str_A.length-1;i++){
             switch (str_A[i+1]){
@@ -1124,18 +1138,18 @@ public class AnalysisChords extends AppCompatActivity {
 
 
         //----------↓Bメロ1行コード進行生成↓----------
-        String first_chord_B=GetNewFirstChord(allChords_B,last_chord_A);//最初のコード決定
-        String[] First_CP_B=FirstChordProgression(first_chord_B, Connect_map_B,Length_map_B,"");//最初の行のコード進行を決定
+        String[] fl_chord_B=GetNewFirstLastChord(allChords_B,new_line_n_B,last_chord_A);//最初のコード決定
+        String[] First_CP_B=FirstChordProgression(fl_chord_B[0],fl_chord_B[1], Connect_map_B,Length_map_B,"");//最初の行のコード進行を決定
         new_chord_map_B.put(0,First_CP_B);//最初の行のコード進行をMAPに追加
         //----------↑Bメロ1行コード進行生成↑----------
 
         //----------↓Bメロ2行目以降コード進行生成↓----------
         String[] Position_Change_B=Position_Change_Block(CM_for_Random_B,new_line_n_B);
         String last_chord_B=First_CP_B[3];
-        String sub_f_chord_B=GetNewFirstChord(allChords_B,last_chord_B);//サブコードの最初のコードを決定???????????????????????????
+        String[] sub_fl_chord_B=GetNewFirstLastChord(allChords_B,new_line_n_B,last_chord_B);//サブコードの最初のコードを決定???????????????????????????
         HashMap<String, List<String>> Connect_map_sub_B =NextChordAnalysis(allChords_B);//コードの連結を調べる????????????????????????????????????????????
         HashMap<String, Integer> Length_map_sub_B=ChordLengthAnalysis(allChords_B,1); //1行の特徴やコードの長さを解析
-        String[] sub_CP_B=FirstChordProgression(sub_f_chord_B, Connect_map_sub_B,Length_map_sub_B,first_chord_B);//最初の行のコード進行を調べる
+        String[] sub_CP_B=FirstChordProgression(sub_fl_chord_B[0],sub_fl_chord_B[1], Connect_map_sub_B,Length_map_sub_B,fl_chord_B[0]);//最初の行のコード進行を調べる
         String[] str_B=B_Const.split("");//str_B[0]は空白 oxox oooo oxoo ox oo
         for(int i=1;i<str_B.length-1;i++){
             if(str_B[i+1].equals("o")){
