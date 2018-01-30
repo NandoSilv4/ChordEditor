@@ -336,13 +336,21 @@ public class SongList extends AppCompatActivity {
                                 break;
                             case 2:
                                 Log.i("テスト  ", "削除");
-                                SQLiteDatabase db2 = helper.getReadableDatabase();
-                                db2.delete("note", "id="+(position+1),null);
-                                db2.close();
-                                finish();
-                                startActivity(getIntent());
-                                overridePendingTransition(0, 0);
-
+                                new AlertDialog.Builder(SongList.this)
+                                        .setMessage("一度削除したファイルは復元できません。本当に削除しますか？")
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                SQLiteDatabase db2 = helper.getReadableDatabase();
+                                                db2.delete("note", "id="+(position+1),null);
+                                                db2.close();
+                                                finish();
+                                                startActivity(getIntent());
+                                                overridePendingTransition(0, 0);
+                                            }
+                                        })
+                                        .setNegativeButton("Cancel", null)
+                                        .show();
                                 break;
                             case 3:
                                 Log.i("テスト  ", "キャンセル");

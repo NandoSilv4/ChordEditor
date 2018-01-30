@@ -1168,10 +1168,7 @@ public class AnalysisChords extends AppCompatActivity {
         result[0] = MapToString(new_chord_map_A);
         result[1] = MapToString(new_chord_map_B);
 
-        result[0]="| "+result[0].replaceAll(","," \\| ");
-        result[1]="| "+result[1].replaceAll(","," \\| ");
-        result[0] = Pattern.compile("(.*?)\\n(.+?)").matcher(result[0]).replaceAll("$1\n\\| $2");
-        result[1] = Pattern.compile("(.*?)\\n(.+?)").matcher(result[1]).replaceAll("$1\n\\| $2");
+
 
         return result;
     }
