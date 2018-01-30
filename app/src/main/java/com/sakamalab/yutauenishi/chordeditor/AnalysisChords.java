@@ -328,8 +328,8 @@ public class AnalysisChords extends AppCompatActivity {
     //コードのルートを見つける
     public String GetChordRoot(String chord){
         String root;
-        chord=chord.replaceAll("^(.*?)/","");//分数コードの場合、分母をルートと見なすため、/より前を消す
-        chord=chord.replaceAll("^(.*?)on","");//分数コードの場合、分母をルートと見なすため、/より前を消す
+        chord=chord.replaceAll("^/(.*?)","");//分数コードの場合、分母をルートと見なすため、/より後ろを消す
+        chord=chord.replaceAll("^on(.*?)","");//分数コードの場合、分母をルートと見なすため、/より後ろを消す
         if(chord.equals(""))return "";
         switch (chord.length()) {
             case 1:
@@ -1039,16 +1039,18 @@ public class AnalysisChords extends AppCompatActivity {
                     flag=0;
                 }
                 count++;
-                if(count>50) {
+                if(count>100) {
                     Log.i("テスト  ", "無限ループミス");
                     flag=1;
                 }
             }
+
             new_chord_p[j]=next_chord;
             new_chord_p=Check_FCP(length_i,new_chord_p,j,next_chord);
             used_chord[point]=next_chord;
             point++;
         }
+        Log.i("テスト  ", "FirstChordProgression");
         if(new_chord_p[3].equals(avoid_l)){
             Log.i("テスト  ", "もう一度");
             return FirstChordProgression(f_chord,l_chord,NC_list_map,Length_map,avoid_l);
@@ -1163,8 +1165,14 @@ public class AnalysisChords extends AppCompatActivity {
 
 
         String[] result = new String[2];
-        result[0] = "[Aメロ]\n" + MapToString(new_chord_map_A);
-        result[1] = "[Bメロ]\n"+MapToString(new_chord_map_B);
+        result[0] = MapToString(new_chord_map_A);
+        result[1] = MapToString(new_chord_map_B);
+
+        result[0]="| "+result[0].replaceAll(","," \\| ");
+        result[1]="| "+result[1].replaceAll(","," \\| ");
+        result[0] = Pattern.compile("(.*?)\\n(.+?)").matcher(result[0]).replaceAll("$1\n\\| $2");
+        result[1] = Pattern.compile("(.*?)\\n(.+?)").matcher(result[1]).replaceAll("$1\n\\| $2");
+
         return result;
     }
 

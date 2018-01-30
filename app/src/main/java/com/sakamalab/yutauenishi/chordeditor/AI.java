@@ -48,24 +48,24 @@ public class AI extends AppCompatActivity {
     public void reload(View v) {
         String[] new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
         new_A=new_CP[0];new_B=new_CP[1];
-        TextView textView = (TextView) findViewById(R.id.text_1);
-        textView.setText(new_A);
         TextView textView2 = (TextView) findViewById(R.id.text_2);
-        textView2.setText(new_B);
+        textView2.setText(new_A);
+        TextView textView4 = (TextView) findViewById(R.id.text_4);
+        textView4.setText(new_B);
         chords=new_A+new_B;
     }
     public void reload_A(View v) {
         String[] new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
         new_A=new_CP[0];
-        TextView textView = (TextView) findViewById(R.id.text_1);
-        textView.setText(new_CP[0]);
+        TextView textView2 = (TextView) findViewById(R.id.text_2);
+        textView2.setText(new_CP[0]);
         chords=new_A+new_B;
     }
     public void reload_B(View v) {
         String[] new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
         new_B=new_CP[1];
-        TextView textView = (TextView) findViewById(R.id.text_2);
-        textView.setText(new_CP[1]);
+        TextView textView4 = (TextView) findViewById(R.id.text_4);
+        textView4.setText(new_CP[1]);
         chords=new_A+new_B;
     }
 
@@ -501,23 +501,31 @@ public class AI extends AppCompatActivity {
 
 
         TextView textView = (TextView) findViewById(R.id.text_1);
-        textView.setText(new_A);
-
+        textView.setTextSize(22);
+        textView.setTextColor(Color.BLACK);
+        textView.setText("[Aメロ]");
 
         TextView textView2 = (TextView) findViewById(R.id.text_2);
-        textView2.setText(new_B);
+        textView2.setTextSize(20);
+        textView2.setTextColor(Color.BLUE);
+        textView2.setText(new_A);
 
 
         TextView textView3 = (TextView) findViewById(R.id.text_3);
-        textView3.setText(allChords_A+"\n\n"+allChords_B);
+        textView3.setTextSize(22);
+        textView3.setTextColor(Color.BLACK);
+        textView3.setText("[Bメロ]");
+
 
 
         TextView textView4 = (TextView) findViewById(R.id.text_4);
-        textView4.setText("");
+        textView4.setTextSize(20);
+        textView4.setTextColor(Color.BLUE);
+        textView4.setText(new_B);
 
 
         TextView textView5 = (TextView) findViewById(R.id.text_5);
-        textView5.setText("");
+        textView5.setText(allChords_A+"\n\n"+allChords_B);
 
 
         c.close();

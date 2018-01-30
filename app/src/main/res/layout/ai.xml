@@ -58,28 +58,13 @@
                 android:id="@+id/text_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-            <Button
-                android:id="@+id/A_change"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="reload_A"
-                android:text="@string/a_change" />
+                 />
+
             <TextView
                 android:id="@+id/text_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-            <Button
-                android:id="@+id/B_change"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="reload_B"
-                android:text="@string/b_change" />
+                />
 
 
 
@@ -88,17 +73,30 @@
                 android:id="@+id/text_3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
+                />
+
+
 
             <TextView
                 android:id="@+id/text_4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
+                />
+
+            <Button
+                android:id="@+id/A_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="reload_A"
+                android:text="@string/a_change" />
+
+
+            <Button
+                android:id="@+id/B_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="reload_B"
+                android:text="@string/b_change" />
 
             <TextView
                 android:id="@+id/text_5"
