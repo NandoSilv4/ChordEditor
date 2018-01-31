@@ -656,6 +656,7 @@ public class AnalysisChords extends AppCompatActivity {
                 target_str = chords_map.get(key);
                 for (int j = 0; j < 3; j++) {
                     List<String> target_list;
+
                     target = GetChordRoot(target_str[j]);
                     //target = target_str[j];
                     target_list = result_map.get(target);
@@ -1055,7 +1056,7 @@ public class AnalysisChords extends AppCompatActivity {
             Log.i("テスト  ", "もう一度");
             return FirstChordProgression(f_chord,l_chord,NC_list_map,Length_map,avoid_l);
         }
-
+        Log.i("テスト  ",new_chord_p[0]+new_chord_p[1]+new_chord_p[2]+new_chord_p[3]);
         return new_chord_p;
     }
 

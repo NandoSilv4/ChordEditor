@@ -528,10 +528,10 @@ public class AI extends AppCompatActivity {
         textView4.setTextColor(Color.BLUE);
         textView4.setText(text_B);
 
-        allChords_A=allChords_A.replaceAll("<!!>","---[Aメロ]データ---");
-        allChords_B=allChords_B.replaceAll("<!!>","---[Bメロ]データ---");
+        String AC_A_txt=allChords_A.replaceAll("<!!>","---[Aメロ]データ---");
+        String AC_B_txt=allChords_B.replaceAll("<!!>","---[Bメロ]データ---");
         TextView textView5 = (TextView) findViewById(R.id.text_5);
-        textView5.setText(allChords_A+"\n\n"+allChords_B);
+        textView5.setText(AC_A_txt+"\n\n"+AC_B_txt);
 
 
         c.close();
