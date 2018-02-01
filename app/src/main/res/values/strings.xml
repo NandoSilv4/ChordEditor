@@ -19,5 +19,7 @@
     <string name="remake">remake all</string>
     <string name="a_change">Aメロの変更</string>
     <string name="b_change">Bメロの変更</string>
+    <string name="repetition">リピートデータ</string>
+    <string name="Data_Open">データ解析</string>
 
 </resources>

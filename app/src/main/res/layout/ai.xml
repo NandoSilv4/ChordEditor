@@ -98,6 +98,20 @@
                 android:onClick="reload_B"
                 android:text="@string/b_change" />
 
+            <Button
+                android:id="@+id/repetition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="repetition"
+                android:text="@string/repetition" />
+
+            <Button
+                android:id="@+id/Data_Open"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="Data_Open"
+                android:text="@string/Data_Open" />
+
             <TextView
                 android:id="@+id/text_5"
                 android:layout_width="match_parent"

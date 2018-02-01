@@ -38,6 +38,8 @@ public class AI extends AppCompatActivity {
     MyOpenHelper helper = new MyOpenHelper(this);
     AnalysisChords AC=new AnalysisChords();
     String chords="";
+    String[] Log_S=new String[10];
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -75,7 +77,14 @@ public class AI extends AppCompatActivity {
         textView4.setText(text_B);
         chords=new_A+new_B;
     }
+    public void repetition(View v) {
+        Log_S=AC.repetition(allChords_A,allChords_B,line_n_A,line_n_B,Log_S);
+    }
+    public void Data_Open(View v) {
+        String result=AC.Data_Open(Log_S);
+        Log.i("テスト  ", "結果！！！！！！！！！！！\n"+result);
 
+    }
 
     public void save(View v) {
         TitleAsk(-1);
@@ -452,6 +461,8 @@ public class AI extends AppCompatActivity {
         SparseArray<String[]> map_B;
         allChords_A=line_n_A=allChords_B=line_n_B="";
 
+        Log_S[0]=Log_S[1]=Log_S[2]=Log_S[3]=Log_S[4]=Log_S[5]=Log_S[6]=Log_S[7]=Log_S[8]=Log_S[9]="";
+
         int sc;
 
         while (mov) {
@@ -502,10 +513,12 @@ public class AI extends AppCompatActivity {
         //----------新しいコード進行生成-----------------------------------------------------------
         String[] new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
         //----------新しいコード進行生成-----------------------------------------------------------
+        Log.i("テスト  ", "GetNewChords 完了");
         new_A=new_CP[0];
         new_B=new_CP[1];
+        String data=new_CP[2];
         chords="[Aメロ]\n"+new_A+"[Bメロ]\n"+new_B;
-
+        Log.i("テスト  ", data);
         String text_A,text_B;
         text_A=AC.ChordToText(new_A);
         text_B=AC.ChordToText(new_B);
@@ -536,8 +549,8 @@ public class AI extends AppCompatActivity {
         String AC_A_txt=allChords_A.replaceAll("<!!>","---[Aメロ]データ---");
         String AC_B_txt=allChords_B.replaceAll("<!!>","---[Bメロ]データ---");
         TextView textView5 = (TextView) findViewById(R.id.text_5);
-        textView5.setText(AC_A_txt+"\n\n"+AC_B_txt);
-
+        textView5.setTextSize(14);
+        textView5.setText(data+"\n\n"+AC_A_txt+AC_B_txt);
 
         c.close();
         db.close();
