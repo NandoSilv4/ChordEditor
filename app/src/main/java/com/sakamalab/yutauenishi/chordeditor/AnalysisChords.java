@@ -12,8 +12,16 @@ import java.util.regex.Pattern;
 public class AnalysisChords extends AppCompatActivity {
 
 
-    public HashMap<String, Integer> ChordType(String type,HashMap<String, Integer> map){
+    public HashMap<String, Integer> ChordType(String type,HashMap<String, Integer> map,int flag){
         int root=map.get("root");
+
+        if(flag!=0){
+            map.put("fraction", flag);
+            root=root+12;
+            map.put("root", (root)%24);
+
+        }
+
         switch(type){
             //対応済
             case "add9":
@@ -103,9 +111,40 @@ public class AnalysisChords extends AppCompatActivity {
                 map.put("root", root);
                 map.put("sub1", (root+4)%24);
                 map.put("sub2", (root+7)%24);
-                map=ChordType(type,map);
+
+                Matcher m_t = Pattern.compile("/").matcher(type);
+                if (m_t.find()) {
+                    String[] type_s= type.split("/", 0);
+                    if(type_s.length!=2){
+                        map=ChordType(type,map,0);
+                        Log.i("テスト  ", "ChordNameAnalysis エラー");
+                    }
+                    int f_n=ChordToNo(type_s[1].charAt(0));
+                    switch (type_s[1].length()){
+                        case 1:break;
+                        case 2:if(type_s[1].charAt(1)=='#')f_n++;break;
+                        default:
+                    }
+                    map=ChordType(type_s[0],map,f_n);
+                }else{
+                    map=ChordType(type,map,0);
+                }
+
+
+
+                //map=ChordType(type,map,0);
                 return map;
         }
+    }
+
+
+    public String ChordToText(String chord){
+        String result;
+
+        result="| "+chord.replaceAll(","," \\| ");
+        result = Pattern.compile("(.*?)\\n(.+?)").matcher(result).replaceAll("$1\n\\| $2");
+
+        return result;
     }
 
 
@@ -632,6 +671,26 @@ public class AnalysisChords extends AppCompatActivity {
     }
 
 
+
+    //分数コードかを判断し、ルートを返す。分数コードの場合、分数
+    public String fraction(String target){
+        String result;
+        Matcher m_t = Pattern.compile("/").matcher(target);
+        if (m_t.find()){
+            String[] tar_s= target.split("/", 0);
+            if(tar_s.length!=2){
+                Log.i("テスト  ", "fraction エラー");
+                return  GetChordRoot(target);
+            }
+            result = GetChordRoot(tar_s[0])+"/"+GetChordRoot(tar_s[1]);
+        }else{
+            result = GetChordRoot(target);
+        }
+        return result;
+    }
+
+
+
     //装飾ありなし変更可能！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
     //出現コードの次のコードの割合を記憶
     public HashMap<String, List<String>> NextChordAnalysis(String ALL_songs){
@@ -657,19 +716,20 @@ public class AnalysisChords extends AppCompatActivity {
                 for (int j = 0; j < 3; j++) {
                     List<String> target_list;
 
-                    target = GetChordRoot(target_str[j]);
+                    target = fraction(target_str[j]);
+                    //Log.i("テスト  ", "target="+target);
                     //target = target_str[j];
                     target_list = result_map.get(target);
                     if (target_list == null) {
                         List<String> new_list = new ArrayList<>();
                         if (!target_str[j + 1].equals(target_str[j])) {
-                            new_list.add(GetChordRoot(target_str[j + 1]));
+                            new_list.add(fraction(target_str[j + 1]));
                             //new_list.add(target_str[j + 1]);
                             result_map.put(target, new_list);
                         }
                     } else {
                         if (!target_str[j + 1].equals(target_str[j])) {
-                            target_list.add(GetChordRoot(target_str[j + 1]));
+                            target_list.add(fraction(target_str[j + 1]));
                             //target_list.add(target_str[j + 1]);
                             result_map.put(target, target_list);
                         }
@@ -1022,7 +1082,9 @@ public class AnalysisChords extends AppCompatActivity {
 
         for(int j=1;j<4;j++){
             if(length_i[j]!=point)continue;
-            next_list=NC_list_map.get(GetChordRoot(new_chord_p[j-1]));
+            next_list=NC_list_map.get(fraction
+
+                    (new_chord_p[j-1]));
             if(next_list==null){
                 Log.i("テスト  ", "FCP失敗　再帰呼出し");
                 return FirstChordProgression(f_chord,l_chord,NC_list_map,Length_map,avoid_l);

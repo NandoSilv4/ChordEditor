@@ -48,24 +48,31 @@ public class AI extends AppCompatActivity {
     public void reload(View v) {
         String[] new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
         new_A=new_CP[0];new_B=new_CP[1];
+        String text_A,text_B;
+        text_A=AC.ChordToText(new_A);
+        text_B=AC.ChordToText(new_B);
         TextView textView2 = (TextView) findViewById(R.id.text_2);
-        textView2.setText(new_A);
+        textView2.setText(text_A);
         TextView textView4 = (TextView) findViewById(R.id.text_4);
-        textView4.setText(new_B);
+        textView4.setText(text_B);
         chords=new_A+new_B;
     }
     public void reload_A(View v) {
         String[] new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
         new_A=new_CP[0];
+        String text_A;
+        text_A=AC.ChordToText(new_A);
         TextView textView2 = (TextView) findViewById(R.id.text_2);
-        textView2.setText(new_CP[0]);
+        textView2.setText(text_A);
         chords=new_A+new_B;
     }
     public void reload_B(View v) {
         String[] new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
         new_B=new_CP[1];
+        String text_B;
+        text_B=AC.ChordToText(new_B);
         TextView textView4 = (TextView) findViewById(R.id.text_4);
-        textView4.setText(new_CP[1]);
+        textView4.setText(text_B);
         chords=new_A+new_B;
     }
 
@@ -500,10 +507,8 @@ public class AI extends AppCompatActivity {
         chords="[Aメロ]\n"+new_A+"[Bメロ]\n"+new_B;
 
         String text_A,text_B;
-        text_A="| "+new_A.replaceAll(","," \\| ");
-        text_B="| "+new_B.replaceAll(","," \\| ");
-        text_A = Pattern.compile("(.*?)\\n(.+?)").matcher(text_A).replaceAll("$1\n\\| $2");
-        text_B = Pattern.compile("(.*?)\\n(.+?)").matcher(text_B).replaceAll("$1\n\\| $2");
+        text_A=AC.ChordToText(new_A);
+        text_B=AC.ChordToText(new_B);
 
         TextView textView = (TextView) findViewById(R.id.text_1);
         textView.setTextSize(22);

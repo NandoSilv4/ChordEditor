@@ -3,13 +3,16 @@ package com.sakamalab.yutauenishi.chordeditor;
 
 
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -43,9 +46,30 @@ public class SongPage extends AppCompatActivity {
 
 
 
+    //SoundPoolの設定　バージョンによって処理分け
+    @SuppressWarnings("deprecation")//警告を消す
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private SoundPool buildSoundPool(int poolMax)
+    {
+        SoundPool pool;
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            pool = new SoundPool(poolMax, AudioManager.STREAM_MUSIC, 0);
+        }
+        else {
+            AudioAttributes attr = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build();
+            pool = new SoundPool.Builder()
+                    .setAudioAttributes(attr)
+                    .setMaxStreams(poolMax)
+                    .build();
+        }
+        return pool;
+    }
 
-    SoundPool S_Pool= new SoundPool(5, AudioManager.STREAM_MUSIC,0);
+    SoundPool S_Pool= buildSoundPool(6);
     int[] S_ID_load=new int[24];
     int[] S_ID_stop=new int[24];
     public void SoundPlay(HashMap<String, Integer> SM){
@@ -276,10 +300,11 @@ public class SongPage extends AppCompatActivity {
         String title = c.getString(0);
         String data = c.getString(1);
         String artist = c.getString(2);
-        chords = c.getString(3);
+        //chords = c.getString(3);
         int key_i = c.getInt(4);
         toolbar(title,artist);
 
+        chords = AC.GetChords(data);
 
 
         String Chord_No[] = {"C", "C#","D","D#","E","F","F#","G","G#","A","A#","B"};
