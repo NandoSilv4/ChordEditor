@@ -57,7 +57,7 @@ public class AI extends AppCompatActivity {
         textView2.setText(text_A);
         TextView textView4 = (TextView) findViewById(R.id.text_4);
         textView4.setText(text_B);
-        chords=new_A+new_B;
+        chords="[Aメロ]\n"+new_A+"[Bメロ]\n"+new_B;
     }
     public void reload_A(View v) {
         String[] new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
@@ -66,7 +66,7 @@ public class AI extends AppCompatActivity {
         text_A=AC.ChordToText(new_A);
         TextView textView2 = (TextView) findViewById(R.id.text_2);
         textView2.setText(text_A);
-        chords=new_A+new_B;
+        chords="[Aメロ]\n"+new_A+"[Bメロ]\n"+new_B;
     }
     public void reload_B(View v) {
         String[] new_CP=AC.GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
@@ -75,10 +75,30 @@ public class AI extends AppCompatActivity {
         text_B=AC.ChordToText(new_B);
         TextView textView4 = (TextView) findViewById(R.id.text_4);
         textView4.setText(text_B);
-        chords=new_A+new_B;
+        chords="[Aメロ]\n"+new_A+"[Bメロ]\n"+new_B;
     }
     public void repetition(View v) {
-        Log_S=AC.repetition(allChords_A,allChords_B,line_n_A,line_n_B,Log_S);
+        //テキスト入力を受け付けるビューを作成します。
+        final EditText editView = new EditText(this);
+        editView.setInputType( InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setTitle("リピート回数入力")
+                .setView(editView)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //入力した文字をトースト出力する
+                        int i = Integer.parseInt(editView.getText().toString());
+                        Log_S=AC.repetition(allChords_A,allChords_B,line_n_A,line_n_B,Log_S,i);
+                    }
+                })
+                .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                })
+                .show();
+
+
     }
     public void Data_Open(View v) {
         String result=AC.Data_Open(Log_S);

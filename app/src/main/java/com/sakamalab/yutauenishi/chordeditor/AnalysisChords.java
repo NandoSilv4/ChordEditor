@@ -172,7 +172,7 @@ public class AnalysisChords extends AppCompatActivity {
         text = Pattern.compile(s+"(.*?)B♭(.*?)"+f).matcher(text).replaceAll(s+"$1A#$2"+f);
         text = Pattern.compile(s+"(.*?)B#(.*?)"+f).matcher(text).replaceAll(s+"$1C$2"+f);
         text = Pattern.compile(s+"(.*?)E#(.*?)"+f).matcher(text).replaceAll(s+"$1F$2"+f);
-
+        text = Pattern.compile(s+"(.*?)on(.*?)"+f).matcher(text).replaceAll(s+"$1/$2"+f);
         text = Pattern.compile(s+"(.*?)"+f).matcher(text).replaceAll("\\|$1\\|");
         return text;
     }
@@ -1212,7 +1212,7 @@ public class AnalysisChords extends AppCompatActivity {
                     flag=0;
                 }
                 count++;
-                if(count>100) {
+                if(count>50) {
                     Log.i("テスト  ", "無限ループミス");
                     flag=1;
                 }
@@ -1245,11 +1245,11 @@ public class AnalysisChords extends AppCompatActivity {
 
 
 
-    public String[] repetition(String allChords_A,String allChords_B,String line_n_A,String line_n_B,String[] Log) {
+    public String[] repetition(String allChords_A,String allChords_B,String line_n_A,String line_n_B,String[] Log,int count) {
 
         String A,B,F_A,F_B,L_A,L_B,Line_A,Line_B;
             A=B=F_A=F_B=L_A=L_B=Line_A=Line_B="";
-        for(int i=0;i<100;i++){
+        for(int i=0;i<count;i++){
             String[] new_CP=GetNewChords(allChords_A,allChords_B,line_n_A,line_n_B);
             A=A+new_CP[0];
             B=B+new_CP[1];
@@ -1281,7 +1281,7 @@ public class AnalysisChords extends AppCompatActivity {
     public String Data_Open(String[] Log_S) {
         String result="";
         Log.i("テスト  ", "Data_Open 行数解析");
-        result=result+"---[Aメロ] 行数解析---\n"+UCtoString(UsedChord(Log_S[0]))+"\n---[Bメロ] Fコード解析---\n"+UCtoString(UsedChord(Log_S[1]));
+        result=result+"---[Aメロ] 行数解析---\n"+UCtoString(UsedChord(Log_S[0]))+"\n---[Bメロ] 行数解析---\n"+UCtoString(UsedChord(Log_S[1]));
         Log.i("テスト  ", "Data_Open Fコード解析");
         result=result+"\n---[Aメロ] Fコード解析---\n"+UCtoString(UsedChord(Log_S[2]))+"\n---[Bメロ] Fコード解析---\n"+UCtoString(UsedChord(Log_S[3]));
         Log.i("テスト  ", "Data_Open Lコード解析");
